@@ -9,8 +9,10 @@ const speak = (text: string, language: Language = "ja", options?: Speech.SpeechO
     };
 
     Speech.stop();
+
     Speech.speak(text, {
         language: languageMap[language],
+        rate: 1.0,
         ...options,
     });
 };

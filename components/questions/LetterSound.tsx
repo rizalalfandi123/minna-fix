@@ -6,10 +6,10 @@ import { triggerHaptic } from "~/helpers/triggerHaptic";
 import speak from "~/helpers/speak";
 import { View } from "react-native";
 import SlowSound from "../icons/SlowSound";
-import { useTheme } from "@react-navigation/native";
+import { useScreenMode } from "~/lib/useColorScheme";
 
 const LetterSound: React.FunctionComponent<{ symbol: string }> = ({ symbol }) => {
-    const { colors } = useTheme();
+    const { themeValue } = useScreenMode();
 
     const mainSoundAnimation = useButtonScaleAnimation();
 
@@ -36,17 +36,17 @@ const LetterSound: React.FunctionComponent<{ symbol: string }> = ({ symbol }) =>
             <AnimatedPressable
                 onPress={handleMainSound}
                 style={[mainSoundAnimation.animatedStyle]}
-                className="relative h-36 w-36 items-center justify-center rounded-2xl bg-primary"
+                className="relative h-36 w-36 items-center justify-center rounded-2xl bg-accent/50 border-2 border-border"
             >
-                <Sound color="red" width={40} height={40} />
+                <Sound color={themeValue.colors["accent-foreground"]} width={40} height={40} />
             </AnimatedPressable>
 
             <AnimatedPressable
                 onPress={handleSecondSound}
                 style={[secondSoundAnimation.animatedStyle]}
-                className="relative h-20 w-20 items-center justify-center rounded-2xl bg-primary"
+                className="relative h-20 w-20 items-center justify-center rounded-2xl bg-accent/50 border-2 border-border"
             >
-                <SlowSound color="red" width={28} height={28} />
+                <SlowSound color={themeValue.colors["accent-foreground"]} width={28} height={28} />
             </AnimatedPressable>
         </View>
     );

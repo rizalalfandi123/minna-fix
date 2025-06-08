@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import React from "react";
 import {
   GestureResponderEvent,
@@ -11,6 +10,7 @@ import CircularProgress from "~/components/CircularProgress";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { contentWidth, learnUnitHeight } from "~/lib/constants/sizes";
+import { useScreenMode } from "~/lib/useColorScheme";
 
 const StepsPageContent = <T extends { id: string }>(props: {
   units: T[];
@@ -83,7 +83,7 @@ export const ProgressUnitLevel: React.FunctionComponent<
 }) => {
   const scaleAnimation = useButtonScaleAnimation();
 
-  const { colors } = useTheme();
+  const { themeValue } = useScreenMode();
 
   const strokeWidth = 8;
 
@@ -112,8 +112,8 @@ export const ProgressUnitLevel: React.FunctionComponent<
       <CircularProgress
         radius={circleSize / 2}
         strokeWidth={strokeWidth}
-        progressColor={disabled ? "transparent" : colors.primary}
-        strokeColor={disabled ? "transparent" : colors.primary}
+        progressColor={disabled ? themeValue.colors.background : themeValue.colors.primary}
+        strokeColor={disabled ? themeValue.colors.background : themeValue.colors.primary}
       >
         <AnimatedPressable
           style={[
@@ -121,7 +121,8 @@ export const ProgressUnitLevel: React.FunctionComponent<
             {
               height: circleSize - strokeWidth * 3,
               width: circleSize - strokeWidth * 3,
-              backgroundColor: "red",
+              backgroundColor: themeValue.colors.primary,
+              opacity: 0.5,
               borderRadius: circleSize / 2,
             },
           ]}

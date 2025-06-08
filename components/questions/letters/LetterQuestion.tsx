@@ -21,7 +21,7 @@ const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, ...props }) =
                 return <GuessTheLetter {...props} question={question} />;
 
             case "GUESS_THE_LETTER_SOUND":
-                return <GuessTheLetterSound {...props} question={question} />;
+                return <GuessTheLetterSound {...props} {...question.data} />;
 
             case "GUESS_THE_SYMBOL":
                 return <GuessTheSymbol {...props} question={question} />;

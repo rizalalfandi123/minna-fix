@@ -6,25 +6,27 @@ import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import AnswerButton from "../AnswerButton";
 
-export type GuessTheSentenceMeanProps = {
-  question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
+export type GuessTheSymbolFromMeanProps = {
+  question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
 } & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
 
-const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, ...props }) => {
+const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, ...props }) => {
   const activeLang = "en";
+
   return (
     <OptionsQuestion
       {...props}
       data={{
-        answer: question.data.answer[activeLang],
-        options: question.data.options.map((item) => item[activeLang]),
+        answer: question.data.answer,
+        options: question.data.options,
         question: question.data.question.map((item) => item.value).join(""),
       }}
       renderAnswer={() => {
         return (
           <QuestionSentenceButton
+            withSpeak={false}
             sentence={question.data.question.map((item) => ({
-              word: item.value,
+              word: item.mean[activeLang],
               hintData: [item.value, ...Object.values(item.alternative ?? {}), item.mean.en],
             }))}
           />
@@ -47,4 +49,4 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, .
   );
 };
 
-export default GuessTheSentenceMean;
+export default GuessTheSymbolFromMean;

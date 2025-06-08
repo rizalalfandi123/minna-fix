@@ -1,8 +1,8 @@
-import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { Circle, G, Svg } from "react-native-svg";
+import { useScreenMode } from "~/lib/useColorScheme";
 
 export type CircularProgressProps = {
     progress?: number; // Now represents percentage (0-100)
@@ -25,7 +25,7 @@ const CircularProgress = ({
     strokeColor,
     animationDuration = 1000,
 }: CircularProgressProps) => {
-    const { colors } = useTheme();
+    const { themeValue } = useScreenMode();
 
     const circumference = 2 * Math.PI * radius;
 
@@ -51,7 +51,7 @@ const CircularProgress = ({
                         cx={radius + strokeWidth / 2}
                         cy={radius + strokeWidth / 2}
                         r={radius}
-                        stroke={strokeColor || colors.primary}
+                        stroke={strokeColor || themeValue.colors.primary}
                         opacity={0.2}
                         strokeWidth={strokeWidth}
                         fill="transparent"
@@ -61,7 +61,7 @@ const CircularProgress = ({
                         cx={radius + strokeWidth / 2}
                         cy={radius + strokeWidth / 2}
                         r={radius}
-                        stroke={progressColor || colors.primary}
+                        stroke={progressColor || themeValue.colors.primary}
                         strokeWidth={strokeWidth}
                         strokeLinecap="round"
                         fill="transparent"

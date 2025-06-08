@@ -7,30 +7,32 @@ import LetterSound from "../LetterSound";
 import { Text } from "~/components/ui/text";
 
 export type GuessTheLetterSoundProps = {
-    question: Extract<LetterQuestionType, { type: "GUESS_THE_LETTER_SOUND" }>;
+  options: string[];
+  answer: string;
+  question: string;
 } & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
 
-const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, ...props }) => {
-    const { t } = useTranslation();
+const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, answer, options, ...props }) => {
+  const { t } = useTranslation();
 
-    return (
-        <OptionsQuestion
-            {...props}
-            data={question.data}
-            renderAnswer={({ data }) => {
-                return <LetterSound symbol={data.question} />;
-            }}
-            renderButton={(props) => {
-                return <AnswerButton {...props} />;
-            }}
-            renderInstruction={() => {
-                return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;
-            }}
-            renderOptions={({ data, ...props }) => {
-                return <LetterOptions options={data.options} {...props} />;
-            }}
-        />
-    );
+  return (
+    <OptionsQuestion
+      {...props}
+      data={{ answer, options, question }}
+      renderAnswer={({ data }) => {
+        return <LetterSound symbol={data.question} />;
+      }}
+      renderButton={(props) => {
+        return <AnswerButton {...props} />;
+      }}
+      renderInstruction={() => {
+        return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;
+      }}
+      renderOptions={({ data, ...props }) => {
+        return <LetterOptions options={data.options} {...props} />;
+      }}
+    />
+  );
 };
 
 export default GuessTheLetterSound;
