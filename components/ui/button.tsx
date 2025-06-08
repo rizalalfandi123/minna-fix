@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Pressable } from 'react-native';
 import { TextClassContext } from '~/components/ui/text';
 import { cn } from '~/lib/utils';
+import { AnimatedPressable } from '../Animations';
 
 const buttonVariants = cva(
   'group flex items-center justify-center rounded-md web:ring-offset-background web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2',
@@ -32,7 +33,7 @@ const buttonVariants = cva(
 );
 
 const buttonTextVariants = cva(
-  'web:whitespace-nowrap text-sm native:text-base font-medium text-foreground web:transition-colors',
+  'web:whitespace-nowrap text-sm native:text-base font-sans-medium text-foreground web:transition-colors',
   {
     variants: {
       variant: {
@@ -64,8 +65,8 @@ function Button({ ref, className, variant, size, ...props }: ButtonProps) {
     <TextClassContext.Provider
       value={buttonTextVariants({ variant, size, className: 'web:pointer-events-none' })}
     >
-      <Pressable
-        className={cn(
+      <AnimatedPressable
+      className={cn(
           props.disabled && 'opacity-50 web:pointer-events-none',
           buttonVariants({ variant, size, className })
         )}
