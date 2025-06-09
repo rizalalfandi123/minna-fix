@@ -15,7 +15,7 @@ const QuestionSentenceButton: React.FunctionComponent<{
   withHint?: boolean;
   withSpeak?: boolean;
 }> = ({ sentence, withHint = true, withSpeak = true }) => {
-  const { themeValue } = useScreenMode();
+  const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
 
@@ -39,7 +39,7 @@ const QuestionSentenceButton: React.FunctionComponent<{
           style={[scaleAnimation.animatedStyle]}
           className="h-16 w-16 items-center justify-center rounded-xl border bg-accent/50 border-border"
         >
-          <Sound color={themeValue.colors["accent-foreground"]} width={32} height={32} />
+          <Sound color={colors["accent-foreground"]} width={32} height={32} />
         </AnimatedPressable>
       )}
 

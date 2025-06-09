@@ -25,7 +25,7 @@ const CircularProgress = ({
     strokeColor,
     animationDuration = 1000,
 }: CircularProgressProps) => {
-    const { themeValue } = useScreenMode();
+    const { colors } = useScreenMode();
 
     const circumference = 2 * Math.PI * radius;
 
@@ -51,7 +51,7 @@ const CircularProgress = ({
                         cx={radius + strokeWidth / 2}
                         cy={radius + strokeWidth / 2}
                         r={radius}
-                        stroke={strokeColor || themeValue.colors.primary}
+                        stroke={strokeColor || colors.primary}
                         opacity={0.2}
                         strokeWidth={strokeWidth}
                         fill="transparent"
@@ -61,7 +61,7 @@ const CircularProgress = ({
                         cx={radius + strokeWidth / 2}
                         cy={radius + strokeWidth / 2}
                         r={radius}
-                        stroke={progressColor || themeValue.colors.primary}
+                        stroke={progressColor || colors.primary}
                         strokeWidth={strokeWidth}
                         strokeLinecap="round"
                         fill="transparent"

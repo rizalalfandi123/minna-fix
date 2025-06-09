@@ -5,18 +5,18 @@ import { useScreenMode } from "~/lib/useColorScheme";
 export type BottomSheetProps = BottomSheetModalProps;
 
 const BottomSheet = React.forwardRef((props: BottomSheetProps, ref: React.Ref<BottomSheetModal>) => {
-    const { themeValue } = useScreenMode();
+    const { colors } = useScreenMode();
 
     return (
         <BottomSheetModal
             {...props}
             ref={ref}
             backgroundStyle={{
-                backgroundColor: themeValue.colors.background,
+                backgroundColor: colors.background,
                 borderTopWidth: 1,
                 borderRadius: 0,
                 marginHorizontal: 0,
-                borderTopColor: themeValue.colors.border,
+                borderTopColor: colors.border,
             }}
             handleIndicatorStyle={{
                 backgroundColor: "red",

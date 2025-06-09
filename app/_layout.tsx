@@ -1,6 +1,6 @@
 import "~/global.css";
 import "~/libs/i18n";
-import { ThemeProvider } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
@@ -33,14 +33,27 @@ export default function RootLayout() {
 }
 
 const App = () => {
-  const { screenMode, applyScreenMode, themeValue } = useScreenMode();
+  const { screenMode, applyScreenMode, colors, fonts } = useScreenMode();
 
   React.useEffect(() => {
     applyScreenMode(screenMode);
   }, [screenMode]);
 
   return (
-    <ThemeProvider value={themeValue.theme}>
+    <ThemeProvider
+      value={{
+        ...(screenMode === "dark" ? DarkTheme : DefaultTheme),
+        colors: {
+          background: colors.background,
+          border: colors.border,
+          card: colors.card,
+          notification: colors.destructive,
+          primary: colors.primary,
+          text: colors.foreground,
+        },
+        fonts,
+      }}
+    >
       <StatusBar style={screenMode} />
       <Stack
         screenOptions={{

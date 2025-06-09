@@ -8,7 +8,7 @@ import { Text } from "../ui/text";
 import { useScreenMode } from "~/lib/useColorScheme";
 
 const LetterSymbol: React.FunctionComponent<{ symbol: string; withHint?: boolean }> = ({ symbol, withHint = true }) => {
-  const { themeValue } = useScreenMode();
+  const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
 
@@ -33,7 +33,7 @@ const LetterSymbol: React.FunctionComponent<{ symbol: string; withHint?: boolean
       <Text className="font-sans-bold text-8xl text-accent-foreground">{symbol}</Text>
 
       {withHint && (
-        <Sound style={{ position: "absolute", bottom: 8, left: 8, opacity: 0.8 }} color={themeValue.colors["accent-foreground"]} width={20} height={20} />
+        <Sound style={{ position: "absolute", bottom: 8, left: 8, opacity: 0.8 }} color={colors["accent-foreground"]} width={20} height={20} />
       )}
     </AnimatedPressable>
   );

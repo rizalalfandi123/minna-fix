@@ -49,27 +49,15 @@ export function useScreenMode() {
 
   const screenMode = state.settings.screenMode;
 
-  const themeValue = React.useMemo(() => {
+  const colors = React.useMemo(() => {
     const colorData = Object.entries(appTheme["default"][screenMode]).map(([key, value]) => ({
       [key]: `hsl(${value})`,
     }));
 
-    const colors: Record<keyof typeof appTheme.default.dark, string> = Object.assign({}, ...colorData);
+    const data: Record<keyof typeof appTheme.default.dark, string> = Object.assign({}, ...colorData);
 
-    const theme: Theme = {
-      ...(screenMode === "dark" ? DarkTheme : DefaultTheme),
-      colors: {
-        background: colors.background,
-        border: colors.border,
-        card: colors.card,
-        notification: colors.destructive,
-        primary: colors.primary,
-        text: colors.foreground,
-      },
-      fonts,
-    };
-
-    return { theme, colors };
+  
+    return data;
   }, [screenMode]);
 
   const toggleScreenMode = () => {
@@ -95,6 +83,7 @@ export function useScreenMode() {
     setScreenMode,
     toggleScreenMode,
     applyScreenMode,
-    themeValue,
+    colors,
+    fonts
   };
 }

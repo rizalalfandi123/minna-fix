@@ -83,7 +83,7 @@ export const ProgressUnitLevel: React.FunctionComponent<
 }) => {
   const scaleAnimation = useButtonScaleAnimation();
 
-  const { themeValue } = useScreenMode();
+  const { colors } = useScreenMode();
 
   const strokeWidth = 8;
 
@@ -112,8 +112,8 @@ export const ProgressUnitLevel: React.FunctionComponent<
       <CircularProgress
         radius={circleSize / 2}
         strokeWidth={strokeWidth}
-        progressColor={disabled ? themeValue.colors.background : themeValue.colors.primary}
-        strokeColor={disabled ? themeValue.colors.background : themeValue.colors.primary}
+        progressColor={disabled ? colors.background : colors.primary}
+        strokeColor={disabled ? colors.background : colors.primary}
       >
         <AnimatedPressable
           style={[
@@ -121,7 +121,7 @@ export const ProgressUnitLevel: React.FunctionComponent<
             {
               height: circleSize - strokeWidth * 3,
               width: circleSize - strokeWidth * 3,
-              backgroundColor: themeValue.colors.primary,
+              backgroundColor: colors.primary,
               opacity: 0.5,
               borderRadius: circleSize / 2,
             },

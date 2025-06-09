@@ -10,12 +10,9 @@ import { bottomNavHeight } from "~/lib/constants/sizes";
 import { useScreenMode } from "~/lib/useColorScheme";
 
 export default function TabLayout() {
-  const { themeValue } = useScreenMode();
+  const { colors, fonts } = useScreenMode();
 
-
-  const navigations = React.useMemo<
-    React.ComponentProps<typeof Tabs.Screen>[]
-  >(() => {
+  const navigations = React.useMemo<React.ComponentProps<typeof Tabs.Screen>[]>(() => {
     const listeners = {
       tabPress: () => {
         triggerHaptic();
@@ -27,9 +24,7 @@ export default function TabLayout() {
         name: "letters",
         options: {
           title: "Letters",
-          tabBarIcon: ({ color }) => (
-            <Hiragana width={32} height={32} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Hiragana width={32} height={32} color={color} />,
         },
       },
       {
@@ -43,18 +38,14 @@ export default function TabLayout() {
         name: "index",
         options: {
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Home width={32} height={32} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Home width={32} height={32} color={color} />,
         },
       },
       {
         name: "exercise",
         options: {
           title: "Exercise",
-          tabBarIcon: ({ color }) => (
-            <Brain width={28} height={28} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Brain width={28} height={28} color={color} />,
         },
       },
       {
@@ -72,19 +63,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: themeValue.colors.primary,
+        tabBarActiveTintColor: colors.primary,
         tabBarStyle: {
           height: bottomNavHeight,
           borderTopWidth: 0,
           borderTopColor: "transparent",
           elevation: 0,
           shadowOpacity: 0,
-          backgroundColor: themeValue.colors.background
+          backgroundColor: colors.background,
         },
         tabBarLabelPosition: "below-icon",
 
         tabBarLabelStyle: {
-          fontFamily: themeValue.theme.fonts.bold.fontFamily,
+          fontFamily: fonts.bold.fontFamily,
         },
 
         headerShown: false,

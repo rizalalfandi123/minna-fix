@@ -9,7 +9,7 @@ import { useScreenMode } from "~/lib/useColorScheme";
 import { cn } from "~/lib/utils";
 
 export default function LettersTabs() {
-  const { themeValue } = useScreenMode();
+  const { colors } = useScreenMode();
 
   const pathname = usePathname();
 
@@ -48,7 +48,7 @@ export default function LettersTabs() {
               <Text
                 className={cn("w-full text-center font-sans-semibold text-lg uppercase")}
                 style={{
-                  color: isActive ? themeValue.colors.foreground : placeholderColor,
+                  color: isActive ? colors.foreground : placeholderColor,
                 }}
               >
                 {nav.title}
