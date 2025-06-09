@@ -1,4 +1,3 @@
-import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 import AnswerButton from "../AnswerButton";
 import LetterOptions from "../LetterOptions";

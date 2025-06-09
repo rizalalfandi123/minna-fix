@@ -1,12 +1,12 @@
 import React from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import SortItemsBySound from "~/components/questions/letters/SortItemsBySound";
 import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import GuessTheLetter from "~/components/questions/letters/GuessTheLetters";
 import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
 import GuessTheSymbol from "~/components/questions/letters/GuessTheSymbol";
 import MatchingTextByText from "~/components/questions/letters/MatchingTextByText";
-import { contentWidth } from "~/lib/constants/sizes";
+import { contentWidth, learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
 
 export type LetterQuestionProps = {
     question: LetterQuestionType;
@@ -38,7 +38,7 @@ const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, ...props }) =
     }, [question, props]);
 
     return (
-        <View style={{ width: contentWidth, height: Dimensions.get("window").height - 56 }} className="flex-1 flex-col gap-3">
+        <View style={{ width: contentWidth, height: windowHeight - learnProgressBarHeight }} className="flex-1 flex-col gap-3">
             {renderQuestion}
         </View>
     );

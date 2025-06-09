@@ -1,24 +1,23 @@
-import React from "react";
 import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
-import SortItems from "../SortItems";
 import QuestionSentenceButton from "../QuestionSentenceButton";
+import React from "react";
+import WriteTheSymbol from "../WriteTheSymbol";
 
-export type SortTheSymbolFromMeanProps = {
-  question: Extract<UnitQuestionType, { type: "SORT_THE_SYMBOLS_FROM_MEAN" }>;
+export type WriteTheSymbolFromMeanProps = {
+  question: Extract<UnitQuestionType, { type: "WRITE_THE_SYMBOL_FROM_MEAN" }>;
   onCorrectAnswer?: () => void;
   onErrorAnswer?: () => void;
 };
 
-const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps> = (props) => {
+const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) => {
   return (
-    <SortItems
-      {...props}
-      answer={props.question.data.answer}
-      options={props.question.data.options.map((item) => ({ number: item.number, value: item.value }))}
+    <WriteTheSymbol
+      data={{
+        answer: props.question.data.answer,
+      }}
       renderQuestion={() => {
         return (
           <QuestionSentenceButton
-            withSpeak={false}
             sentence={props.question.data.question.map((item) => ({
               word: item.mean.en,
               hintData: [item.value, ...Object.values(item.alternative ?? {}), item.mean.en],
@@ -26,8 +25,10 @@ const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps>
           />
         );
       }}
+      onCorrectAnswer={props.onCorrectAnswer}
+      onErrorAnswer={props.onErrorAnswer}
     />
   );
 };
 
-export default SortTheSymbolFromMean;
+export default WriteTheSymbolFromMean;

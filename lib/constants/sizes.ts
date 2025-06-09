@@ -14,6 +14,8 @@ export const bottomNavHeight = 64;
 
 export const pageHeaderHeight = 56;
 
-export const letterHeight = Dimensions.get("window").height - bottomNavHeight * 2
+export const windowHeight = Dimensions.get("window").height;
 
-export const learnUnitHeight = Dimensions.get("window").height - bottomNavHeight * 2 - pageHeaderHeight;
+export const letterHeight = windowHeight - bottomNavHeight * 2;
+
+export const learnUnitHeight = windowHeight - bottomNavHeight * 2 - pageHeaderHeight;

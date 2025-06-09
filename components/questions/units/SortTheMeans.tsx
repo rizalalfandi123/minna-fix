@@ -7,7 +7,6 @@ export type SortTheMeansProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_MEANS" }>;
   onCorrectAnswer?: () => void;
   onErrorAnswer?: () => void;
-  width?: number;
 };
 
 const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {

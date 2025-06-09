@@ -45,7 +45,7 @@ export const setPlatformSpecificSetup = Platform.select({
 export function useScreenMode() {
   const { state, dispatch } = useUserData();
 
-  const { setColorScheme } = useColorScheme();
+  const { setColorScheme, colorScheme } = useColorScheme();
 
   const screenMode = state.settings.screenMode;
 

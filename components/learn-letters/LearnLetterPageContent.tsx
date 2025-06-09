@@ -4,7 +4,7 @@ import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import useBackHandler from "~/hooks/useBackHandler";
 import LetterQuestion from "~/components/questions/letters/LetterQuestion";
 import LearnProgressBar from "../LearnProgressBar";
-import { contentWidth, letterHeight } from "~/lib/constants/sizes";
+import { contentWidth } from "~/lib/constants/sizes";
 import delay from "~/helpers/delay";
 import { isWeb } from "~/helpers/platform";
 
@@ -71,9 +71,7 @@ const questions: Array<LetterQuestionType> = [
 const LearnLetterPageContent: React.FC = () => {
   const handleBack = useBackHandler("/letters");
 
-  const [questionQueue, setQuestionQueue] = React.useState<
-    Array<QuestionQueue>
-  >(() => questions.map((question) => ({ isPassed: false, question })));
+  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>(() => questions.map((question) => ({ isPassed: false, question })));
 
   const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
 
@@ -82,7 +80,6 @@ const LearnLetterPageContent: React.FC = () => {
   const handleNext = React.useCallback(() => {
     if (currentIndex < questionQueue.length - 1) {
       const newIndex = currentIndex + 1;
-
 
       setCurrentIndex(newIndex);
 
@@ -143,9 +140,6 @@ const LearnLetterPageContent: React.FC = () => {
         pagingEnabled
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
-        initialNumToRender={2}
-        maxToRenderPerBatch={2}
-        windowSize={2}
         removeClippedSubviews
         getItemLayout={(_data, index) => ({
           length: contentWidth,
