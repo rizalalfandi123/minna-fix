@@ -13,19 +13,24 @@ import speak from "~/helpers/speak";
 import { AnimatedPressable } from "../Animations";
 import { Text } from "../ui/text";
 import { cn } from "~/lib/utils";
+import { useGetLetterLevels } from "~/services/queries/letterLevelQueries";
+import useLetterProgress from "~/services/queries/letterProgressQueries";
+import { useButtonLetterProgress } from "~/hooks/useButtonLetterProgress";
 
 const LetterButton: React.FunctionComponent<{
   data: Nullable<Letter>;
   symbolClassName?: string;
 }> = ({ data, symbolClassName }) => {
-  //   const levelData = useGetLetterLevels();
-
-  //   const letterProgress = useGetLetterProgress();
-
   const scaleAnimation = useButtonScaleAnimation();
 
+  const { progress } = useButtonLetterProgress({ letterId: data?.id });
+
+  // const { data: letterLevels = [] } = useGetLetterLevels();
+
+  // const { data: letterProgress } = useLetterProgress();
+
   //   const progressData = React.useMemo(() => {
-  //     const totalLevel = (levelData.data ?? []).filter((level) =>
+  //     const totalLevel = (letterLevels ?? []).filter((level) =>
   //       level.letters_to_letter_levels.some((letterLevel) => letterLevel.letter_id === data?.id)
   //     );
 
@@ -40,7 +45,7 @@ const LetterButton: React.FunctionComponent<{
   //     );
 
   //     return { totalLevel, totalProgress, percentage };
-  //   }, [levelData, letterProgress, data?.id]);
+  //   }, [letterLevels, letterProgress, data?.id]);
 
   const handlePress = () => {
     scaleAnimation.animate();
@@ -63,7 +68,7 @@ const LetterButton: React.FunctionComponent<{
       <Text className={cn("mb-1 font-sans-semibold text-3xl", symbolClassName)}>{data.symbol}</Text>
       <Text className="font-sans-medium">{data.name}</Text>
       <View className="w-full flex-1 items-center justify-center px-1">
-        <ProgressBar containerClassName="h-2.5" progress={25} />
+        <ProgressBar containerClassName="h-2.5" progress={progress} />
       </View>
     </AnimatedPressable>
   );

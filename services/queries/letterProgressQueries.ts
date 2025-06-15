@@ -1,81 +1,46 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Database } from "~/database.types";
-import { isLetterProgressLocalOrErrorSynced } from "~/helpers/narrowing";
-import queryClient from "~/libs/query-client";
-import { MutationOperation } from "~/types";
-import { PostgrestError } from "@supabase/supabase-js";
-import { queryOptions, useQuery } from "@tanstack/react-query";
-import { v4 as uuid } from "uuid";
 import supabase from "~/libs/supabase";
 
+export const LETTER_PROGRESS_KEY = "LETTER_PROGRESS";
+
 export type LetterProgress = Database["public"]["Tables"]["letter_progress"]["Row"] & {
-    letter_levels: {
-        letter_type_id: string;
-    };
+  status: "local" | "saved";
 };
 
-export const LETTER_PROGRESS = "LETTER_PROGRESS";
+const useLetterProgress = () => {
+  const queryClient = useQueryClient();
 
-export type LetterProgressData =
-    | {
-          progress: LetterProgress;
-          status: "synced";
-          id: string;
-      }
-    | {
-          progress: LetterProgress;
-          status: "local";
-          operation: MutationOperation;
-          number: number;
-          id: string;
-      }
-    | {
-          progress: LetterProgress;
-          status: "error-synced";
-          id: string;
-      };
-
-export const getLetterProgressQueryOptions = queryOptions<Array<LetterProgressData>, PostgrestError>({
-    queryKey: [LETTER_PROGRESS],
-
+  const query = useQuery<Array<LetterProgress>>({
+    queryKey: [LETTER_PROGRESS_KEY],
     queryFn: async () => {
-        const response = await supabase.from("letter_progress").select(`
-                created_at,
-                deleted,
-                id,
-                is_completed,
-                letter_level_id,
-                updated_at,
-                letter_levels (
-                    letter_type_id
-                )
-            `);
+      const response = await supabase.from("letter_progress").select("*");
 
-        const localData: Array<LetterProgressData> = (queryClient.getQueryData(getLetterProgressQueryOptions.queryKey) ?? []).filter((item) =>
-            isLetterProgressLocalOrErrorSynced(item)
-        );
+      const prevData = queryClient.getQueryData<Array<LetterProgress>>([LETTER_PROGRESS_KEY]) ?? [];
 
-        const syncedData: Array<LetterProgressData> = (response.data ?? []).map((item) => ({
-            progress: item,
-            status: "synced",
-            id: uuid(),
-        }));
+      const resultData = new Map<string, LetterProgress>();
 
-        const allData = [...localData, ...syncedData];
+      for (let index = 0; index < prevData.length; index++) {
+        const element = prevData[index];
 
-        return allData;
+        resultData.set(element.id, element);
+      }
+
+      const newData = response.data ?? [];
+
+      for (let index = 0; index < newData.length; index++) {
+        const element = newData[index];
+
+        resultData.set(element.id, { ...element, status: "saved" });
+      }
+
+      const result: Array<LetterProgress> = Array.from(resultData.values());
+
+      return result;
     },
+  });
 
-    staleTime: Infinity,
-
-    gcTime: Infinity,
-
-    refetchOnMount: true,
-
-    refetchOnWindowFocus: false,
-});
-
-export const useGetLetterProgress = () => {
-    const query = useQuery<Array<LetterProgressData>, PostgrestError>(getLetterProgressQueryOptions);
-
-    return query;
+  return query;
 };
+
+export default useLetterProgress;

@@ -1,7 +1,7 @@
 import React from "react";
-import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import LetterSound from "~/components/questions/LetterSound";
 import SortItems from "../SortItems";
+import { LetterQuestionType } from "~/types";
 
 export type SortItemsBySoundProps = {
   question: Extract<LetterQuestionType, { type: "SORT_THE_ITEMS_BY_SOUND" }>;

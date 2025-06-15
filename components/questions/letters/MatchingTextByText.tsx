@@ -1,7 +1,6 @@
 import React from "react";
-import { AnswerStatus, Nullable } from "~/types";
+import { AnswerStatus, LetterQuestionType, Nullable } from "~/types";
 import { View } from "react-native";
-import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import AnswerButton from "../AnswerButton";
 import { useTranslation } from "react-i18next";
 import delay from "~/helpers/delay";
@@ -52,7 +51,7 @@ const MemoizedButton = React.memo(
     return (
       <Button
         variant={isSelected ? "default" : "outline"}
-        className={cn("!h-16 !w-36 md:!h-20", {
+        className={cn("!h-14 !w-36 md:!h-16", {
           "border border-green-400": pairedButtons[cell.value] === "success" && !isSelected,
           "border border-red-400": pairedButtons[cell.value] === "error" && !isSelected,
         })}

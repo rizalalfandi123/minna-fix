@@ -1,10 +1,10 @@
-import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 import AnswerButton from "../AnswerButton";
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
+import { LetterQuestionType } from "~/types";
 
 export type GuessTheSymbolProps = {
     question: Extract<LetterQuestionType, { type: "GUESS_THE_SYMBOL" }>;

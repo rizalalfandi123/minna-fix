@@ -27,7 +27,6 @@
     "@supabase/supabase-js": "^2.49.10",
     "@tanstack/query-async-storage-persister": "^5.80.2",
     "@tanstack/react-query": "^5.80.3",
-    "@tanstack/react-query-devtools": "^5.80.3",
     "@tanstack/react-query-persist-client": "^5.80.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

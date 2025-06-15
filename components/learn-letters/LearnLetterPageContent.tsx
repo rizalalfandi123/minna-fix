@@ -1,77 +1,34 @@
 import React from "react";
 import { View, FlatList } from "react-native";
-import { LetterQuestionType } from "~/services/queries/letterQuestionQueries";
 import useBackHandler from "~/hooks/useBackHandler";
 import LetterQuestion from "~/components/questions/letters/LetterQuestion";
 import LearnProgressBar from "../LearnProgressBar";
-import { contentWidth } from "~/lib/constants/sizes";
+import { contentWidth, learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
 import delay from "~/helpers/delay";
 import { isWeb } from "~/helpers/platform";
+import { DetailLevelQuestion } from "~/services/queries/levelQuestionQueries";
+import { LetterQuestionType } from "~/types";
+import LearnLetterSummaryPage from "../summaries/LearnLetterSummaryPage";
 
-type QuestionQueue = { question: LetterQuestionType; isPassed: boolean };
+type QuestionQueue = { question: LetterQuestionType; isPassed: boolean } | "DONE";
 
-const questions: Array<LetterQuestionType> = [
-  {
-    type: "GUESS_THE_LETTER",
-    data: {
-      answer: "ka",
-      options: ["ka", "ba", "ca"],
-      question: "か",
-    },
-  },
-  {
-    type: "SORT_THE_ITEMS_BY_SOUND",
-    data: {
-      answer: "あおい",
-      options: [
-        { number: 0, value: "お" },
-        { number: 1, value: "あ" },
-        { number: 2, value: "い" },
-        { number: 3, value: "え" },
-      ],
-    },
-  },
-  {
-    type: "GUESS_THE_SYMBOL",
-    data: {
-      answer: "か",
-      options: ["か", "ki", "ku", "d"],
-      question: "ka",
-    },
-  },
-  {
-    type: "GUESS_THE_LETTER_SOUND",
-    data: {
-      question: "あ",
-      options: ["あ", "い", "う", "え", "お"],
-      answer: "あ",
-    },
-  },
-  {
-    type: "MATCHING_TEXT_BY_TEXT",
-    data: {
-      options: [
-        { rightSide: "あ", leftSide: "i" },
-        { rightSide: "お", leftSide: "a" },
-        { rightSide: "う", leftSide: "e" },
-        { rightSide: "え", leftSide: "u" },
-        { rightSide: "い", leftSide: "o" },
-      ],
-      answer: [
-        { rightSide: "あ", leftSide: "a" },
-        { rightSide: "お", leftSide: "o" },
-        { rightSide: "う", leftSide: "u" },
-        { rightSide: "え", leftSide: "e" },
-        { rightSide: "い", leftSide: "i" },
-      ],
-    },
-  },
-];
+export type LearnLetterPageContentProps = {
+  levelQuestions: Array<DetailLevelQuestion>;
+  levelId: string;
+};
 
-const LearnLetterPageContent: React.FC = () => {
+function isQuestionQuene(queue: QuestionQueue): queue is Extract<QuestionQueue, { isPassed: boolean }> {
+  return typeof queue !== "string";
+}
+
+const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQuestions, levelId }) => {
+  const initedQuestion = React.useRef<boolean>(false);
+
   const handleBack = useBackHandler("/letters");
 
-  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>(() => questions.map((question) => ({ isPassed: false, question })));
+  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
+
+  console.log({ questionQueue });
 
   const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
 
@@ -80,6 +37,8 @@ const LearnLetterPageContent: React.FC = () => {
   const handleNext = React.useCallback(() => {
     if (currentIndex < questionQueue.length - 1) {
       const newIndex = currentIndex + 1;
+
+      console.log({ newIndex });
 
       setCurrentIndex(newIndex);
 
@@ -97,35 +56,57 @@ const LearnLetterPageContent: React.FC = () => {
         scrollToNext();
       }
     }
-  }, [currentIndex]);
+  }, [currentIndex, questionQueue]);
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: QuestionQueue; index: number }) => (
-      <LetterQuestion
-        question={item.question}
-        key={index}
-        onCorrectAnswer={() => {
-          setQuestionQueue((prev) =>
-            prev.map((item, i) => {
-              if (index === i) {
+    ({ item, index }: { item: QuestionQueue; index: number }) => {
+      if (item === "DONE") {
+        return <LearnLetterSummaryPage levelId={levelId} onNext={handleBack} />;
+      }
+
+      return (
+        <LetterQuestion
+          question={item.question}
+          key={index}
+          onCorrectAnswer={() => {
+            const nextQuestionQueue = questionQueue.map((item, i) => {
+              if (index === i && isQuestionQuene(item)) {
                 return { ...item, isPassed: true };
               }
 
               return item;
-            })
-          );
+            });
 
-          handleNext();
-        }}
-        onErrorAnswer={() => {
-          setQuestionQueue((prev) => [...prev, item]);
+            console.log({ nextQuestionQueue, questionQueue });
 
-          handleNext();
-        }}
-      />
-    ),
-    [currentIndex, handleNext]
+            const isAlmostQuestionComplete =
+              nextQuestionQueue.filter((question) => isQuestionQuene(question) && question.isPassed).length === levelQuestions.length;
+
+            if (isAlmostQuestionComplete) {
+              nextQuestionQueue.push("DONE");
+            }
+
+            setQuestionQueue(nextQuestionQueue);
+
+            handleNext();
+          }}
+          onErrorAnswer={() => {
+            setQuestionQueue((prev) => [...prev, item]);
+
+            handleNext();
+          }}
+        />
+      );
+    },
+    [currentIndex, handleNext, questionQueue, levelId]
   );
+
+  React.useEffect(() => {
+    if (!initedQuestion.current && levelQuestions.length > 0) {
+      setQuestionQueue(levelQuestions.map((level) => ({ isPassed: false, question: level.letter_questions.question })));
+      initedQuestion.current = true;
+    }
+  }, [levelQuestions]);
 
   return (
     <View className="flex-1 bg-background">
@@ -135,7 +116,7 @@ const LearnLetterPageContent: React.FC = () => {
         ref={flatListRef}
         data={questionQueue}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${item.question.type}-${index}`}
+        keyExtractor={(item, index) => `${isQuestionQuene(item) ? item.question.type : item}-${index}`}
         horizontal
         pagingEnabled
         scrollEnabled={false}
