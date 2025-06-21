@@ -26,11 +26,13 @@ const LearnLetterSummaryPage: React.FC<{ onNext: () => void; levelId: string }> 
     <View style={{ width: contentWidth, height: windowHeight - learnProgressBarHeight }}>
       <View className="w-full flex-col flex-1">
         <View className="flex-1">
-          <Text>DOne</Text>
+          <Text>Done</Text>
         </View>
-        <Button onPress={handleIncreaseLevel}>
-          <Text>Next</Text>
-        </Button>
+        <View className="h-24 items-center justify-center w-full">
+          <Button className="w-full" onPress={handleIncreaseLevel}>
+            <Text>Next</Text>
+          </Button>
+        </View>
       </View>
     </View>
   );

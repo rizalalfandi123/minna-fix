@@ -5,16 +5,14 @@ import CenteredSpinner from "~/components/CenteredSpinner";
 import LearnLetterPageContent from "~/components/learn-letters/LearnLetterPageContent";
 import { useGetDetailLevelQuestion } from "~/services/queries/levelQuestionQueries";
 
-function HiraganaLearnLetterPage() {
+function KatakanaLearnLetterPage() {
   const { levelId } = useLocalSearchParams<{ levelId: string }>();
 
   const { data: levelQuestions = [], isLoading } = useGetDetailLevelQuestion(levelId);
-
-  console.log({ levelQuestions });
 
   return (
     <View className="w-full h-full">{isLoading ? <CenteredSpinner /> : <LearnLetterPageContent levelId={levelId} levelQuestions={levelQuestions} />}</View>
   );
 }
 
-export default HiraganaLearnLetterPage;
+export default KatakanaLearnLetterPage;

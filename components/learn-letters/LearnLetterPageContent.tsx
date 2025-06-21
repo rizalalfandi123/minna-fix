@@ -28,8 +28,6 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQu
 
   const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
 
-  console.log({ questionQueue });
-
   const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
 
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
@@ -37,8 +35,6 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQu
   const handleNext = React.useCallback(() => {
     if (currentIndex < questionQueue.length - 1) {
       const newIndex = currentIndex + 1;
-
-      console.log({ newIndex });
 
       setCurrentIndex(newIndex);
 
@@ -77,21 +73,18 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQu
               return item;
             });
 
-            console.log({ nextQuestionQueue, questionQueue });
-
-            const isAlmostQuestionComplete =
-              nextQuestionQueue.filter((question) => isQuestionQuene(question) && question.isPassed).length === levelQuestions.length;
-
-            if (isAlmostQuestionComplete) {
-              nextQuestionQueue.push("DONE");
-            }
-
             setQuestionQueue(nextQuestionQueue);
 
             handleNext();
           }}
           onErrorAnswer={() => {
-            setQuestionQueue((prev) => [...prev, item]);
+            setQuestionQueue((prev) => {
+              const newValue = [...prev];
+
+              newValue.splice(questionQueue.length - 1, 0, item);
+
+              return newValue;
+            });
 
             handleNext();
           }}
@@ -103,7 +96,10 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQu
 
   React.useEffect(() => {
     if (!initedQuestion.current && levelQuestions.length > 0) {
-      setQuestionQueue(levelQuestions.map((level) => ({ isPassed: false, question: level.letter_questions.question })));
+      const initialQuestionQueue = levelQuestions.map((level) => ({ isPassed: false, question: level.letter_questions.question }));
+
+      setQuestionQueue([...initialQuestionQueue, "DONE"]);
+
       initedQuestion.current = true;
     }
   }, [levelQuestions]);

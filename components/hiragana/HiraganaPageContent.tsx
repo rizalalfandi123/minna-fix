@@ -1,15 +1,22 @@
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { useLetterChart } from "~/hooks/useLetterChart";
-import MemoizedLetterPage from "~/components/letters/LetterPage";
+import LetterPage from "~/components/letters/LetterPage";
 import { TLetterButtonRow } from "~/components/letters/LetterButtonRow";
 import { useTranslation } from "react-i18next";
 import { useNextLetterLevel } from "~/hooks/useNextLetterLevel";
+import { useGetLetters } from "~/services/queries/letterQueries";
 
 const Page = () => {
-  const nextLevel = useNextLetterLevel();
+  const { data: lettersData } = useGetLetters();
 
-  console.log({ nextLevel });
+  const letterTypeId = React.useMemo(() => {
+    const data = lettersData?.letterTypes.find((type) => type.name === "hiragana");
+
+    return data?.id ?? "";
+  }, [lettersData]);
+
+  const nextLevel = useNextLetterLevel({ letterTypeId });
 
   const letterChart = useLetterChart();
 
@@ -64,15 +71,13 @@ const Page = () => {
   );
 
   const handleLearn = () => {
-    if (nextLevel) {
       router.navigate({ pathname: "/learn/letters/hiragana", params: { levelId: nextLevel.id } });
-    }
   };
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <MemoizedLetterPage letterBlocks={hirganaBlocks} onPressLearn={handleLearn} />
+      <LetterPage letterBlocks={hirganaBlocks} onPressLearn={handleLearn} />
     </>
   );
 };

@@ -4,7 +4,6 @@ import { View } from "react-native";
 import AnswerButton from "~/components/questions/AnswerButton";
 import ItemSorter, { SorterItem } from "~/components/questions/ItemSorter";
 import { useTranslation } from "react-i18next";
-import LetterSound from "~/components/questions/LetterSound";
 import { Text } from "~/components/ui/text";
 
 export type SortItemsProps = {

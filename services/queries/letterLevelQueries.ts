@@ -1,6 +1,6 @@
 import { Database } from "~/database.types";
 import { PostgrestError } from "@supabase/supabase-js";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import supabase from "~/libs/supabase";
 import { day } from "~/lib/constants/sizes";
 
@@ -12,12 +12,22 @@ export const LETTER_LEVELS_KEY = "LETTER_LEVELS";
 
 export const LETTER_TO_LETTER_LEVEL_KEY = "LETTER_TO_LETTER_LEVELS";
 
-export const useGetLetterLevels = () => {
+export type GetLetterLevelsOptions = Partial<UseQueryOptions<Array<LetterLevel>, PostgrestError>>
+
+export const useGetLetterLevels = (params: Partial<{ letterTypeId: string }>, options?: GetLetterLevelsOptions) => {
   const query = useQuery<Array<LetterLevel>, PostgrestError>({
-    queryKey: [LETTER_LEVELS_KEY],
+    queryKey: [LETTER_LEVELS_KEY, params],
 
     queryFn: async () => {
-      const response = await supabase.from("letter_levels").select("*");
+      const query = supabase.from("letter_levels").select("*");
+
+      if (params?.letterTypeId) {
+        query.eq("letter_type_id", params.letterTypeId);
+      }
+
+      query.order("number", { ascending: true });
+
+      const response = await query;
 
       if (response.error) {
         throw response.error;
@@ -27,6 +37,8 @@ export const useGetLetterLevels = () => {
     },
 
     staleTime: day,
+
+    ...(options ?? {})
   });
 
   return query;

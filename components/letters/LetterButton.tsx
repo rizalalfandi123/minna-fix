@@ -1,20 +1,14 @@
 import React from "react";
-
 import { Letter } from "~/services/queries/letterQueries";
 import { View } from "react-native";
 import { Nullable } from "~/types";
 import ProgressBar from "~/components/ProgressBar";
-// import { useGetLetterLevels } from '~/services/queries/letterLevelQueries';
-// import { useGetLetterProgress } from '~/services/queries/letterProgressQueries';
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
-import Animated from "react-native-reanimated";
 import speak from "~/helpers/speak";
 import { AnimatedPressable } from "../Animations";
 import { Text } from "../ui/text";
 import { cn } from "~/lib/utils";
-import { useGetLetterLevels } from "~/services/queries/letterLevelQueries";
-import useLetterProgress from "~/services/queries/letterProgressQueries";
 import { useButtonLetterProgress } from "~/hooks/useButtonLetterProgress";
 
 const LetterButton: React.FunctionComponent<{
@@ -24,28 +18,6 @@ const LetterButton: React.FunctionComponent<{
   const scaleAnimation = useButtonScaleAnimation();
 
   const { progress } = useButtonLetterProgress({ letterId: data?.id });
-
-  // const { data: letterLevels = [] } = useGetLetterLevels();
-
-  // const { data: letterProgress } = useLetterProgress();
-
-  //   const progressData = React.useMemo(() => {
-  //     const totalLevel = (letterLevels ?? []).filter((level) =>
-  //       level.letters_to_letter_levels.some((letterLevel) => letterLevel.letter_id === data?.id)
-  //     );
-
-  //     const totalProgress = (letterProgress.data ?? []).filter(
-  //       (progress) =>
-  //         totalLevel.some((level) => progress.progress.letter_level_id === level.id) &&
-  //         progress.progress.is_completed
-  //     );
-
-  //     const percentage = Math.ceil(
-  //       (Math.min(totalProgress.length, totalLevel.length) / totalLevel.length) * 100
-  //     );
-
-  //     return { totalLevel, totalProgress, percentage };
-  //   }, [letterLevels, letterProgress, data?.id]);
 
   const handlePress = () => {
     scaleAnimation.animate();

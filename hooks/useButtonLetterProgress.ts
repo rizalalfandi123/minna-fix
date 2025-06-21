@@ -14,6 +14,10 @@ export const useButtonLetterProgress = ({ letterId }: { letterId?: string }) => 
       allLevelToLetterLevel.some((levelToLetter) => progress.letter_level_id === levelToLetter.letter_level_id)
     );
 
+    if (allLevelToLetterLevel.length <= 0) {
+      return 100;
+    }
+
     return (progressData.length / allLevelToLetterLevel.length) * 100;
   }, [letterToLetterLevels, letterId, letterProgress]);
 

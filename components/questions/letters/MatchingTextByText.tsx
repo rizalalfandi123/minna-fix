@@ -7,6 +7,7 @@ import delay from "~/helpers/delay";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Text } from "~/components/ui/text";
+import { shuffleArray } from "~/helpers/array";
 
 export type MatchingTextByTextProps = {
   question: Extract<LetterQuestionType, { type: "MATCHING_TEXT_BY_TEXT" }>;
@@ -86,12 +87,12 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
     () => [
       getMatchingTextColumn({
         answer: question.data.answer,
-        options: question.data.options,
+        options: shuffleArray(question.data.options),
         side: "leftSide",
       }),
       getMatchingTextColumn({
         answer: question.data.answer,
-        options: question.data.options,
+        options: shuffleArray(question.data.options),
         side: "rightSide",
       }),
     ],

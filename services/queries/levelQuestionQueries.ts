@@ -35,6 +35,7 @@ export const useGetDetailLevelQuestion = (levelId: string) => {
           `
         )
         .eq("letter_level_id", levelId)
+        .order("number", { ascending: true })
         .overrideTypes<Array<DetailLevelQuestion>>();
 
       if (response.error) {

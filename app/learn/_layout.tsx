@@ -5,6 +5,7 @@ export default function LearnLayout() {
         <Stack screenOptions={{ presentation: "transparentModal", headerShown: false }}>
             {/* <Stack.Screen name="unit" /> */}
             <Stack.Screen name="letters/hiragana" />
+            <Stack.Screen name="letters/katakana" />
             <Stack.Screen name="vocabulary/[id]" />
         </Stack>
     );

@@ -3,6 +3,7 @@ import { Nullable } from "~/types";
 import { View } from "react-native";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
+import { shuffleArray } from "~/helpers/array";
 
 const LetterOptions: React.FunctionComponent<{
   options: Array<string>;
@@ -10,9 +11,12 @@ const LetterOptions: React.FunctionComponent<{
   onSelectOption: (option: string) => void;
   disabled?: boolean;
 }> = ({ options, onSelectOption, selectedAnswer, disabled }) => {
+
+  const suffleOptions = React.useMemo(() => shuffleArray(options), [options])
+
   return (
     <View className="flex-row flex-wrap justify-center gap-3">
-      {options.map((option, i) => {
+      {suffleOptions.map((option, i) => {
         return (
           <Button
             disabled={disabled}

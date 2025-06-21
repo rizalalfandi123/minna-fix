@@ -19,9 +19,7 @@ const LetterPage: React.FC<{
       <View className={cn("bg-background flex-1")}>
         <View className="h-20 w-full items-center justify-center px-4">
           <Button className="w-full" onPress={onPressLearn}>
-            <Text className="font-sans-semibold text-lg uppercase">
-              {t("startLearning")}
-            </Text>
+            <Text className="font-sans-semibold text-lg uppercase">{t("startLearning")}</Text>
           </Button>
         </View>
 
@@ -38,15 +36,10 @@ const LetterPage: React.FC<{
             offset: 128 * index,
             index,
           })}
-          initialNumToRender={2}
-          maxToRenderPerBatch={2}
-          windowSize={2}
         />
       </View>
     </>
   );
 };
 
-const MemoizedLetterPage = React.memo(LetterPage);
-
-export default MemoizedLetterPage;
+export default LetterPage;
