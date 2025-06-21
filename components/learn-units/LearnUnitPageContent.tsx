@@ -210,7 +210,6 @@ const LearnUnitPageContent: React.FC = () => {
 
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
 
-  console.log({ questionQueue });
 
   const handleNext = React.useCallback(() => {
     if (currentIndex < questionQueue.length - 1) {

@@ -10,7 +10,6 @@ function HiraganaLearnLetterPage() {
 
   const { data: levelQuestions = [], isLoading } = useGetDetailLevelQuestion(levelId);
 
-  console.log({ levelQuestions });
 
   return (
     <View className="w-full h-full">{isLoading ? <CenteredSpinner /> : <LearnLetterPageContent levelId={levelId} levelQuestions={levelQuestions} />}</View>

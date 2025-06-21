@@ -14,7 +14,7 @@ export const bottomNavHeight = 64;
 
 export const pageHeaderHeight = 56;
 
-export const windowHeight = Dimensions.get("window").height;
+export const windowHeight = Dimensions.get("screen").height;
 
 export const letterHeight = windowHeight - bottomNavHeight * 2;
 
