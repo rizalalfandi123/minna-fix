@@ -5,7 +5,7 @@ import { AnimatedPressable } from "../Animations";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import speak from "~/helpers/speak";
 import { Text } from "../ui/text";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
 const LetterSymbol: React.FunctionComponent<{ symbol: string; withHint?: boolean }> = ({ symbol, withHint = true }) => {
   const { colors } = useScreenMode();

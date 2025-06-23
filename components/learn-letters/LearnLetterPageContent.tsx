@@ -3,17 +3,17 @@ import { View, FlatList } from "react-native";
 import useBackHandler from "~/hooks/useBackHandler";
 import LetterQuestion from "~/components/questions/letters/LetterQuestion";
 import LearnProgressBar from "../LearnProgressBar";
-import { contentWidth, learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
+import { contentWidth } from "~/lib/constants/sizes";
 import delay from "~/helpers/delay";
 import { isWeb } from "~/helpers/platform";
-import { DetailLevelQuestion } from "~/services/queries/levelQuestionQueries";
+import { DetailLetterLevelQuestion } from "~/services/queries/letterLevelQuestionQueries";
 import { LetterQuestionType } from "~/types";
 import LearnLetterSummaryPage from "../summaries/LearnLetterSummaryPage";
 
 type QuestionQueue = { question: LetterQuestionType; isPassed: boolean } | "DONE";
 
 export type LearnLetterPageContentProps = {
-  levelQuestions: Array<DetailLevelQuestion>;
+  levelQuestions: Array<DetailLetterLevelQuestion>;
   levelId: string;
 };
 

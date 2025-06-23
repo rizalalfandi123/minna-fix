@@ -1,66 +1,77 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerProps } from "expo-router/ui";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import PageHeader from "~/components/PageHeader";
 import { Text } from "~/components/ui/text";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
-import useBackHandler from "~/hooks/useBackHandler";
 import { bottomNavHeight } from "~/lib/constants/sizes";
 import { cn } from "~/lib/utils";
+import { UNITS } from "~/services/queries/unitQueries";
+import { Unit } from "~/types";
 
 export default function LettersTabs() {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    const router = useRouter();
+  const { t } = useTranslation();
 
-    const prevPath = React.useRef<string>(pathname);
+  const router = useRouter();
 
-    const { id } = useLocalSearchParams<{ id: string }>();
+  const queryClient = useQueryClient();
 
-    const navigations: Array<TabTriggerProps & { title: string }> = [
-        { name: "vocabulary", href: `/units/${id}/vocabulary`, title: "Vocabulary" },
-        { name: "grammar", href: `/units/${id}/grammar`, title: "Grammar" },
-        { name: "exercise", href: `/units/${id}/exercise`, title: "Exercise" },
-    ];
+  const prevPath = React.useRef<string>(pathname);
 
-    React.useEffect(() => {
-        if (prevPath.current !== pathname) {
-            triggerHaptic();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-            prevPath.current = pathname;
-        }
-    }, [pathname]);
+  const unitData = React.useMemo(() => {
+    const units = queryClient.getQueryData<Array<Unit>>([UNITS]);
 
-    const handleBack = () => {
-        router.replace({ pathname: "/units" });
-    };
-    return (
-        <Tabs>
-            <PageHeader onBack={handleBack} />
+    const unit = (units ?? []).find((unit) => unit.id === id);
 
-            <TabSlot />
+    return unit;
+  }, [id]);
 
-            <TabList style={{ height: bottomNavHeight }} className="flex-row items-start bg-background">
-                {navigations.map((nav) => {
-                    const isActive = pathname === nav.href;
+  const navigations: Array<TabTriggerProps & { title: string }> = [
+    { name: "vocabulary", href: `/units/${id}/vocabulary`, title: "Vocabulary" },
+    { name: "grammar", href: `/units/${id}/grammar`, title: "Grammar" },
+    { name: "exercise", href: `/units/${id}/exercise`, title: "Exercise" },
+  ];
 
-                    return (
-                        <TabTrigger
-                            className={cn(
-                                "h-12 flex-1 items-center justify-center border-b-2 bg-background",
-                                isActive ? "border-b-foreground" : "border-b-background"
-                            )}
-                            name={nav.name}
-                            href={nav.href}
-                            key={nav.name}
-                        >
-                            <Text className={cn("w-full text-center font-sans-semibold text-lg uppercase", isActive ? "text-foreground" : "text-border")}>
-                                {nav.title}
-                            </Text>
-                        </TabTrigger>
-                    );
-                })}
-            </TabList>
-        </Tabs>
-    );
+  React.useEffect(() => {
+    if (prevPath.current !== pathname) {
+      triggerHaptic();
+
+      prevPath.current = pathname;
+    }
+  }, [pathname]);
+
+  const handleBack = () => {
+    router.replace({ pathname: "/units" });
+  };
+
+  return (
+    <Tabs>
+      <PageHeader title={unitData ? t("unit_name", { name: `${unitData.number}` }) : t("unit_name", { name: "" })} onBack={handleBack} />
+
+      <TabSlot />
+
+      <TabList style={{ height: bottomNavHeight }} className="flex-row items-start bg-background">
+        {navigations.map((nav) => {
+          const isActive = pathname === nav.href;
+
+          return (
+            <TabTrigger
+              className={cn("h-12 flex-1 items-center justify-center border-b-2 bg-background", isActive ? "border-b-foreground" : "border-b-background")}
+              name={nav.name}
+              href={nav.href}
+              key={nav.name}
+            >
+              <Text className={cn("w-full text-center font-sans-semibold text-lg uppercase", isActive ? "text-foreground" : "text-border")}>{nav.title}</Text>
+            </TabTrigger>
+          );
+        })}
+      </TabList>
+    </Tabs>
+  );
 }

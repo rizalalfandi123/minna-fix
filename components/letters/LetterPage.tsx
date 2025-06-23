@@ -6,12 +6,14 @@ import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
-import { letterHeight } from "~/lib/constants/sizes";
+import useScreenHeight from "~/helpers/useScreenHeight";
 
 const LetterPage: React.FC<{
   letterBlocks: Array<TLetterButtonRow>;
   onPressLearn: () => void;
 }> = ({ letterBlocks, onPressLearn }) => {
+  const { letterHeight } = useScreenHeight();
+
   const { t } = useTranslation();
 
   return (
@@ -19,7 +21,7 @@ const LetterPage: React.FC<{
       <View className={cn("bg-background flex-1")}>
         <View className="h-20 w-full items-center justify-center px-4">
           <Button className="w-full" onPress={onPressLearn}>
-            <Text className="font-sans-semibold text-lg uppercase">{t("startLearning")}</Text>
+            <Text className="font-sans-semibold text-lg uppercase">{t("start_learning")}</Text>
           </Button>
         </View>
 

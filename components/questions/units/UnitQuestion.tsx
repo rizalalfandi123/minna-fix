@@ -1,44 +1,58 @@
 import React from "react";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
-import { contentWidth, learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
-import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
+import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
 import GuessTheSentenceMean from "./GuessTheSentenceMean";
 import GuessTheSymbolFromMean from "./GuessTheSymbolFromMean";
 import SortTheMeans from "./SortTheMeans";
 import SortTheSymbolFromMean from "./SortTheSymbolFromMean";
 import WriteTheSymbolFromMean from "./WriteTheSymbolFromMean";
 import WriteTheSymbolFromSound from "./WriteTheSymbolFromSound";
+import useScreenHeight from "~/helpers/useScreenHeight";
+import { UnitQuestion as TUnitQuestion } from "~/types";
 
 export type UnitQuestionProps = {
-  question: UnitQuestionType;
+  question: TUnitQuestion;
   onCorrectAnswer?: () => void;
   onErrorAnswer?: () => void;
 };
 
 const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, ...props }) => {
-  const renderQuestion = React.useMemo(() => {
-    switch (question.type) {
-      case "GUESS_THE_SENTENCE_MEAN":
-        return <GuessTheSentenceMean {...props} question={question} />;
+  const { screenHeight } = useScreenHeight();
 
-      case "GUESS_THE_SOUND_MEAN":
-        return <GuessTheLetterSound {...props} {...question.data} />;
+  const renderQuestion = React.useMemo(() => {
+    const questionData = question.question.data;
+
+    const activeLanguage = "en";
+
+    switch (questionData.type) {
+      case "GUESS_THE_SENTENCE_MEAN":
+        return <GuessTheSentenceMean {...props} question={questionData} />;
+
+      case "GUESS_THE_SOUND_MEAN": {
+        const guessTheSoundData = {
+          options: questionData.data.options.map((word) => word[activeLanguage]),
+          answer: questionData.data.answer[activeLanguage],
+          question: questionData.data.question,
+        };
+        
+        return <GuessTheLetterSound {...props} {...guessTheSoundData} />;
+      }
 
       case "GUESS_THE_SYMBOL_FROM_MEAN":
-        return <GuessTheSymbolFromMean {...props} question={question} />;
+        return <GuessTheSymbolFromMean {...props} question={questionData} />;
 
       case "SORT_THE_MEANS":
-        return <SortTheMeans {...props} question={question} />;
+        return <SortTheMeans {...props} question={questionData} />;
 
       case "SORT_THE_SYMBOLS_FROM_MEAN":
-        return <SortTheSymbolFromMean {...props} question={question} />;
+        return <SortTheSymbolFromMean {...props} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_MEAN":
-        return <WriteTheSymbolFromMean {...props} question={question} />;
+        return <WriteTheSymbolFromMean {...props} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_SOUND":
-        return <WriteTheSymbolFromSound {...props} question={question} />;
+        return <WriteTheSymbolFromSound {...props} question={questionData} />;
 
       default:
         return null;
@@ -46,7 +60,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, ...props }) => {
   }, [question, props]);
 
   return (
-    <View style={{ width: contentWidth, height: windowHeight - learnProgressBarHeight }} className="flex-1 flex-col gap-3">
+    <View style={{ width: contentWidth, height: screenHeight - learnProgressBarHeight }} className="flex-1 flex-col gap-3">
       {renderQuestion}
     </View>
   );

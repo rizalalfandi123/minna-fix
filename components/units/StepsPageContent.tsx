@@ -1,21 +1,16 @@
 import React from "react";
-import {
-  GestureResponderEvent,
-  PressableProps,
-  ScrollView,
-  View,
-} from "react-native";
+import { GestureResponderEvent, PressableProps, ScrollView, View } from "react-native";
 import { AnimatedPressable } from "~/components/Animations";
 import CircularProgress from "~/components/CircularProgress";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
+import useScreenHeight from "~/helpers/useScreenHeight";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
-import { contentWidth, learnUnitHeight } from "~/lib/constants/sizes";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { contentWidth } from "~/lib/constants/sizes";
+import { useScreenMode } from "~/lib/useScreenMode";
 
-const StepsPageContent = <T extends { id: string }>(props: {
-  units: T[];
-  onPressUnit: (unit: T) => void;
-}) => {
+const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPressUnit: (unit: T) => void }) => {
+  const { learnUnitHeight } = useScreenHeight();
+
   const padding = 44;
 
   const circleSize = 92;
@@ -28,8 +23,7 @@ const StepsPageContent = <T extends { id: string }>(props: {
 
   const centerOffset = (contentWidth - patternWidth) / 2;
 
-  const totalHeight =
-    props.units.length * (circleSize + padding / 2) + circleSize;
+  const totalHeight = props.units.length * (circleSize + padding / 2) + circleSize;
 
   return (
     <View style={{ height: learnUnitHeight }}>
@@ -45,11 +39,7 @@ const StepsPageContent = <T extends { id: string }>(props: {
 
           const movingRight = segmentPosition < maxOffset;
 
-          const horizontalOffset =
-            centerOffset +
-            (movingRight
-              ? segmentPosition * horizontalStep
-              : (maxOffset * 2 - 2 - segmentPosition) * horizontalStep);
+          const horizontalOffset = centerOffset + (movingRight ? segmentPosition * horizontalStep : (maxOffset * 2 - 2 - segmentPosition) * horizontalStep);
 
           const verticalPosition = i * (circleSize + padding / 2);
 
@@ -69,10 +59,7 @@ const StepsPageContent = <T extends { id: string }>(props: {
   );
 };
 
-export const ProgressUnitLevel: React.FunctionComponent<
-  Record<"circleSize" | "verticalPosition" | "horizontalOffset", number> &
-    PressableProps
-> = ({
+export const ProgressUnitLevel: React.FunctionComponent<Record<"circleSize" | "verticalPosition" | "horizontalOffset", number> & PressableProps> = ({
   circleSize,
   horizontalOffset,
   verticalPosition,

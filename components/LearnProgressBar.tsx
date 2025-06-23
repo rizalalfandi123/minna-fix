@@ -5,7 +5,7 @@ import Love from "~/components/icons/Love";
 import ProgressBar from "~/components/ProgressBar";
 import { cn } from "~/lib/utils";
 import { Text } from "./ui/text";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
 export type LearnProgressBarProps = {
     size?: number;

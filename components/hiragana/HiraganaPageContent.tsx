@@ -8,6 +8,8 @@ import { useNextLetterLevel } from "~/hooks/useNextLetterLevel";
 import { useGetLetters } from "~/services/queries/letterQueries";
 
 const Page = () => {
+
+
   const { data: lettersData } = useGetLetters();
 
   const letterTypeId = React.useMemo(() => {
@@ -20,7 +22,7 @@ const Page = () => {
 
   const letterChart = useLetterChart();
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const router = useRouter();
 
@@ -67,7 +69,7 @@ const Page = () => {
         title: t("hiragana.choon.name"),
       },
     ],
-    [letterChart.letterData]
+    [letterChart.letterData, i18n.language]
   );
 
   const handleLearn = () => {

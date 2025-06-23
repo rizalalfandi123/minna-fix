@@ -7,9 +7,12 @@ import Home from "~/components/icons/Home";
 import Dictionary from "~/components/icons/Dictionary";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { bottomNavHeight } from "~/lib/constants/sizes";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
+  const { t, i18n } = useTranslation();
+
   const { colors, fonts } = useScreenMode();
 
   const navigations = React.useMemo<React.ComponentProps<typeof Tabs.Screen>[]>(() => {
@@ -51,14 +54,14 @@ export default function TabLayout() {
       {
         name: "settings",
         options: {
-          title: "Settings",
+          title: t("settings.name"),
           tabBarIcon: ({ color }) => <Settings color={color} />,
         },
       },
     ];
 
     return data.map((nav) => ({ ...nav, listeners }));
-  }, []);
+  }, [i18n.language]);
 
   return (
     <Tabs

@@ -13,9 +13,3 @@ export const learnProgressBarHeight = 14 * 4;
 export const bottomNavHeight = 64;
 
 export const pageHeaderHeight = 56;
-
-export const windowHeight = Dimensions.get("screen").height;
-
-export const letterHeight = windowHeight - bottomNavHeight * 2;
-
-export const learnUnitHeight = windowHeight - bottomNavHeight * 2 - pageHeaderHeight;

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { Circle, G, Svg } from "react-native-svg";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
 export type CircularProgressProps = {
     progress?: number; // Now represents percentage (0-100)

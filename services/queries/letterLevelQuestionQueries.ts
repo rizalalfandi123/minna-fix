@@ -1,21 +1,18 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
-import { Database } from "~/database.types";
 import supabase from "~/libs/supabase";
 
-import { LetterQuestion } from "~/types";
+import { LetterQuestion, LetterLevelQuestion } from "~/types";
 
-export type LevelQuestion = Database["public"]["Tables"]["letter_questions_to_letter_levels"]["Row"];
-
-export type DetailLevelQuestion = LevelQuestion & {
+export type DetailLetterLevelQuestion = LetterLevelQuestion & {
   letter_questions: LetterQuestion;
 };
 
-export const LEVEL_QUESTIONS_KEY = "LEVEL_QUESTIONS";
+export const LETTER_LEVEL_QUESTIONS_KEY = "LETTER_LEVEL_QUESTIONS";
 
-export const useGetDetailLevelQuestion = (levelId: string) => {
-  const query = useQuery<Array<DetailLevelQuestion>, PostgrestError>({
-    queryKey: [LEVEL_QUESTIONS_KEY, { id: levelId }],
+export const useGetDetailLevelLetterQuestion = (levelId: string) => {
+  const query = useQuery<Array<DetailLetterLevelQuestion>, PostgrestError>({
+    queryKey: [LETTER_LEVEL_QUESTIONS_KEY, { id: levelId }],
 
     queryFn: async () => {
       const response = await supabase
@@ -36,7 +33,7 @@ export const useGetDetailLevelQuestion = (levelId: string) => {
         )
         .eq("letter_level_id", levelId)
         .order("number", { ascending: true })
-        .overrideTypes<Array<DetailLevelQuestion>>();
+        .overrideTypes<Array<DetailLetterLevelQuestion>>();
 
       if (response.error) {
         throw response.error;
@@ -49,9 +46,9 @@ export const useGetDetailLevelQuestion = (levelId: string) => {
   return query;
 };
 
-export const useGetLevelQuestion = () => {
-  const query = useQuery<Array<LevelQuestion>, PostgrestError>({
-    queryKey: [LEVEL_QUESTIONS_KEY],
+export const useGetLevelLetterQuestion = () => {
+  const query = useQuery<Array<LetterLevelQuestion>, PostgrestError>({
+    queryKey: [LETTER_LEVEL_QUESTIONS_KEY],
     queryFn: async () => {
       const response = await supabase.from("letter_questions_to_letter_levels").select("*");
 

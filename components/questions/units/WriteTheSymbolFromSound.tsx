@@ -1,4 +1,4 @@
-import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
+import { UnitQuestionType } from "~/types";
 import React from "react";
 import WriteTheSymbol from "../WriteTheSymbol";
 import LetterSound from "../LetterSound";

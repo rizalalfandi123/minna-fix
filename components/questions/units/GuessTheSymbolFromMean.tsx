@@ -1,4 +1,4 @@
-import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
+import { UnitQuestionType } from "~/types";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";

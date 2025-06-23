@@ -5,7 +5,7 @@ import useUserData from "~/hooks/useUserData";
 import { setAndroidNavigationBar } from "./android-navigation-bar";
 import { useColorScheme } from "nativewind";
 import appTheme from "./constants/appTheme";
-import { DarkTheme, DefaultTheme, Theme } from "@react-navigation/native";
+import { Theme } from "@react-navigation/native";
 
 const fonts: Theme["fonts"] = {
   regular: {
@@ -45,20 +45,26 @@ export const setPlatformSpecificSetup = Platform.select({
 export function useScreenMode() {
   const { state, dispatch } = useUserData();
 
-  const { setColorScheme, colorScheme } = useColorScheme();
+  const { setColorScheme } = useColorScheme();
 
   const screenMode = state.settings.screenMode;
 
-  const colors = React.useMemo(() => {
+  const colorVars = React.useMemo(() => {
     const colorData = Object.entries(appTheme["default"][screenMode]).map(([key, value]) => ({
-      [key]: `hsl(${value})`,
+      [key]: value,
     }));
 
     const data: Record<keyof typeof appTheme.default.dark, string> = Object.assign({}, ...colorData);
 
-  
     return data;
   }, [screenMode]);
+
+  const colors = React.useMemo(() => {
+
+    const data = Object.fromEntries(Object.entries(colorVars).map(([key, value]) => [key, `hsl(${value})`]))  as unknown as Record<keyof typeof appTheme.default.dark, string>
+
+    return data
+  }, [colorVars]);
 
   const toggleScreenMode = () => {
     setScreenMode(state.settings.screenMode === "light" ? "dark" : "light");
@@ -84,6 +90,7 @@ export function useScreenMode() {
     toggleScreenMode,
     applyScreenMode,
     colors,
-    fonts
+    fonts,
+    colorVars
   };
 }

@@ -2,7 +2,6 @@ import { Database } from "~/database.types";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import supabase from "~/libs/supabase";
-import { day } from "~/lib/constants/sizes";
 
 export type LetterLevel = Database["public"]["Tables"]["letter_levels"]["Row"];
 
@@ -36,7 +35,6 @@ export const useGetLetterLevels = (params: Partial<{ letterTypeId: string }>, op
       return response.data;
     },
 
-    staleTime: day,
 
     ...(options ?? {})
   });
@@ -58,7 +56,6 @@ export const useGetLetterToLetterLevels = () => {
       return response.data;
     },
 
-    staleTime: day,
   });
 
   return query;

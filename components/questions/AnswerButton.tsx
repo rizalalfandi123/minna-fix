@@ -8,6 +8,7 @@ import { Button, ButtonProps } from "../ui/button";
 import { Text } from "../ui/text";
 import { contentWidth } from "~/lib/constants/sizes";
 import { cn } from "~/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export type AnswerButtonProps = {
   answerStatus: AnswerStatus;
@@ -16,6 +17,9 @@ export type AnswerButtonProps = {
 const height = 280;
 
 const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus, ...props }) => {
+
+  const {t} = useTranslation()
+
   const answerSound = useAnswerSound();
 
   const playAudio = async (type: AnswerStatus) => {
@@ -52,7 +56,7 @@ const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus
     <View className="relative z-10 h-24 w-full items-center justify-center">
       <View className="z-20 w-full px-4">
         <Button size="lg" className="w-full" {...props}>
-          <Text>Check</Text>
+          <Text>{answerStatus === null ? t('check') : t('continue')}</Text>
         </Button>
       </View>
 

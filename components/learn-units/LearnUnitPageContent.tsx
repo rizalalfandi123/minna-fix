@@ -6,7 +6,7 @@ import { contentWidth } from "~/lib/constants/sizes";
 import delay from "~/helpers/delay";
 import { isWeb } from "~/helpers/platform";
 import UnitQuestion from "../questions/units/UnitQuestion";
-import { UnitQuestion as TUnitQuestion } from "~/services/queries/unitQuestionQueries";
+import { UnitQuestion as TUnitQuestion } from "~/types";
 
 type QuestionQueue = { question: TUnitQuestion; isPassed: boolean };
 
@@ -17,119 +17,73 @@ const questions: Array<TUnitQuestion> = [
     id: "kmd",
     updated_at: "",
     question: {
-      type: "WRITE_THE_SYMBOL_FROM_MEAN",
+      category: "GRAMMAR",
       data: {
-        answer: "わたし",
-        question: [
-          {
-            value: "わたし",
-            mean: {
-              en: "I",
-              id: "Saya",
-            },
-            alternative: {
-              romaji: "watashi",
-            },
-          },
-        ],
-      },
-    },
-  },
-
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      type: "GUESS_THE_SOUND_MEAN",
-      data: {
-        answer: "I",
-        options: ["I", "You"],
-        question: "わたし",
-      },
-    },
-  },
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      type: "GUESS_THE_SENTENCE_MEAN",
-      data: {
-        answer: {
-          en: "I",
-          id: "Saya",
-        },
-        options: [
-          {
+        type: "GUESS_THE_SENTENCE_MEAN",
+        data: {
+          answer: {
             en: "I",
             id: "Saya",
           },
-          {
-            en: "de",
-            id: "de",
-          },
-          {
-            en: "Ifw",
-            id: "Sfwaya",
-          },
-        ],
-        question: [
-          {
-            value: "わたし",
-            mean: {
+          options: [
+            {
               en: "I",
               id: "Saya",
             },
-            alternative: {
-              romaji: "watashi",
+            {
+              en: "You",
+              id: "Kamu",
             },
-          },
-        ],
+            {
+              en: "They",
+              id: "Mereka",
+            },
+            // ... more options here
+          ],
+          question: [
+            {
+              value: "わたし",
+              mean: {
+                en: "I",
+                id: "Saya",
+              },
+              // alternative in optional
+              alternative: {
+                romaji: "watashi",
+                hiragana: "わたし",
+                // katakana: string;
+                // kanji: string;
+                // romaji: string;
+              },
+            },
+          ],
+        },
       },
     },
   },
-
   {
     created_at: "",
     deleted: false,
     id: "kmd",
     updated_at: "",
     question: {
-      type: "SORT_THE_MEANS",
+      category: "GRAMMAR",
       data: {
-        answer: {
-          en: "I",
-          id: "Saya",
-        },
-        options: [
-          {
+        type: "GUESS_THE_SOUND_MEAN",
+        data: {
+          answer: {
             en: "I",
             id: "Saya",
           },
-          {
-            en: "de",
-            id: "de",
-          },
-          {
-            en: "Ifw",
-            id: "Sfwaya",
-          },
-        ].map((value, number) => ({ number, value })),
-        question: [
-          {
-            value: "わたし",
-            mean: {
+          options: [
+            {
               en: "I",
               id: "Saya",
             },
-            alternative: {
-              romaji: "watashi",
-            },
-          },
-        ],
+            //...more options here
+          ],
+          question: "わたし",
+        },
       },
     },
   },
@@ -140,22 +94,70 @@ const questions: Array<TUnitQuestion> = [
     id: "kmd",
     updated_at: "",
     question: {
-      type: "GUESS_THE_SYMBOL_FROM_MEAN",
       data: {
-        answer: "わたし",
-        options: ["わたし", "わし"],
-        question: [
-          {
-            value: "わたし",
-            mean: {
+        type: "SORT_THE_MEANS",
+        data: {
+          answer: {
+            en: "I",
+            id: "Saya",
+          },
+          options: [
+            {
               en: "I",
               id: "Saya",
             },
-            alternative: {
-              romaji: "watashi",
+            {
+              en: "de",
+              id: "de",
             },
-          },
-        ],
+            {
+              en: "Ifw",
+              id: "Sfwaya",
+            },
+          ].map((value, number) => ({ number, value })),
+          question: [
+            {
+              value: "わたし",
+              mean: {
+                en: "I",
+                id: "Saya",
+              },
+              alternative: {
+                romaji: "watashi",
+              },
+            },
+          ],
+        },
+      },
+      category: "GRAMMAR",
+    },
+  },
+
+  {
+    created_at: "",
+    deleted: false,
+    id: "kmd",
+    updated_at: "",
+    question: {
+      category: "GRAMMAR",
+      data: {
+        type: "GUESS_THE_SYMBOL_FROM_MEAN",
+        data: {
+          answer: "わたし",
+          options: ["わたし"],
+          question: [
+            {
+              value: "わたし",
+              mean: {
+                en: "I",
+                id: "Saya",
+              },
+              alternative: {
+                romaji: "watashi",
+              },
+            },
+          ],
+        },
       },
     },
   },
@@ -166,22 +168,25 @@ const questions: Array<TUnitQuestion> = [
     id: "kmd",
     updated_at: "",
     question: {
-      type: "SORT_THE_SYMBOLS_FROM_MEAN",
+      category: "GRAMMAR",
       data: {
-        answer: "わたし",
-        options: ["わたし", "わし"].map((value, number) => ({ number, value })),
-        question: [
-          {
-            value: "わたし",
-            mean: {
-              en: "I",
-              id: "Saya",
+        type: "SORT_THE_SYMBOLS_FROM_MEAN",
+        data: {
+          answer: "わたし",
+          options: ["わたし", "わし"].map((value, number) => ({ number, value })),
+          question: [
+            {
+              value: "わたし",
+              mean: {
+                en: "I",
+                id: "Saya",
+              },
+              alternative: {
+                romaji: "watashi",
+              },
             },
-            alternative: {
-              romaji: "watashi",
-            },
-          },
-        ],
+          ],
+        },
       },
     },
   },
@@ -192,10 +197,41 @@ const questions: Array<TUnitQuestion> = [
     id: "kmd",
     updated_at: "",
     question: {
-      type: "WRITE_THE_SYMBOL_FROM_SOUND",
+      category: "GRAMMAR",
       data: {
-        answer: "わたし",
-        question: "わたし",
+        type: "WRITE_THE_SYMBOL_FROM_SOUND",
+        data: {
+          answer: "わたし",
+          question: "わたし",
+        },
+      },
+    },
+  },
+
+  {
+    created_at: "",
+    deleted: false,
+    id: "kmd",
+    updated_at: "",
+    question: {
+      category: "GRAMMAR",
+      data: {
+        type: "WRITE_THE_SYMBOL_FROM_MEAN",
+        data: {
+          answer: "わたし",
+          question: [
+            {
+              value: "わたし",
+              mean: {
+                en: "I",
+                id: "Saya",
+              },
+              alternative: {
+                romaji: "watashi",
+              },
+            },
+          ],
+        },
       },
     },
   },
@@ -209,7 +245,6 @@ const LearnUnitPageContent: React.FC = () => {
   const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
 
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
-
 
   const handleNext = React.useCallback(() => {
     if (currentIndex < questionQueue.length - 1) {
@@ -236,7 +271,7 @@ const LearnUnitPageContent: React.FC = () => {
   const renderItem = React.useCallback(
     ({ item, index }: { item: QuestionQueue; index: number }) => (
       <UnitQuestion
-        question={item.question.question}
+        question={item.question}
         key={index}
         onCorrectAnswer={() => {
           setQuestionQueue((prev) =>

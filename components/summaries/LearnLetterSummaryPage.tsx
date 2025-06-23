@@ -1,14 +1,17 @@
 import { View } from "react-native";
-import { contentWidth, learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
+import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
 import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import useLetterProgressMutation from "~/services/mutations/useLetterProgressMutation";
 import { v4 as uuid } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
 import { LETTER_PROGRESS_KEY } from "~/services/queries/letterProgressQueries";
+import useScreenHeight from "~/helpers/useScreenHeight";
 
 const LearnLetterSummaryPage: React.FC<{ onNext: () => void; levelId: string }> = ({ onNext, levelId }) => {
   const queryClient = useQueryClient();
+
+  const { screenHeight } = useScreenHeight();
 
   const { mutate } = useLetterProgressMutation({
     onSuccess() {
@@ -23,7 +26,7 @@ const LearnLetterSummaryPage: React.FC<{ onNext: () => void; levelId: string }> 
   };
 
   return (
-    <View style={{ width: contentWidth, height: windowHeight - learnProgressBarHeight }}>
+    <View style={{ width: contentWidth, height: screenHeight - learnProgressBarHeight }}>
       <View className="w-full flex-col flex-1">
         <View className="flex-1">
           <Text>Done</Text>

@@ -1,10 +1,9 @@
 import "~/global.css";
 import "~/libs/i18n";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 import { PortalHost } from "@rn-primitives/portal";
 import { useLoadFonts } from "~/hooks/useLoadFont";
 import * as SplashScreen from "expo-splash-screen";
@@ -33,27 +32,14 @@ export default function RootLayout() {
 }
 
 const App = () => {
-  const { screenMode, applyScreenMode, colors, fonts } = useScreenMode();
+  const { screenMode, applyScreenMode } = useScreenMode();
 
   React.useEffect(() => {
     applyScreenMode(screenMode);
   }, [screenMode]);
 
   return (
-    <ThemeProvider
-      value={{
-        ...(screenMode === "dark" ? DarkTheme : DefaultTheme),
-        colors: {
-          background: colors.background,
-          border: colors.border,
-          card: colors.card,
-          notification: colors.destructive,
-          primary: colors.primary,
-          text: colors.foreground,
-        },
-        fonts,
-      }}
-    >
+    <>
       <StatusBar style={screenMode} />
       <Stack
         screenOptions={{
@@ -65,6 +51,6 @@ const App = () => {
         <Stack.Screen name="learn" />
       </Stack>
       <PortalHost />
-    </ThemeProvider>
+    </>
   );
 };

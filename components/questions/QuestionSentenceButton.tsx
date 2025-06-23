@@ -7,7 +7,7 @@ import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { cn } from "~/lib/utils";
 import { Text } from "~/components/ui/text";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 
 const QuestionSentenceButton: React.FunctionComponent<{
@@ -86,44 +86,6 @@ const Word: React.FunctionComponent<{
           </PopoverContent>
         </Popover>
       ) : (
-        // <Popover size="$5" allowFlip stayInFrame offset={15} resize>
-        //   <Popover.Trigger asChild>{text}</Popover.Trigger>
-
-        //   <Popover.Content
-        //     enterStyle={{ y: -10, opacity: 0 }}
-        //     exitStyle={{ y: -10, opacity: 0 }}
-        //     elevate
-        //     animation={[
-        //       'quick',
-        //       {
-        //         opacity: {
-        //           overshootClamping: true,
-        //         },
-        //       },
-        //     ]}
-        //     style={{
-        //       backgroundColor: getTokenValue('$color.slate-700'),
-        //     }}
-        //     p="$3">
-        //     <Popover.Arrow
-        //       style={{
-        //         backgroundColor: getTokenValue('$color.slate-700'),
-        //       }}
-        //     />
-
-        //     <YStack width="100%">
-        //       {hintData.map((data, i) => (
-        //         <View
-        //           key={data}
-        //           borderBottomWidth={i !== hintData.length - 1 ? 2 : 0}
-        //           borderColor="white"
-        //           p="$2">
-        //           <BodyText fontSize="$6">{data}</BodyText>
-        //         </View>
-        //       ))}
-        //     </YStack>
-        //   </Popover.Content>
-        // </Popover>
         text
       )}
     </React.Fragment>

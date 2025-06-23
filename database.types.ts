@@ -324,6 +324,41 @@ export type Database = {
           },
         ]
       }
+      unit_levels: {
+        Row: {
+          created_at: string
+          deleted: boolean
+          id: number
+          number: number
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted?: boolean
+          id?: number
+          number: number
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted?: boolean
+          id?: number
+          number?: number
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unit_levels_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       unit_questions: {
         Row: {
           created_at: string
@@ -348,23 +383,41 @@ export type Database = {
         }
         Relationships: []
       }
+      unit_questions_to_unit_levels: {
+        Row: {
+          unit_level_id: string
+          unit_question_id: string
+        }
+        Insert: {
+          unit_level_id: string
+          unit_question_id: string
+        }
+        Update: {
+          unit_level_id?: string
+          unit_question_id?: string
+        }
+        Relationships: []
+      }
       units: {
         Row: {
           created_at: string
           deleted: boolean
           id: string
+          number: number
           updated_at: string
         }
         Insert: {
           created_at?: string
           deleted?: boolean
           id?: string
-          updated_at: string
+          number: number
+          updated_at?: string
         }
         Update: {
           created_at?: string
           deleted?: boolean
           id?: string
+          number?: number
           updated_at?: string
         }
         Relationships: []

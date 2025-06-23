@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, View, ViewProps } from "react-native";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 import { cn } from "~/lib/utils";
 
 export interface SpinnerProps extends ViewProps {

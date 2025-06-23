@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetModalProps } from "@gorhom/bottom-sheet";
 import React from "react";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
 export type BottomSheetProps = BottomSheetModalProps;
 

@@ -1,68 +1,54 @@
+import { PostgrestError } from "@supabase/supabase-js";
+import { useQuery } from "@tanstack/react-query";
 import { Database } from "~/database.types";
-import { SymbolWord, TranslatedWord } from "~/types";
+import supabase from "~/libs/supabase";
+import { LetterQuestionType } from "~/types";
 
-export type UnitQuestionType =
-  | {
-      type: "GUESS_THE_SENTENCE_MEAN";
-      data: {
-        options: Array<TranslatedWord>;
-        answer: TranslatedWord;
-        question: Array<SymbolWord>;
-      };
-    }
-  | {
-      type: "SORT_THE_MEANS";
-      data: {
-        question: Array<SymbolWord>;
-        answer: TranslatedWord;
-        options: {
-          number: number;
-          value: TranslatedWord;
-        }[];
-      };
-    }
-  | {
-      type: "GUESS_THE_SOUND_MEAN";
-      data: {
-        options: Array<string>;
-        answer: string;
-        question: string;
-      };
-    }
-  | {
-      type: "GUESS_THE_SYMBOL_FROM_MEAN";
-      data: {
-        options: Array<string>;
-        answer: string;
-        question: Array<SymbolWord>;
-      };
-    }
-  | {
-      type: "SORT_THE_SYMBOLS_FROM_MEAN";
-      data: {
-        question: Array<SymbolWord>;
-        answer: string;
-        options: {
-          number: number;
-          value: string;
-        }[];
-      };
-    }
-  | {
-      type: "WRITE_THE_SYMBOL_FROM_MEAN";
-      data: {
-        question: Array<SymbolWord>;
-        answer: string;
-      };
-    }
-  | {
-      type: "WRITE_THE_SYMBOL_FROM_SOUND";
-      data: {
-        question: string;
-        answer: string;
-      };
-    };
+export type LetterQuestion = Omit<Database["public"]["Tables"]["unit_questions"]["Row"], "question"> & {
+  letter_questions_to_letter_levels: Array<{
+    letter_question_id: string;
+    letter_level_id: string;
+    number: number;
+  }>;
+  question: LetterQuestionType;
+};
 
-export type UnitQuestion = Omit<Database["public"]["Tables"]["unit_questions"]["Row"], "question"> & {
-  question: UnitQuestionType;
+export const LETTER_QUESTIONS = "LETTER_QUESTIONS";
+
+export const useGetLetterQuestions = () => {
+  const query = useQuery<Array<LetterQuestion>, PostgrestError>({
+    queryKey: [LETTER_QUESTIONS],
+
+    queryFn: async () => {
+      const response = await supabase
+        .from("letter_questions")
+        .select(
+          `   
+                    created_at,
+                    deleted,
+                    id,
+                    question,
+                    updated_at,
+                    letter_questions_to_letter_levels (
+                        letter_question_id,
+                        letter_level_id,
+                        number
+                    )`
+        )
+        .overrideTypes<
+          Array<{
+            question: LetterQuestionType;
+          }>
+        >();
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response.data;
+    },
+
+  });
+
+  return query;
 };

@@ -6,9 +6,9 @@ import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { pageHeaderHeight } from "~/lib/constants/sizes";
 import { Text } from "./ui/text";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
-const PageHeader: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+const PageHeader: React.FC<{ onBack: () => void, title: string }> = ({ onBack, title }) => {
     const { colors } = useScreenMode();
 
     const scaleAnimation = useButtonScaleAnimation({ pressedScale: 0.75 });
@@ -30,7 +30,7 @@ const PageHeader: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             </AnimatedPressable>
 
             <View className="h-full flex-1 justify-center">
-                <Text className="font-sans-medium text-lg">Unit 5</Text>
+                <Text className="font-sans-medium text-lg">{title}</Text>
             </View>
         </View>
     );

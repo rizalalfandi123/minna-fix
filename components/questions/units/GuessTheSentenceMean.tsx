@@ -1,10 +1,10 @@
-import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import AnswerButton from "../AnswerButton";
+import { UnitQuestionType } from "~/types";
 
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
@@ -12,6 +12,7 @@ export type GuessTheSentenceMeanProps = {
 
 const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, ...props }) => {
   const activeLang = "en";
+  
   return (
     <OptionsQuestion
       {...props}

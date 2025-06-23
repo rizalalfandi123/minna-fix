@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, View } from "react-native";
 import { Input } from "~/components/ui/input";
 import React from "react";
 import * as wanakana from "wanakana";
@@ -7,7 +7,8 @@ import { AnswerStatus } from "~/types";
 import { cn } from "~/lib/utils";
 import AnswerButton from "./AnswerButton";
 import useKeyboardVisibility from "~/hooks/useKeyboardVisibility";
-import { learnProgressBarHeight, windowHeight } from "~/lib/constants/sizes";
+import { learnProgressBarHeight } from "~/lib/constants/sizes";
+import useScreenHeight from "~/helpers/useScreenHeight";
 
 export type WriteTheSymbolProps = {
   data: {
@@ -19,6 +20,8 @@ export type WriteTheSymbolProps = {
 };
 
 const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
+  const { screenHeight } = useScreenHeight();
+
   const [inputValue, setInputValue] = React.useState<string>("");
 
   const [kanaValue, setKanaValue] = React.useState<string>("");
@@ -28,7 +31,7 @@ const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
   const { isVisible: isVisibleKeyboard, height: keyboardHeight } = useKeyboardVisibility();
 
   const questionHeight = React.useMemo<number>(() => {
-    return windowHeight - learnProgressBarHeight - (isVisibleKeyboard ? keyboardHeight : 0);
+    return screenHeight - learnProgressBarHeight - (isVisibleKeyboard ? keyboardHeight : 0);
   }, [isVisibleKeyboard, keyboardHeight]);
 
   const onChangeText = (text: string) => {

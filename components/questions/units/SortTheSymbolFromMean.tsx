@@ -1,5 +1,5 @@
 import React from "react";
-import { UnitQuestionType } from "~/services/queries/unitQuestionQueries";
+import { UnitQuestionType } from "~/types";
 import SortItems from "../SortItems";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 

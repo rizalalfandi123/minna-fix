@@ -6,7 +6,7 @@ import { triggerHaptic } from "~/helpers/triggerHaptic";
 import speak from "~/helpers/speak";
 import { View } from "react-native";
 import SlowSound from "../icons/SlowSound";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 
 const LetterSound: React.FunctionComponent<{ symbol: string }> = ({ symbol }) => {
     const { colors } = useScreenMode();

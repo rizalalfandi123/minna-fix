@@ -5,7 +5,7 @@ import { Text } from "~/components/ui/text";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { placeholderColor } from "~/lib/constants/appTheme";
 import { bottomNavHeight } from "~/lib/constants/sizes";
-import { useScreenMode } from "~/lib/useColorScheme";
+import { useScreenMode } from "~/lib/useScreenMode";
 import { cn } from "~/lib/utils";
 
 export default function LettersTabs() {

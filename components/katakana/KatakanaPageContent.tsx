@@ -22,7 +22,7 @@ const KatakanaPageContent = () => {
 
   const router = useRouter();
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const katakanaBlocks = React.useMemo<Array<TLetterButtonRow>>(
     () => [
@@ -65,7 +65,7 @@ const KatakanaPageContent = () => {
         title: t("katakana.choon.name"),
       },
     ],
-    [letterChart.letterData]
+    [letterChart.letterData, i18n.language]
   );
 
   const handleLearn = () => {

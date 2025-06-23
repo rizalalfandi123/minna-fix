@@ -8,7 +8,7 @@ import supabase from "~/libs/supabase";
 export type Letter = Database["public"]["Tables"]["letters"]["Row"];
 
 export type LetterType = Omit<Database["public"]["Tables"]["letter_types"]["Row"], "name"> & {
-    name: TLetterTypeName;
+  name: TLetterTypeName;
 };
 
 export type LetterPosition = Database["public"]["Tables"]["letter_positions"]["Row"];
@@ -16,55 +16,54 @@ export type LetterPosition = Database["public"]["Tables"]["letter_positions"]["R
 export type LetterBlock = Database["public"]["Tables"]["letter_blocks"]["Row"];
 
 export type LetterData = {
-    letters: Array<Letter>;
-    letterPositions: Array<LetterPosition>;
-    letterBlocks: Array<LetterBlock>;
-    letterTypes: Array<LetterType>;
+  letters: Array<Letter>;
+  letterPositions: Array<LetterPosition>;
+  letterBlocks: Array<LetterBlock>;
+  letterTypes: Array<LetterType>;
 };
 
 const LETTER_QUERY_KEY = "LETTERS";
 
 export const useGetLetters = () => {
-    const query = useQuery<LetterData, PostgrestError>({
-        queryKey: [LETTER_QUERY_KEY],
+  const query = useQuery<LetterData, PostgrestError>({
+    queryKey: [LETTER_QUERY_KEY],
 
-        queryFn: async () => {
-            const letters = await supabase.from("letters").select();
+    queryFn: async () => {
+      const letters = await supabase.from("letters").select();
 
-            const letterPositions = await supabase.from("letter_positions").select();
+      const letterPositions = await supabase.from("letter_positions").select();
 
-            const letterBlocks = await supabase.from("letter_blocks").select();
+      const letterBlocks = await supabase.from("letter_blocks").select();
 
-            const letterTypes = await supabase.from("letter_types").select().overrideTypes<Array<{ name: TLetterTypeName }>>();
+      const letterTypes = await supabase.from("letter_types").select().overrideTypes<Array<{ name: TLetterTypeName }>>();
 
-            if (letters.error) {
-                throw letters.error;
-            }
+      if (letters.error) {
+        throw letters.error;
+      }
 
-            if (letterPositions.error) {
-                throw letterPositions.error;
-            }
+      if (letterPositions.error) {
+        throw letterPositions.error;
+      }
 
-            if (letterBlocks.error) {
-                throw letterBlocks.error;
-            }
+      if (letterBlocks.error) {
+        throw letterBlocks.error;
+      }
 
-            if (letterTypes.error) {
-                throw letterTypes.error;
-            }
+      if (letterTypes.error) {
+        throw letterTypes.error;
+      }
 
-            const data: LetterData = {
-                letterBlocks: letterBlocks.data,
-                letterPositions: letterPositions.data,
-                letters: letters.data,
-                letterTypes: letterTypes.data,
-            };
+      const data: LetterData = {
+        letterBlocks: letterBlocks.data,
+        letterPositions: letterPositions.data,
+        letters: letters.data,
+        letterTypes: letterTypes.data,
+      };
 
-            return data;
-        },
+      return data;
+    },
 
-        staleTime: 5 * day,
-    });
+  });
 
-    return query;
+  return query;
 };
