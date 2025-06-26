@@ -12,9 +12,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 
 const QuestionSentenceButton: React.FunctionComponent<{
   sentence: Array<{ word: string; hintData?: Array<string> }>;
-  withHint?: boolean;
+  withHint: boolean;
   withSpeak?: boolean;
-}> = ({ sentence, withHint = true, withSpeak = true }) => {
+}> = ({ sentence, withHint, withSpeak = true }) => {
   const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
@@ -57,22 +57,15 @@ const Word: React.FunctionComponent<{
 }> = ({ hintData, word, withHint }) => {
   const text = (
     <View className="h-16 min-w-[2rem] flex-col items-center justify-center">
-      <Text
-        style={{
-          borderBottomWidth: withHint ? 2 : 0,
-        }}
-        className="font-sans-bold text-2xl"
-      >
-        {word}
-      </Text>
+      <Text className="font-sans-bold text-2xl">{word}</Text>
 
-      <View className="h-2 w-full !border-b-4 border-accent border-dotted bg-background" />
+      <View className={cn("h-2 w-full border-accent border-dotted bg-background", withHint ? "border-b-4" : "border-b-0")} />
     </View>
   );
 
   return (
     <React.Fragment>
-      {hintData ? (
+      {hintData && withHint ? (
         <Popover>
           <PopoverTrigger>{text}</PopoverTrigger>
           <PopoverContent className="w-fit" side="bottom" sideOffset={-24}>

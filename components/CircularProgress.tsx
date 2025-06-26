@@ -16,7 +16,7 @@ export type CircularProgressProps = {
 };
 
 const CircularProgress = ({
-    progress = 70, // Default to 70% instead of 0.7
+    progress = 50, // Default to 70% instead of 0.7
     radius = 50,
     strokeWidth = 8,
     children,

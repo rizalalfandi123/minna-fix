@@ -5,14 +5,19 @@ import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import AnswerButton from "../AnswerButton";
 import { UnitQuestionType } from "~/types";
+import { useTranslation } from "react-i18next";
+import { Language } from "~/contexts/userContext";
 
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
+  withHint: boolean;
 } & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
 
-const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, ...props }) => {
-  const activeLang = "en";
-  
+const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint, ...props }) => {
+  const { i18n } = useTranslation();
+
+  const activeLang = i18n.language as Language;
+
   return (
     <OptionsQuestion
       {...props}
@@ -26,8 +31,9 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, .
           <QuestionSentenceButton
             sentence={question.data.question.map((item) => ({
               word: item.value,
-              hintData: [item.value, ...Object.values(item.alternative ?? {}), item.mean.en],
+              hintData: [item.mean[activeLang], ...Object.values(item.alternative ?? {})],
             }))}
+            withHint={withHint}
           />
         );
       }}

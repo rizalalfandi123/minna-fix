@@ -328,7 +328,7 @@ export type Database = {
         Row: {
           created_at: string
           deleted: boolean
-          id: number
+          id: string
           number: number
           unit_id: string
           updated_at: string
@@ -336,7 +336,7 @@ export type Database = {
         Insert: {
           created_at?: string
           deleted?: boolean
-          id?: number
+          id?: string
           number: number
           unit_id: string
           updated_at?: string
@@ -344,7 +344,7 @@ export type Database = {
         Update: {
           created_at?: string
           deleted?: boolean
-          id?: number
+          id?: string
           number?: number
           unit_id?: string
           updated_at?: string
@@ -359,11 +359,44 @@ export type Database = {
           },
         ]
       }
+      unit_progress: {
+        Row: {
+          created_at: string
+          deleted: boolean
+          id: string
+          unit_level_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          unit_level_id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted?: boolean
+          id?: string
+          unit_level_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unit_progress_letter_level_id_fkey"
+            columns: ["unit_level_id"]
+            isOneToOne: false
+            referencedRelation: "letter_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       unit_questions: {
         Row: {
           created_at: string
           deleted: boolean
           id: string
+          key: string | null
           question: Json
           updated_at: string
         }
@@ -371,6 +404,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           id?: string
+          key?: string | null
           question: Json
           updated_at?: string
         }
@@ -378,6 +412,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           id?: string
+          key?: string | null
           question?: Json
           updated_at?: string
         }
@@ -385,18 +420,39 @@ export type Database = {
       }
       unit_questions_to_unit_levels: {
         Row: {
+          number: number
           unit_level_id: string
           unit_question_id: string
+          with_hint: boolean
         }
         Insert: {
+          number: number
           unit_level_id: string
           unit_question_id: string
+          with_hint?: boolean
         }
         Update: {
+          number?: number
           unit_level_id?: string
           unit_question_id?: string
+          with_hint?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "unit_questions_to_unit_levels_unit_level_id_fkey"
+            columns: ["unit_level_id"]
+            isOneToOne: false
+            referencedRelation: "unit_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "unit_questions_to_unit_levels_unit_question_id_fkey"
+            columns: ["unit_question_id"]
+            isOneToOne: false
+            referencedRelation: "unit_questions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       units: {
         Row: {

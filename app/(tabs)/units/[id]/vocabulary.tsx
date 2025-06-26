@@ -1,16 +1,42 @@
-import { useRouter } from "expo-router";
-import StepsPageContent from "~/components/units/StepsPageContent";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
+import StepsPageContent, { StepsBlock } from "~/components/units/StepsPageContent";
+import { chunkArray } from "~/helpers/array";
+import { useGetDetailUnitLevels } from "~/services/queries/unitLevels";
+import useUnitProgress from "~/services/queries/unitProgressQueries";
+import { UnitLevel } from "~/types";
 
-const data = Array.from({ length: 30 }, (_, i) => ({ id: `${i}` }));
+type VocabularyLevel = UnitLevel & { isComplete: boolean };
 
 const VocabularyPage = () => {
-    const router = useRouter();
+  const params = useLocalSearchParams<{ id: string }>();
 
-    const handlePressUnit = (unit: { id: string }) => {
-        router.navigate({ pathname: "/learn/vocabulary/[id]", params: { id: unit.id } });
-    };
+  const { data: unitProgress = [] } = useUnitProgress();
 
-    return <StepsPageContent<{ id: string }> onPressUnit={handlePressUnit} units={data} />;
+  const { data: unitLevels = [] } = useGetDetailUnitLevels(params.id);
+
+  const data: StepsBlock<VocabularyLevel> = React.useMemo(() => {
+    const blocks = chunkArray(
+      unitLevels.map((level) => ({ ...level, isComplete: unitProgress.some((progress) => progress.unit_level_id === level.id) })),
+      3
+    );
+
+    const stepBlocks = blocks.map((block, index) => {
+      const isActive = index === 0 ? true : block.some((level) => level.isComplete) || (blocks[index - 1] ?? []).every((level) => level.isComplete);
+
+      return { block, isActive: isActive };
+    });
+
+    return stepBlocks;
+  }, [unitProgress, unitLevels]);
+
+  const router = useRouter();
+
+  const handlePressBlock = (unit: { id: string }) => {
+    router.navigate({ pathname: "/learn/vocabulary/[id]", params: { id: unit.id } });
+  };
+
+  return <StepsPageContent<VocabularyLevel> onPressItem={handlePressBlock} levels={data} />;
 };
 
 export default VocabularyPage;

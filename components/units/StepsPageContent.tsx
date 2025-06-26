@@ -2,13 +2,16 @@ import React from "react";
 import { GestureResponderEvent, PressableProps, ScrollView, View } from "react-native";
 import { AnimatedPressable } from "~/components/Animations";
 import CircularProgress from "~/components/CircularProgress";
+import { shuffleArray } from "~/helpers/array";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import useScreenHeight from "~/helpers/useScreenHeight";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { contentWidth } from "~/lib/constants/sizes";
 import { useScreenMode } from "~/lib/useScreenMode";
 
-const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPressUnit: (unit: T) => void }) => {
+export type StepsBlock<T extends { id: string; isComplete: boolean }> = Array<{ block: Array<T>; isActive: boolean }>;
+
+const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: { levels: StepsBlock<T>; onPressItem: (item: T) => void }) => {
   const { learnUnitHeight } = useScreenHeight();
 
   const padding = 44;
@@ -23,7 +26,7 @@ const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPress
 
   const centerOffset = (contentWidth - patternWidth) / 2;
 
-  const totalHeight = props.units.length * (circleSize + padding / 2) + circleSize;
+  const totalHeight = props.levels.length * (circleSize + padding / 2) + circleSize;
 
   return (
     <View style={{ height: learnUnitHeight }}>
@@ -34,8 +37,10 @@ const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPress
         }}
         className="bg-background"
       >
-        {props.units.map((item, i) => {
+        {props.levels.map((item, i) => {
           const segmentPosition = i % ((maxOffset - 1) * 2);
+
+          const progress = (item.block.filter((subItem) => subItem.isComplete).length / item.block.length) * 100;
 
           const movingRight = segmentPosition < maxOffset;
 
@@ -48,9 +53,18 @@ const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPress
               key={i}
               circleSize={circleSize}
               horizontalOffset={horizontalOffset}
-              disabled={i !== 1}
+              disabled={!item.isActive}
+              progress={progress}
               verticalPosition={verticalPosition}
-              onPress={() => props.onPressUnit(item)}
+              onPress={() => {
+                let selectedItem = item.block.find((level) => !level.isComplete);
+
+                if (!selectedItem) {
+                  selectedItem = shuffleArray(item.block)[0];
+                }
+
+                props.onPressItem(selectedItem);
+              }}
             />
           );
         })}
@@ -59,15 +73,9 @@ const StepsPageContent = <T extends { id: string }>(props: { units: T[]; onPress
   );
 };
 
-export const ProgressUnitLevel: React.FunctionComponent<Record<"circleSize" | "verticalPosition" | "horizontalOffset", number> & PressableProps> = ({
-  circleSize,
-  horizontalOffset,
-  verticalPosition,
-  onPress,
-  disabled = true,
-  id,
-  ...props
-}) => {
+export const ProgressUnitLevel: React.FunctionComponent<
+  Record<"circleSize" | "verticalPosition" | "horizontalOffset" | "progress", number> & PressableProps
+> = ({ circleSize, horizontalOffset, verticalPosition, onPress, disabled = true, id, progress, ...props }) => {
   const scaleAnimation = useButtonScaleAnimation();
 
   const { colors } = useScreenMode();
@@ -98,6 +106,7 @@ export const ProgressUnitLevel: React.FunctionComponent<Record<"circleSize" | "v
     >
       <CircularProgress
         radius={circleSize / 2}
+        progress={progress}
         strokeWidth={strokeWidth}
         progressColor={disabled ? colors.background : colors.primary}
         strokeColor={disabled ? colors.background : colors.primary}

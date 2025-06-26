@@ -7,240 +7,20 @@ import delay from "~/helpers/delay";
 import { isWeb } from "~/helpers/platform";
 import UnitQuestion from "../questions/units/UnitQuestion";
 import { UnitQuestion as TUnitQuestion } from "~/types";
+import LearnUnitSummaryPage from "../summaries/LearnUnitSummaryPage";
 
-type QuestionQueue = { question: TUnitQuestion; isPassed: boolean };
+type QuestionQueue = { question: TUnitQuestion; isPassed: boolean; withHint: boolean } | "DONE";
 
-const questions: Array<TUnitQuestion> = [
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "GUESS_THE_SENTENCE_MEAN",
-        data: {
-          answer: {
-            en: "I",
-            id: "Saya",
-          },
-          options: [
-            {
-              en: "I",
-              id: "Saya",
-            },
-            {
-              en: "You",
-              id: "Kamu",
-            },
-            {
-              en: "They",
-              id: "Mereka",
-            },
-            // ... more options here
-          ],
-          question: [
-            {
-              value: "わたし",
-              mean: {
-                en: "I",
-                id: "Saya",
-              },
-              // alternative in optional
-              alternative: {
-                romaji: "watashi",
-                hiragana: "わたし",
-                // katakana: string;
-                // kanji: string;
-                // romaji: string;
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "GUESS_THE_SOUND_MEAN",
-        data: {
-          answer: {
-            en: "I",
-            id: "Saya",
-          },
-          options: [
-            {
-              en: "I",
-              id: "Saya",
-            },
-            //...more options here
-          ],
-          question: "わたし",
-        },
-      },
-    },
-  },
+function isQuestionQuene(queue: QuestionQueue): queue is Extract<QuestionQueue, { isPassed: boolean }> {
+  return typeof queue !== "string";
+}
 
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      data: {
-        type: "SORT_THE_MEANS",
-        data: {
-          answer: {
-            en: "I",
-            id: "Saya",
-          },
-          options: [
-            {
-              en: "I",
-              id: "Saya",
-            },
-            {
-              en: "de",
-              id: "de",
-            },
-            {
-              en: "Ifw",
-              id: "Sfwaya",
-            },
-          ].map((value, number) => ({ number, value })),
-          question: [
-            {
-              value: "わたし",
-              mean: {
-                en: "I",
-                id: "Saya",
-              },
-              alternative: {
-                romaji: "watashi",
-              },
-            },
-          ],
-        },
-      },
-      category: "GRAMMAR",
-    },
-  },
+const LearnUnitPageContent: React.FC<{ questions: Array<{ question: TUnitQuestion; withHint: boolean }>; levelId: string }> = ({ questions, levelId }) => {
+  const initialized = React.useRef<boolean>(false);
 
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "GUESS_THE_SYMBOL_FROM_MEAN",
-        data: {
-          answer: "わたし",
-          options: ["わたし"],
-          question: [
-            {
-              value: "わたし",
-              mean: {
-                en: "I",
-                id: "Saya",
-              },
-              alternative: {
-                romaji: "watashi",
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
-
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "SORT_THE_SYMBOLS_FROM_MEAN",
-        data: {
-          answer: "わたし",
-          options: ["わたし", "わし"].map((value, number) => ({ number, value })),
-          question: [
-            {
-              value: "わたし",
-              mean: {
-                en: "I",
-                id: "Saya",
-              },
-              alternative: {
-                romaji: "watashi",
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
-
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "WRITE_THE_SYMBOL_FROM_SOUND",
-        data: {
-          answer: "わたし",
-          question: "わたし",
-        },
-      },
-    },
-  },
-
-  {
-    created_at: "",
-    deleted: false,
-    id: "kmd",
-    updated_at: "",
-    question: {
-      category: "GRAMMAR",
-      data: {
-        type: "WRITE_THE_SYMBOL_FROM_MEAN",
-        data: {
-          answer: "わたし",
-          question: [
-            {
-              value: "わたし",
-              mean: {
-                en: "I",
-                id: "Saya",
-              },
-              alternative: {
-                romaji: "watashi",
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
-];
-
-const LearnUnitPageContent: React.FC = () => {
   const handleBack = useBackHandler("/units");
 
-  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>(() => questions.map((question) => ({ isPassed: false, question })));
+  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
 
   const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
 
@@ -266,35 +46,60 @@ const LearnUnitPageContent: React.FC = () => {
         scrollToNext();
       }
     }
-  }, [currentIndex]);
+  }, [currentIndex, questionQueue]);
 
   const renderItem = React.useCallback(
-    ({ item, index }: { item: QuestionQueue; index: number }) => (
-      <UnitQuestion
-        question={item.question}
-        key={index}
-        onCorrectAnswer={() => {
-          setQuestionQueue((prev) =>
-            prev.map((item, i) => {
-              if (index === i) {
+    ({ item, index }: { item: QuestionQueue; index: number }) => {
+      if (item === "DONE") {
+        return <LearnUnitSummaryPage levelId={levelId} onNext={handleBack} />;
+      }
+
+      return (
+        <UnitQuestion
+          question={item.question}
+          key={index}
+          onCorrectAnswer={() => {
+            const nextQuestionQueue = questionQueue.map((item, i) => {
+              if (index === i && isQuestionQuene(item)) {
                 return { ...item, isPassed: true };
               }
 
               return item;
-            })
-          );
+            });
 
-          handleNext();
-        }}
-        onErrorAnswer={() => {
-          setQuestionQueue((prev) => [...prev, item]);
+            setQuestionQueue(nextQuestionQueue);
 
-          handleNext();
-        }}
-      />
-    ),
+            handleNext();
+          }}
+          withHint={item.withHint}
+          onErrorAnswer={() => {
+            setQuestionQueue((prev) => {
+              const newValue = [...prev];
+
+              newValue.splice(questionQueue.length - 1, 0, item);
+
+              return newValue;
+            });
+
+            handleNext();
+          }}
+        />
+      );
+    },
     [currentIndex, handleNext]
   );
+
+  React.useEffect(() => {
+    if (!initialized.current && questions.length > 0) {
+      const initialQuestionQueue = questions.map((item) => ({ isPassed: false, question: item.question, withHint: item.withHint }));
+
+      console.log({ initialQuestionQueue, questions });
+
+      setQuestionQueue([...initialQuestionQueue, "DONE"]);
+
+      initialized.current = true;
+    }
+  }, [questions]);
 
   return (
     <View className="flex-1 bg-background">
@@ -304,7 +109,7 @@ const LearnUnitPageContent: React.FC = () => {
         ref={flatListRef}
         data={questionQueue}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${item.question.id}-${index}`}
+        keyExtractor={(item, index) => `${isQuestionQuene(item) ? item.question.id : item}-${index}`}
         horizontal
         pagingEnabled
         scrollEnabled={false}

@@ -24,7 +24,7 @@ function isQuestionQuene(queue: QuestionQueue): queue is Extract<QuestionQueue, 
 const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQuestions, levelId }) => {
   const initedQuestion = React.useRef<boolean>(false);
 
-  const handleBack = useBackHandler("/letters");
+  const handleBack = useBackHandler("/units");
 
   const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
 

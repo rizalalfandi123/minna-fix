@@ -93,14 +93,11 @@ export type UnitQuestionType =
       };
     }
   | {
-      type: "SORT_THE_MEANS";
+      type: "SORT_THE_MEAN";
       data: {
         question: Array<SymbolWord>;
         answer: TranslatedWord;
-        options: {
-          number: number;
-          value: TranslatedWord;
-        }[];
+        options: Array<TranslatedWord>;
       };
     }
   | {
@@ -124,10 +121,7 @@ export type UnitQuestionType =
       data: {
         question: Array<SymbolWord>;
         answer: string;
-        options: {
-          number: number;
-          value: string;
-        }[];
+        options: Array<string>
       };
     }
   | {
@@ -157,4 +151,7 @@ export type UnitQuestion = Omit<Database["public"]["Tables"]["unit_questions"]["
 export type LetterLevelQuestion = Database["public"]["Tables"]["letter_questions_to_letter_levels"]["Row"];
 
 export type UnitLevelQuestion = Database["public"]["Tables"]["unit_questions_to_unit_levels"]["Row"];
+
+export type UnitLevel = Database["public"]["Tables"]["unit_levels"]["Row"];
+
 
