@@ -1,9 +1,8 @@
-import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
+import OptionsQuestion from "../OptionsQuestion";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
-import AnswerButton from "../AnswerButton";
 import { UnitQuestionType } from "~/types";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
@@ -11,16 +10,15 @@ import { Language } from "~/contexts/userContext";
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
   withHint: boolean;
-} & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
+}
 
-const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint, ...props }) => {
+const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint}) => {
   const { i18n } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
   return (
     <OptionsQuestion
-      {...props}
       data={{
         answer: question.data.answer[activeLang],
         options: question.data.options.map((item) => item[activeLang]),
@@ -46,9 +44,6 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, w
       }}
       renderOptions={({ data, ...props }) => {
         return <LetterOptions {...props} options={data.options} />;
-      }}
-      renderButton={(props) => {
-        return <AnswerButton {...props} />;
       }}
     />
   );

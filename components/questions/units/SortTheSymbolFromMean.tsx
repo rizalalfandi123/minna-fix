@@ -8,8 +8,6 @@ import { Language } from "~/contexts/userContext";
 export type SortTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_SYMBOLS_FROM_MEAN" }>;
   withHint: boolean;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
 };
 
 const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps> = (props) => {

@@ -8,8 +8,6 @@ import { Language } from "~/contexts/userContext";
 export type WriteTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "WRITE_THE_SYMBOL_FROM_MEAN" }>;
   withHint: boolean;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
 };
 
 const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) => {
@@ -33,8 +31,6 @@ const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) =>
           />
         );
       }}
-      onCorrectAnswer={props.onCorrectAnswer}
-      onErrorAnswer={props.onErrorAnswer}
     />
   );
 };

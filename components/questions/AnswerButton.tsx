@@ -12,13 +12,14 @@ import { useTranslation } from "react-i18next";
 
 export type AnswerButtonProps = {
   answerStatus: AnswerStatus;
-} & Partial<ButtonProps>;
+  onPressContinue: ButtonProps["onPress"];
+  onPressCheckAnswer: ButtonProps["onPress"];
+};
 
 const height = 280;
 
-const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus, ...props }) => {
-
-  const {t} = useTranslation()
+const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus, onPressCheckAnswer, onPressContinue }) => {
+  const { t } = useTranslation();
 
   const answerSound = useAnswerSound();
 
@@ -55,8 +56,8 @@ const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus
   return (
     <View className="relative z-10 h-24 w-full items-center justify-center">
       <View className="z-20 w-full px-4">
-        <Button size="lg" className="w-full" {...props}>
-          <Text>{answerStatus === null ? t('check') : t('continue')}</Text>
+        <Button size="lg" className="w-full" onPress={answerStatus === null ? onPressCheckAnswer : onPressContinue}>
+          <Text>{answerStatus === null ? t("check") : t("continue")}</Text>
         </Button>
       </View>
 

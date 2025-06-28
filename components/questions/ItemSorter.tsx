@@ -4,7 +4,6 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { View } from "react-native";
 import { contentWidth } from "~/lib/constants/sizes";
 import { Button } from "../ui/button";

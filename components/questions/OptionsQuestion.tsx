@@ -1,102 +1,61 @@
 import React from "react";
-import { AnswerStatus, Nullable } from "~/types";
+import { type Nullable } from "~/types";
 import { View } from "react-native";
-import { ButtonProps } from "../ui/button";
+import useLearnUnitStore from "~/stores/learnUnitStore";
+import { isOptionsQuestion } from "~/helpers/unitQuestionNarrowing";
 
 export type OptionsQuestionProps = {
-    data: {
-        options: string[];
-        answer: string;
-        question: string;
-    };
-    onCorrectAnswer?: () => void;
-    onErrorAnswer?: () => void;
-    renderAnswer?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;
-    renderInstruction?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;
-    renderButton?: (props: Partial<ButtonProps> & { answerStatus: AnswerStatus }) => React.ReactNode;
-    renderOptions?: (
-        props: Pick<OptionsQuestionProps, "data"> & {
-            onSelectOption: (option: string) => void;
-            selectedAnswer: Nullable<string>;
-            disabled: boolean;
-        }
-    ) => React.ReactNode;
+  data: {
+    options: string[];
+    answer: string;
+    question: string;
+  };
+  renderAnswer?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;
+  renderInstruction?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;
+  renderOptions?: (
+    props: Pick<OptionsQuestionProps, "data"> & {
+      onSelectOption: (option: string) => void;
+      selectedAnswer: Nullable<string>;
+      disabled: boolean;
+    }
+  ) => React.ReactNode;
 };
 
-const OptionsQuestion: React.FunctionComponent<OptionsQuestionProps> = ({
-    data,
-    onCorrectAnswer,
-    onErrorAnswer,
-    renderAnswer,
-    renderInstruction,
-    renderOptions,
-    renderButton,
-}) => {
-    const [selectedAnswer, setSelectedAnswer] = React.useState<Nullable<string>>(null);
+const OptionsQuestion: React.FunctionComponent<OptionsQuestionProps> = ({ data, renderAnswer, renderInstruction, renderOptions }) => {
+  const isLocked = useLearnUnitStore((state) => state.data.activeQuestionData.isLocked);
 
-    const [isLocked, setIsLocked] = React.useState<boolean>(false);
+  const selectedAnswer = useLearnUnitStore((state) => {
+    if (isOptionsQuestion(state.data.activeQuestionData.data)) {
+      return state.data.activeQuestionData.data.selectedAnswer;
+    }
 
-    const [answerStatus, setAnswerStatus] = React.useState<AnswerStatus>(null);
+    return null;
+  });
 
-    const handleResetAnswer = async () => {
-        setSelectedAnswer(null);
+  const setSelectedAnswer = useLearnUnitStore((state) => state.setActiveQuestionData);
 
-        setIsLocked(false);
+  const handleSelectAnswer = (newAnswer: string) => {
+    setSelectedAnswer({ type: "GUESS_THE_SENTENCE_MEAN", selectedAnswer: selectedAnswer === newAnswer ? null : newAnswer, answer: data.answer });
+  };
 
-        setAnswerStatus(null);
-    };
+  return (
+    <View className="w-full flex-1 flex-col">
+      {renderInstruction && renderInstruction({ data })}
 
-    const handleSelectAnswer = (newAnswer: string) => {
-        setSelectedAnswer((prev) => (prev === newAnswer ? null : newAnswer));
-    };
+      {renderAnswer && <View className="w-full flex-1 items-center bg-red-400 justify-center">{renderAnswer({ data })}</View>}
 
-    const handleContinue = () => {
-        if (answerStatus === "success") {
-            onCorrectAnswer?.();
-        } else {
-            onErrorAnswer?.();
-        }
-
-        handleResetAnswer();
-    };
-
-    const handleCheckAnswer = () => {
-        if (!selectedAnswer) return;
-
-        const isCorrect = selectedAnswer === data.answer;
-
-        setAnswerStatus(isCorrect ? "success" : "error");
-
-        setIsLocked(true);
-    };
-
-    const handleNext = () => {
-        if (answerStatus === null) {
-            handleCheckAnswer();
-        } else {
-            handleContinue();
-        }
-    };
-
-    return (
-        <View className="w-full flex-1 flex-col">
-            {renderInstruction && renderInstruction({ data })}
-
-            {renderAnswer && <View className="w-full flex-1 items-center justify-center">{renderAnswer({ data })}</View>}
-
-            {renderOptions && (
-                <View className="h-64 items-center justify-center">
-                    {renderOptions({
-                        data,
-                        disabled: isLocked,
-                        onSelectOption: handleSelectAnswer,
-                        selectedAnswer,
-                    })}
-                </View>
-            )}
-            {renderButton && renderButton({ onPress: handleNext, disabled: selectedAnswer === null, answerStatus })}
+      {renderOptions && (
+        <View className="h-64 items-center justify-center">
+          {renderOptions({
+            data,
+            disabled: isLocked,
+            onSelectOption: handleSelectAnswer,
+            selectedAnswer,
+          })}
         </View>
-    );
+      )}
+    </View>
+  );
 };
 
 export default OptionsQuestion;

@@ -1,26 +1,24 @@
 import { UnitQuestionType } from "~/types";
-import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
+import OptionsQuestion from "../OptionsQuestion";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
-import AnswerButton from "../AnswerButton";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
 
 export type GuessTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
   withHint: boolean;
-} & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
+};
 
-const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, withHint, ...props }) => {
+const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, withHint }) => {
   const { i18n } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
   return (
     <OptionsQuestion
-      {...props}
       data={{
         answer: question.data.answer,
         options: question.data.options,
@@ -47,9 +45,6 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
       }}
       renderOptions={({ data, ...props }) => {
         return <LetterOptions {...props} options={data.options} />;
-      }}
-      renderButton={(props) => {
-        return <AnswerButton {...props} />;
       }}
     />
   );

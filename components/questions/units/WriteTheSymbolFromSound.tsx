@@ -5,8 +5,6 @@ import LetterSound from "../LetterSound";
 
 export type WriteTheSymbolFromSoundProps = {
   question: Extract<UnitQuestionType, { type: "WRITE_THE_SYMBOL_FROM_SOUND" }>;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
 };
 
 const WriteTheSymbolFromSound: React.FC<WriteTheSymbolFromSoundProps> = (props) => {
@@ -18,8 +16,6 @@ const WriteTheSymbolFromSound: React.FC<WriteTheSymbolFromSoundProps> = (props) 
       renderQuestion={({ data }) => {
         return <LetterSound symbol={data.answer} />;
       }}
-      onCorrectAnswer={props.onCorrectAnswer}
-      onErrorAnswer={props.onErrorAnswer}
     />
   );
 };

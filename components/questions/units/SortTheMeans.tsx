@@ -8,8 +8,6 @@ import { Language } from "~/contexts/userContext";
 export type SortTheMeansProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_MEAN" }>;
   withHint: boolean;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
 };
 
 const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {

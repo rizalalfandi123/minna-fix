@@ -4,6 +4,12 @@ import { View } from "react-native";
 import SelectLanguage from "~/components/SelectLanguage";
 import DarkModeToggle from "~/components/ThemeToggle";
 import { Text } from "~/components/ui/text";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "~/components/ui/button";
+
+const clearAsyncStorage = async() => {
+    AsyncStorage.clear();
+}
 
 export default function Home() {
   const { t } = useTranslation();
@@ -37,6 +43,10 @@ export default function Home() {
             </View>
           </View>
         </View>
+
+        <Button onPress={clearAsyncStorage}>
+          <Text>Clear</Text>
+        </Button>
       </View>
     </>
   );

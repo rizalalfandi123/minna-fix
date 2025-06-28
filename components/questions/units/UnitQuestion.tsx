@@ -16,11 +16,9 @@ import { Language } from "~/contexts/userContext";
 export type UnitQuestionProps = {
   question: TUnitQuestion;
   withHint?: boolean;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
 };
 
-const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true, ...props }) => {
+const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }) => {
   const { screenHeight } = useScreenHeight();
 
   const { i18n } = useTranslation();
@@ -32,7 +30,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true, 
 
     switch (questionData.type) {
       case "GUESS_THE_SENTENCE_MEAN":
-        return <GuessTheSentenceMean {...props} withHint={withHint} question={questionData} />;
+        return <GuessTheSentenceMean withHint={withHint} question={questionData} />;
 
       case "GUESS_THE_SOUND_MEAN": {
         const guessTheSoundData = {
@@ -41,34 +39,30 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true, 
           question: questionData.data.question,
         };
 
-        return <GuessTheLetterSound {...props} {...guessTheSoundData} />;
+        return <GuessTheLetterSound {...guessTheSoundData} />;
       }
 
       case "GUESS_THE_SYMBOL_FROM_MEAN":
-        return <GuessTheSymbolFromMean {...props} withHint={withHint} question={questionData} />;
+        return <GuessTheSymbolFromMean withHint={withHint} question={questionData} />;
 
       case "SORT_THE_MEAN":
-        return <SortTheMeans {...props} withHint={withHint} question={questionData} />;
+        return <SortTheMeans withHint={withHint} question={questionData} />;
 
       case "SORT_THE_SYMBOLS_FROM_MEAN":
-        return <SortTheSymbolFromMean {...props} withHint={withHint} question={questionData} />;
+        return <SortTheSymbolFromMean  withHint={withHint} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_MEAN":
-        return <WriteTheSymbolFromMean {...props} withHint={withHint} question={questionData} />;
+        return <WriteTheSymbolFromMean  withHint={withHint} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_SOUND":
-        return <WriteTheSymbolFromSound {...props} question={questionData} />;
+        return <WriteTheSymbolFromSound question={questionData} />;
 
       default:
         return null;
     }
-  }, [question, props]);
+  }, [question]);
 
-  return (
-    <View style={{ width: contentWidth, height: screenHeight - learnProgressBarHeight }} className="flex-1 flex-col gap-3">
-      {renderQuestion}
-    </View>
-  );
+  return <View className="flex-col gap-3 flex-1">{renderQuestion}</View>;
 };
 
 export default UnitQuestion;

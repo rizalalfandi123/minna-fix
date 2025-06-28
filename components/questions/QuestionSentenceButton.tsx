@@ -29,7 +29,7 @@ const QuestionSentenceButton: React.FunctionComponent<{
 
   return (
     <View
-      className={cn("w-full flex-row justify-center gap-4", {
+      className={cn("w-full flex-row justify-center gap-4 items-center", {
         "cursor-pointer": withHint,
       })}
     >
@@ -56,7 +56,7 @@ const Word: React.FunctionComponent<{
   withHint: boolean;
 }> = ({ hintData, word, withHint }) => {
   const text = (
-    <View className="h-16 min-w-[2rem] flex-col items-center justify-center">
+    <View className="h-16 flex-col items-center justify-center">
       <Text className="font-sans-bold text-2xl">{word}</Text>
 
       <View className={cn("h-2 w-full border-accent border-dotted bg-background", withHint ? "border-b-4" : "border-b-0")} />
