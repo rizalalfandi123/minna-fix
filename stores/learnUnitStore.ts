@@ -5,7 +5,7 @@ import { Nullable, TAnswerStatus, UnitQuestion } from "~/types";
 
 export type TLearnUnitQuestionData =
   | {
-      type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN";
+      type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
       selectedAnswer: Nullable<string>;
       answer: string;
     }
@@ -43,6 +43,8 @@ export type TLearnUnitStoreMutations = {
 
   setActiveQuestionData: (data: Nullable<TLearnUnitQuestionData>) => void;
 
+  resetData: () => void;
+
   handleSuccessAnswer: (cb?: (nextActiveQuestionIndex: number) => void) => void;
 
   handleFailedAnswer: (cb?: (nextActiveQuestionIndex: number) => void) => void;
@@ -52,16 +54,18 @@ export type TLearnUnitStoreMutations = {
 
 export type TLearnUnitStore = TLearnUnitStoreData & TLearnUnitStoreMutations;
 
-const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
-  data: {
-    questionQueue: [],
-    activeQuestionIndex: 0,
-    activeQuestionData: {
-      answerStatus: null,
-      isLocked: false,
-      data: null,
-    },
+const initalData: TLearnUnitStoreData["data"] = {
+  questionQueue: [],
+  activeQuestionIndex: 0,
+  activeQuestionData: {
+    answerStatus: null,
+    isLocked: false,
+    data: null,
   },
+};
+
+const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
+  data: initalData,
 
   setQuestionQueue: (queue) => set((prev) => ({ data: { ...prev.data, questionQueue: queue } })),
 
@@ -127,10 +131,17 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, data } } });
   },
 
+  resetData: () =>
+    set({
+      data: initalData,
+    }),
+
   handleCheckAnserStatus: () => {
     const previousData = get();
 
     let answerStatus: TAnswerStatus = null;
+
+    console.log({ previousData });
 
     if (isOptionsQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
@@ -147,9 +158,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
 
       const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
 
-      if (typeof selectedAnswer === "string") {
-        answerStatus = isCorrect ? "success" : "error";
-      }
+      answerStatus = isCorrect ? "success" : "error";
     }
 
     if (isWriteQuestion(previousData.data.activeQuestionData.data)) {

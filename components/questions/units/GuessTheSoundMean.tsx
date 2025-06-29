@@ -1,22 +1,21 @@
-import OptionsQuestion from "../OptionsQuestion";
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import LetterSound from "../LetterSound";
 import { Text } from "~/components/ui/text";
-import LetterOptionsQuestion from "./LetterOptionsQuestion";
+import UnitOptionsQuestion from "./UnitOptionsQuestion";
 
-export type GuessTheLetterSoundProps = {
+export type GuessTheSoundMeanProps = {
   options: string[];
   answer: string;
   question: string;
 };
 
-const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, answer, options }) => {
+const GuessTheSoundMean: React.FC<GuessTheSoundMeanProps> = ({ question, answer, options }) => {
   const { t } = useTranslation();
 
   return (
-    <LetterOptionsQuestion
-      type="GUESS_THE_LETTER_SOUND"
+    <UnitOptionsQuestion
+      type="GUESS_THE_SOUND_MEAN"
       data={{ answer, options, question }}
       renderAnswer={({ data }) => {
         return <LetterSound symbol={data.question} />;
@@ -31,4 +30,4 @@ const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, ans
   );
 };
 
-export default GuessTheLetterSound;
+export default GuessTheSoundMean;

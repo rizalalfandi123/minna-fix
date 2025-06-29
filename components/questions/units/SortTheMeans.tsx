@@ -1,9 +1,9 @@
 import React from "react";
 import { UnitQuestionType } from "~/types";
-import SortItems from "../SortItems";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import UnitSortItems from "./UnitSortItems";
 
 export type SortTheMeansProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_MEAN" }>;
@@ -16,7 +16,7 @@ const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {
   const activeLang = i18n.language as Language;
 
   return (
-    <SortItems
+    <UnitSortItems
       {...props}
       answer={props.question.data.answer[activeLang]}
       options={props.question.data.options.map((item, index) => ({ number: index, value: item[activeLang] }))}

@@ -1,6 +1,5 @@
 import React from "react";
 import { View } from "react-native";
-import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
 import GuessTheSentenceMean from "./GuessTheSentenceMean";
 import GuessTheSymbolFromMean from "./GuessTheSymbolFromMean";
 import SortTheMeans from "./SortTheMeans";
@@ -11,6 +10,7 @@ import useScreenHeight from "~/helpers/useScreenHeight";
 import { UnitQuestion as TUnitQuestion } from "~/types";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import GuessTheSoundMean from "./GuessTheSoundMean";
 
 export type UnitQuestionProps = {
   question: TUnitQuestion;
@@ -38,7 +38,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
           question: questionData.data.question,
         };
 
-        return <GuessTheLetterSound {...guessTheSoundData} />;
+        return <GuessTheSoundMean {...guessTheSoundData} />;
       }
 
       case "GUESS_THE_SYMBOL_FROM_MEAN":

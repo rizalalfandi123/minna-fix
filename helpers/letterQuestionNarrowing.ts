@@ -14,18 +14,18 @@ export function isOptionsQuestion(questionData: Nullable<TLearnLetterQuestionDat
   return ["GUESS_THE_LETTER", "GUESS_THE_SYMBOL", "GUESS_THE_LETTER_SOUND"].includes(questionData.type);
 }
 
-// export function isSortQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
-//   TLearnUnitQuestionData,
-//   {
-//     type: "SORT_THE_MEAN";
-//   }
-// > {
-//   if (!questionData) {
-//     return false;
-//   }
+export function isSortQuestion(questionData: Nullable<TLearnLetterQuestionData>): questionData is Extract<
+  TLearnLetterQuestionData,
+  {
+    type: "SORT_THE_ITEMS_BY_SOUND";
+  }
+> {
+  if (!questionData) {
+    return false;
+  }
 
-//   return ["SORT_THE_MEAN"].includes(questionData.type);
-// }
+  return ["SORT_THE_ITEMS_BY_SOUND"].includes(questionData.type);
+}
 
 // export function isWriteQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
 //   TLearnUnitQuestionData,

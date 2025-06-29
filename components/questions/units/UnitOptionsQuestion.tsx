@@ -1,12 +1,13 @@
 import React from "react";
-import { View } from "react-native";
 import useLearnUnitStore from "~/stores/learnUnitStore";
 import { isOptionsQuestion } from "~/helpers/unitQuestionNarrowing";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 
-export type UnitOptionsQuestionProps = Omit<OptionsQuestionProps, "handleSelectAnswer" | "selectedAnswer" | "isLocked">;
+export type UnitOptionsQuestionProps = Omit<OptionsQuestionProps, "handleSelectAnswer" | "selectedAnswer" | "isLocked"> & {
+  type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
+};
 
-const UnitOptionsQuestion: React.FunctionComponent<UnitOptionsQuestionProps> = (props) => {
+const UnitOptionsQuestion: React.FunctionComponent<UnitOptionsQuestionProps> = ({ type, ...props }) => {
   const isLocked = useLearnUnitStore((state) => state.data.activeQuestionData.isLocked);
 
   const selectedAnswer = useLearnUnitStore((state) => {
@@ -20,7 +21,7 @@ const UnitOptionsQuestion: React.FunctionComponent<UnitOptionsQuestionProps> = (
   const setSelectedAnswer = useLearnUnitStore((state) => state.setActiveQuestionData);
 
   const handleSelectAnswer = (newAnswer: string) => {
-    setSelectedAnswer({ type: "GUESS_THE_SENTENCE_MEAN", selectedAnswer: selectedAnswer === newAnswer ? null : newAnswer, answer: props.data.answer });
+    setSelectedAnswer({ type, selectedAnswer: selectedAnswer === newAnswer ? null : newAnswer, answer: props.data.answer });
   };
 
   return <OptionsQuestion {...props} handleSelectAnswer={handleSelectAnswer} isLocked={isLocked} selectedAnswer={selectedAnswer} />;

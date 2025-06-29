@@ -23,7 +23,6 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
 
   const questionQueue = useLearnUnitStore((state) => state.data.questionQueue);
 
-  console.log({ questionQueue: questionQueue.length });
 
   const activeQuestionIndex = useLearnUnitStore((state) => state.data.activeQuestionIndex);
 
@@ -76,6 +75,8 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
       initialized.current = true;
     }
   }, [questions]);
+
+  console.log({ questionQueue})
 
   return (
     <View className="flex-1 bg-background">

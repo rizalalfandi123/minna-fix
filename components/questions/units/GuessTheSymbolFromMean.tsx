@@ -19,6 +19,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
 
   return (
     <UnitOptionsQuestion
+      type="GUESS_THE_SYMBOL_FROM_MEAN"
       data={{
         answer: question.data.answer,
         options: question.data.options,

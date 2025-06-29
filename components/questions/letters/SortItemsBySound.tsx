@@ -1,8 +1,8 @@
 import React from "react";
 import LetterSound from "~/components/questions/LetterSound";
-import SortItems from "../SortItems";
 import { LetterQuestionType } from "~/types";
 import { shuffleArray } from "~/helpers/array";
+import LetterSortItems from "./LetterSortItems";
 
 export type SortItemsBySoundProps = {
   question: Extract<LetterQuestionType, { type: "SORT_THE_ITEMS_BY_SOUND" }>;
@@ -12,7 +12,7 @@ const SortItemsBySound: React.FunctionComponent<SortItemsBySoundProps> = ({ ques
   const suffleOptions = React.useMemo(() => shuffleArray(question.data.options), [question.data.options]);
 
   return (
-    <SortItems
+    <LetterSortItems
       answer={question.data.answer}
       options={suffleOptions}
       renderQuestion={() => {

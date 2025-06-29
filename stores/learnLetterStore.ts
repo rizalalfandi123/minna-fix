@@ -1,22 +1,19 @@
 import { create } from "zustand";
-import { isOptionsQuestion } from "~/helpers/letterQuestionNarrowing";
+import { SorterItemData } from "~/components/questions/ItemSorter";
+import { isOptionsQuestion, isSortQuestion } from "~/helpers/letterQuestionNarrowing";
 import { Nullable, TAnswerStatus, LetterQuestion } from "~/types";
 
-export type TLearnLetterQuestionData = {
-  type: "GUESS_THE_LETTER" | "GUESS_THE_SYMBOL" | "GUESS_THE_LETTER_SOUND";
-  selectedAnswer: Nullable<string>;
-  answer: string;
-};
-// | {
-//     type: "SORT_THE_MEAN";
-//     selectedAnswer: Array<SorterItemData>;
-//     answer: string;
-//   }
-// | {
-//     type: "WRITE_THE_SYMBOL_FROM_SOUND";
-//     inputAnswer: string;
-//     answer: string;
-//   };
+export type TLearnLetterQuestionData =
+  | {
+      type: "GUESS_THE_LETTER" | "GUESS_THE_SYMBOL" | "GUESS_THE_LETTER_SOUND";
+      selectedAnswer: Nullable<string>;
+      answer: string;
+    }
+  | {
+      type: "SORT_THE_ITEMS_BY_SOUND";
+      selectedAnswer: Array<SorterItemData>;
+      answer: string;
+    };
 
 export type TLetterQuestionQueueItem = LetterQuestion | "SUMMARY";
 
@@ -41,6 +38,8 @@ export type TLearnLetterStoreMutations = {
 
   setActiveQuestionData: (data: Nullable<TLearnLetterQuestionData>) => void;
 
+  resetData: () => void;
+
   handleSuccessAnswer: (cb?: (nextActiveQuestionIndex: number) => void) => void;
 
   handleFailedAnswer: (cb?: (nextActiveQuestionIndex: number) => void) => void;
@@ -50,16 +49,18 @@ export type TLearnLetterStoreMutations = {
 
 export type TLearnLetterStore = TLearnLetterStoreData & TLearnLetterStoreMutations;
 
-const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
-  data: {
-    questionQueue: [],
-    activeQuestionIndex: 0,
-    activeQuestionData: {
-      answerStatus: null,
-      isLocked: false,
-      data: null,
-    },
+const initalData: TLearnLetterStoreData["data"] = {
+  questionQueue: [],
+  activeQuestionIndex: 0,
+  activeQuestionData: {
+    answerStatus: null,
+    isLocked: false,
+    data: null,
   },
+};
+
+const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
+  data: initalData,
 
   setQuestionQueue: (queue) => set((prev) => ({ data: { ...prev.data, questionQueue: queue } })),
 
@@ -125,6 +126,11 @@ const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
     set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, data } } });
   },
 
+  resetData: () =>
+    set({
+      data: initalData,
+    }),
+
   handleCheckAnserStatus: () => {
     const previousData = get();
 
@@ -140,27 +146,13 @@ const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
       }
     }
 
-    // if (isSortQuestion(previousData.data.activeQuestionData.data)) {
-    //   const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
+    if (isSortQuestion(previousData.data.activeQuestionData.data)) {
+      const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-    //   const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
+      const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
 
-    //   if (typeof selectedAnswer === "string") {
-    //     answerStatus = isCorrect ? "success" : "error";
-    //   }
-    // }
-
-    // if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
-    //   const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
-
-    //   const isCorrect = inputAnswer.trim() === previousData.data.activeQuestionData.data.answer;
-
-    //   if (typeof inputAnswer === "string") {
-    //     answerStatus = isCorrect ? "success" : "error";
-    //   }
-    // }
-
-    // console.log({ answerStatus });
+      answerStatus = isCorrect ? "success" : "error";
+    }
 
     set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, answerStatus } } });
   },

@@ -4,14 +4,14 @@ import { Nullable } from "~/types";
 export function isOptionsQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
   TLearnUnitQuestionData,
   {
-    type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN";
+    type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
   }
 > {
   if (!questionData) {
     return false;
   }
 
-  return ["GUESS_THE_SENTENCE_MEAN", "GUESS_THE_SYMBOL_FROM_MEAN"].includes(questionData.type);
+  return ["GUESS_THE_SENTENCE_MEAN", "GUESS_THE_SYMBOL_FROM_MEAN", "GUESS_THE_SOUND_MEAN"].includes(questionData.type);
 }
 
 export function isSortQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
@@ -41,5 +41,5 @@ export function isWriteQuestion(questionData: Nullable<TLearnUnitQuestionData>):
 }
 
 export function isSummarySection(item: TUnitQuestionQueueItem): item is "SUMMARY" {
-  return typeof item === "string"
-} 
+  return typeof item === "string";
+}

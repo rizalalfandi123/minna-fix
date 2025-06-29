@@ -15,6 +15,7 @@ const GuessTheSymbol: React.FC<GuessTheSymbolProps> = ({ question }) => {
 
   return (
     <LetterOptionsQuestion
+      type="GUESS_THE_SYMBOL"
       data={question.data}
       renderInstruction={() => {
         return (

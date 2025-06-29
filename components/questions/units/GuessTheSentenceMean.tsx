@@ -11,15 +11,16 @@ import UnitOptionsQuestion from "./UnitOptionsQuestion";
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
   withHint: boolean;
-}
+};
 
-const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint}) => {
+const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint }) => {
   const { i18n } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
   return (
     <UnitOptionsQuestion
+      type="GUESS_THE_SENTENCE_MEAN"
       data={{
         answer: question.data.answer[activeLang],
         options: question.data.options.map((item) => item[activeLang]),

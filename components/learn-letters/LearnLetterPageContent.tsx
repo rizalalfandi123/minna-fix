@@ -23,7 +23,7 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
 
   const questionQueue = useLearnLetterStore((state) => state.data.questionQueue);
 
-  console.log({ questionQueue: questionQueue.length });
+  console.log({ questionQueue: questionQueue });
 
   const activeQuestionIndex = useLearnLetterStore((state) => state.data.activeQuestionIndex);
 
