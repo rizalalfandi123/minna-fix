@@ -18,13 +18,15 @@ export type TLearnUnitQuestionData =
     }
   | {
       type: "WRITE_THE_SYMBOL_FROM_SOUND";
-      inputAnswer: string
-      answer: string
+      inputAnswer: string;
+      answer: string;
     };
+
+export type TUnitQuestionQueueItem = { question: UnitQuestion; withHint: boolean } | "SUMMARY";
 
 export type TLearnUnitStoreData = {
   data: {
-    questionQueue: Array<UnitQuestion>;
+    questionQueue: Array<TUnitQuestionQueueItem>;
     activeQuestionIndex: number;
     activeQuestionData: {
       answerStatus: TAnswerStatus;
@@ -35,7 +37,7 @@ export type TLearnUnitStoreData = {
 };
 
 export type TLearnUnitStoreMutations = {
-  setQuestionQueue: (data: Array<UnitQuestion>) => void;
+  setQuestionQueue: (data: Array<TUnitQuestionQueueItem>) => void;
 
   setAnswerStatus: (status: TAnswerStatus) => void;
 
@@ -153,7 +155,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     }
 
     if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
-       const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
+      const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
 
       const isCorrect = inputAnswer.trim() === previousData.data.activeQuestionData.data.answer;
 

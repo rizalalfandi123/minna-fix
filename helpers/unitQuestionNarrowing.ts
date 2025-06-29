@@ -1,4 +1,4 @@
-import { TLearnUnitQuestionData } from "~/stores/learnUnitStore";
+import { TLearnUnitQuestionData, TUnitQuestionQueueItem } from "~/stores/learnUnitStore";
 import { Nullable } from "~/types";
 
 export function isOptionsQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
@@ -39,3 +39,7 @@ export function isWriteQuestion(questionData: Nullable<TLearnUnitQuestionData>):
 
   return ["WRITE_THE_SYMBOL_FROM_SOUND"].includes(questionData.type);
 }
+
+export function isSummarySection(item: TUnitQuestionQueueItem): item is "SUMMARY" {
+  return typeof item === "string"
+} 

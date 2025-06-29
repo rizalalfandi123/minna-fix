@@ -12,7 +12,7 @@ import { useScreenMode } from "~/lib/useScreenMode";
 export type StepsBlock<T extends { id: string; isComplete: boolean }> = Array<{ block: Array<T>; isActive: boolean }>;
 
 const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: { levels: StepsBlock<T>; onPressItem: (item: T) => void }) => {
-  const { learnUnitHeight } = useScreenHeight();
+  const { unitLevelListHeight } = useScreenHeight();
 
   const padding = 44;
 
@@ -29,7 +29,7 @@ const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: 
   const totalHeight = props.levels.length * (circleSize + padding / 2) + circleSize;
 
   return (
-    <View style={{ height: learnUnitHeight }}>
+    <View style={{ height: unitLevelListHeight }}>
       <ScrollView
         contentContainerStyle={{
           minHeight: totalHeight,

@@ -6,7 +6,7 @@ import { useGetDetailUnitLevels } from "~/services/queries/unitLevels";
 import useUnitProgress from "~/services/queries/unitProgressQueries";
 import { UnitLevel } from "~/types";
 
-type VocabularyLevel = UnitLevel & { isComplete: boolean };
+type TVocabularyLevel = UnitLevel & { isComplete: boolean };
 
 const VocabularyPage = () => {
   const params = useLocalSearchParams<{ id: string }>();
@@ -15,7 +15,7 @@ const VocabularyPage = () => {
 
   const { data: unitLevels = [] } = useGetDetailUnitLevels(params.id);
 
-  const data: StepsBlock<VocabularyLevel> = React.useMemo(() => {
+  const data: StepsBlock<TVocabularyLevel> = React.useMemo(() => {
     const blocks = chunkArray(
       unitLevels.map((level) => ({ ...level, isComplete: unitProgress.some((progress) => progress.unit_level_id === level.id) })),
       3
@@ -36,7 +36,7 @@ const VocabularyPage = () => {
     router.navigate({ pathname: "/learn/vocabulary/[id]", params: { id: unit.id } });
   };
 
-  return <StepsPageContent<VocabularyLevel> onPressItem={handlePressBlock} levels={data} />;
+  return <StepsPageContent<TVocabularyLevel> onPressItem={handlePressBlock} levels={data} />;
 };
 
 export default VocabularyPage;

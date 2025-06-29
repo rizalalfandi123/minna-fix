@@ -42,7 +42,7 @@ const OptionsQuestion: React.FunctionComponent<OptionsQuestionProps> = ({ data, 
     <View className="w-full flex-1 flex-col">
       {renderInstruction && renderInstruction({ data })}
 
-      {renderAnswer && <View className="w-full flex-1 items-center bg-red-400 justify-center">{renderAnswer({ data })}</View>}
+      {renderAnswer && <View className="w-full flex-1 items-center justify-center">{renderAnswer({ data })}</View>}
 
       {renderOptions && (
         <View className="h-64 items-center justify-center">

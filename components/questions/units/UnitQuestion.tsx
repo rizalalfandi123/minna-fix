@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
-import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
 import GuessTheSentenceMean from "./GuessTheSentenceMean";
 import GuessTheSymbolFromMean from "./GuessTheSymbolFromMean";
 import SortTheMeans from "./SortTheMeans";
@@ -19,11 +18,11 @@ export type UnitQuestionProps = {
 };
 
 const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }) => {
-  const { screenHeight } = useScreenHeight();
-
   const { i18n } = useTranslation();
 
   const activeLang = i18n.language as Language;
+
+  const { contentWidth } = useScreenHeight();
 
   const renderQuestion = React.useMemo(() => {
     const questionData = question.question.data;
@@ -49,10 +48,10 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
         return <SortTheMeans withHint={withHint} question={questionData} />;
 
       case "SORT_THE_SYMBOLS_FROM_MEAN":
-        return <SortTheSymbolFromMean  withHint={withHint} question={questionData} />;
+        return <SortTheSymbolFromMean withHint={withHint} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_MEAN":
-        return <WriteTheSymbolFromMean  withHint={withHint} question={questionData} />;
+        return <WriteTheSymbolFromMean withHint={withHint} question={questionData} />;
 
       case "WRITE_THE_SYMBOL_FROM_SOUND":
         return <WriteTheSymbolFromSound question={questionData} />;
@@ -62,7 +61,11 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
     }
   }, [question]);
 
-  return <View className="flex-col gap-3 flex-1">{renderQuestion}</View>;
+  return (
+    <View style={{ width: contentWidth }} className="flex-col gap-3 flex-1 px-4">
+      {renderQuestion}
+    </View>
+  );
 };
 
 export default UnitQuestion;

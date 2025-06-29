@@ -1,101 +1,77 @@
 import React from "react";
-import { View, FlatList } from "react-native";
-import useBackHandler from "~/hooks/useBackHandler";
-import LearnProgressBar from "../LearnProgressBar";
-import { contentWidth } from "~/lib/constants/sizes";
-import delay from "~/helpers/delay";
-import { isWeb } from "~/helpers/platform";
-import UnitQuestion from "../questions/units/UnitQuestion";
+import { FlatList, View } from "react-native";
+import useScreenHeight from "~/helpers/useScreenHeight";
 import { UnitQuestion as TUnitQuestion } from "~/types";
+import useLearnUnitStore, { TUnitQuestionQueueItem } from "~/stores/learnUnitStore";
+import delay from "~/helpers/delay";
+import AnswerButton from "../questions/AnswerButton";
+import UnitQuestion from "../questions/units/UnitQuestion";
+import LearnProgressBar from "../LearnProgressBar";
 import LearnUnitSummaryPage from "../summaries/LearnUnitSummaryPage";
+import { isSummarySection } from "~/helpers/unitQuestionNarrowing";
 
-type QuestionQueue = { question: TUnitQuestion; isPassed: boolean; withHint: boolean } | "DONE";
+export type LearnUnitPageContentProps = {
+  questions: Array<{ question: TUnitQuestion; withHint: boolean }>;
+  levelId: string;
+  onBack: () => void;
+};
 
-function isQuestionQuene(queue: QuestionQueue): queue is Extract<QuestionQueue, { isPassed: boolean }> {
-  return typeof queue !== "string";
-}
-
-const LearnUnitPageContent: React.FC<{ questions: Array<{ question: TUnitQuestion; withHint: boolean }>; levelId: string }> = ({ questions, levelId }) => {
+const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, levelId, onBack }) => {
   const initialized = React.useRef<boolean>(false);
 
-  const handleBack = useBackHandler("/units");
+  const listRef = React.useRef<FlatList<TUnitQuestionQueueItem> | null>(null);
 
-  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
+  const questionQueue = useLearnUnitStore((state) => state.data.questionQueue);
 
-  const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
+  console.log({ questionQueue: questionQueue.length });
 
-  const [currentIndex, setCurrentIndex] = React.useState<number>(0);
+  const activeQuestionIndex = useLearnUnitStore((state) => state.data.activeQuestionIndex);
 
-  const handleNext = React.useCallback(() => {
-    if (currentIndex < questionQueue.length - 1) {
-      const newIndex = currentIndex + 1;
+  const answerStatus = useLearnUnitStore((state) => state.data.activeQuestionData.answerStatus);
 
-      setCurrentIndex(newIndex);
+  const handleCheckAnserStatus = useLearnUnitStore((state) => state.handleCheckAnserStatus);
 
-      const scrollToNext = () =>
-        flatListRef.current?.scrollToIndex({
-          index: newIndex,
-          animated: true,
-        });
+  const setQuestionQueue = useLearnUnitStore((state) => state.setQuestionQueue);
 
-      if (isWeb) {
-        delay(100).then(() => {
-          scrollToNext();
-        });
-      } else {
-        scrollToNext();
-      }
+  const handleSuccessAnswer = useLearnUnitStore((state) => state.handleSuccessAnswer);
+
+  const handleFailedAnswer = useLearnUnitStore((state) => state.handleFailedAnswer);
+
+  const { learnHight, contentWidth } = useScreenHeight();
+
+  const handlePressContinue = () => {
+    if (answerStatus === "success") {
+      handleSuccessAnswer((nextIndex) => {
+        if (listRef.current) {
+          listRef.current.scrollToIndex({ index: nextIndex });
+        }
+      });
     }
-  }, [currentIndex, questionQueue]);
 
-  const renderItem = React.useCallback(
-    ({ item, index }: { item: QuestionQueue; index: number }) => {
-      if (item === "DONE") {
-        return <LearnUnitSummaryPage levelId={levelId} onNext={handleBack} />;
-      }
+    if (answerStatus === "error") {
+      handleFailedAnswer((nextIndex) => {
+        if (listRef.current) {
+          listRef.current.scrollToIndex({ index: nextIndex, animated: true });
+        }
+      });
+    }
+  };
 
-      return (
-        <UnitQuestion
-          question={item.question}
-          key={index}
-          onCorrectAnswer={() => {
-            const nextQuestionQueue = questionQueue.map((item, i) => {
-              if (index === i && isQuestionQuene(item)) {
-                return { ...item, isPassed: true };
-              }
+  const renderItem = ({ item }: { item: TUnitQuestionQueueItem; index: number }) => {
+    if (isSummarySection(item)) {
+      return <LearnUnitSummaryPage levelId={levelId} onNext={onBack} />;
+    }
 
-              return item;
-            });
-
-            setQuestionQueue(nextQuestionQueue);
-
-            handleNext();
-          }}
-          withHint={item.withHint}
-          onErrorAnswer={() => {
-            setQuestionQueue((prev) => {
-              const newValue = [...prev];
-
-              newValue.splice(questionQueue.length - 1, 0, item);
-
-              return newValue;
-            });
-
-            handleNext();
-          }}
-        />
-      );
-    },
-    [currentIndex, handleNext]
-  );
+    return (
+      <View style={{ height: learnHight }} className="justify-center flex-col gap-2 items-center">
+        <UnitQuestion question={item.question} withHint={item.withHint} />
+      </View>
+    );
+  };
 
   React.useEffect(() => {
     if (!initialized.current && questions.length > 0) {
-      const initialQuestionQueue = questions.map((item) => ({ isPassed: false, question: item.question, withHint: item.withHint }));
-
-      console.log({ initialQuestionQueue, questions });
-
-      setQuestionQueue([...initialQuestionQueue, "DONE"]);
+      setQuestionQueue([...questions, "SUMMARY"]);
 
       initialized.current = true;
     }
@@ -103,13 +79,13 @@ const LearnUnitPageContent: React.FC<{ questions: Array<{ question: TUnitQuestio
 
   return (
     <View className="flex-1 bg-background">
-      <LearnProgressBar handleBack={handleBack} health={8} progress={20} />
+      {activeQuestionIndex < questionQueue.length - 1 && <LearnProgressBar handleBack={onBack} health={8} progress={20} />}
 
-      <FlatList<QuestionQueue>
-        ref={flatListRef}
+      <FlatList<TUnitQuestionQueueItem>
+        ref={listRef}
         data={questionQueue}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${isQuestionQuene(item) ? item.question.id : item}-${index}`}
+        keyExtractor={(item, index) => `${index}-${isSummarySection(item) ? item : item.question.id}`}
         horizontal
         pagingEnabled
         scrollEnabled={false}
@@ -124,13 +100,17 @@ const LearnUnitPageContent: React.FC<{ questions: Array<{ question: TUnitQuestio
           const wait = delay(500);
 
           wait.then(() => {
-            flatListRef.current?.scrollToIndex({
+            listRef.current?.scrollToIndex({
               index: info.index,
               animated: true,
             });
           });
         }}
       />
+
+      {activeQuestionIndex < questionQueue.length - 1 && (
+        <AnswerButton onPressCheckAnswer={handleCheckAnserStatus} onPressContinue={handlePressContinue} answerStatus={answerStatus} />
+      )}
     </View>
   );
 };

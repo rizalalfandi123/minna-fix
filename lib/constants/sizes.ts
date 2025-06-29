@@ -10,6 +10,9 @@ export const contentWidth = Math.min(Dimensions.get("window").width, maxContentW
 
 export const learnProgressBarHeight = 14 * 4;
 
+export const learnAnswerHeight = 24 * 4;
+
 export const bottomNavHeight = 64;
 
 export const pageHeaderHeight = 56;
+

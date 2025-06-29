@@ -12,7 +12,7 @@ const LetterOptions: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ options, onSelectOption, selectedAnswer, disabled }) => {
 
-  const suffleOptions = React.useMemo(() => shuffleArray(options), [])
+  const suffleOptions = React.useMemo(() => shuffleArray(options), [options])
 
   return (
     <View className="flex-row flex-wrap justify-center gap-3">

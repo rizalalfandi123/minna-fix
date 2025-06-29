@@ -6,7 +6,7 @@ import { Text } from "~/components/ui/text";
 import { AnswerStatus } from "~/types";
 import { cn } from "~/lib/utils";
 import useKeyboardVisibility from "~/hooks/useKeyboardVisibility";
-import { learnProgressBarHeight } from "~/lib/constants/sizes";
+import { learnAnswerHeight, learnProgressBarHeight } from "~/lib/constants/sizes";
 import useScreenHeight from "~/helpers/useScreenHeight";
 import useLearnUnitStore from "~/stores/learnUnitStore";
 import { isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
@@ -19,7 +19,7 @@ export type WriteTheSymbolProps = {
 };
 
 const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
-  const { screenHeight } = useScreenHeight();
+  const { learnHight, screenHeight } = useScreenHeight();
 
   const [inputValue, setInputValue] = React.useState<string>("");
 
@@ -35,56 +35,19 @@ const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
 
   const setSelectedAnswer = useLearnUnitStore((state) => state.setActiveQuestionData);
 
-  // const [kanaValue, setKanaValue] = React.useState<string>("");
-
-  // const [answerStatus, setAnswerStatus] = React.useState<AnswerStatus>(null);
-
   const { isVisible: isVisibleKeyboard, height: keyboardHeight } = useKeyboardVisibility();
 
   const questionHeight = React.useMemo<number>(() => {
-    return screenHeight - learnProgressBarHeight - 96 - 20 - (isVisibleKeyboard ? keyboardHeight : 0);
-  }, [isVisibleKeyboard, keyboardHeight]);
+    return screenHeight - learnProgressBarHeight - 8 - (isVisibleKeyboard ? 0 : learnAnswerHeight) - (isVisibleKeyboard ? keyboardHeight : 0);
+  }, [isVisibleKeyboard, keyboardHeight, learnHight]);
 
   const onChangeText = (text: string) => {
     setInputValue(text);
 
     React.startTransition(() => {
       setSelectedAnswer({ type: "WRITE_THE_SYMBOL_FROM_SOUND", answer: props.data.answer, inputAnswer: wanakana.toKana(text) });
-      // setKanaValue(wanakana.toKana(text));
     });
   };
-
-  // const handleResetAnswer = () => {
-  //   setInputValue("");
-  //   // setKanaValue("");
-  //   // setAnswerStatus(null);
-  // };
-
-  // const handleContinue = () => {
-  //   if (answerStatus === "success") {
-  //     props.onCorrectAnswer?.();
-  //   } else {
-  //     props.onErrorAnswer?.();
-  //   }
-
-  //   handleResetAnswer();
-  // };
-
-  // const handleCheckAnswer = () => {
-  //   if (!kanaValue) return;
-
-  //   const isCorrect = kanaValue.trim() === props.data.answer;
-
-  //   setAnswerStatus(isCorrect ? "success" : "error");
-  // };
-
-  // const handleNext = () => {
-  //   if (answerStatus === null) {
-  //     handleCheckAnswer();
-  //   } else {
-  //     handleContinue();
-  //   }
-  // };
 
   return (
     <KeyboardAvoidingView behavior="padding" className="w-full flex-1">

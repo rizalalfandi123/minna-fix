@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
+import {  learnProgressBarHeight } from "~/lib/constants/sizes";
 import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { v4 as uuid } from "uuid";
@@ -11,7 +11,7 @@ import { UNIT_PROGRESS_KEY } from "~/services/queries/unitProgressQueries";
 const LearnUnitSummaryPage: React.FC<{ onNext: () => void; levelId: string }> = ({ onNext, levelId }) => {
   const queryClient = useQueryClient();
 
-  const { screenHeight } = useScreenHeight();
+  const { screenHeight, contentWidth } = useScreenHeight();
 
   const { mutate } = useUnitProgressMutation({
     onSuccess() {
