@@ -1,5 +1,5 @@
 import React from "react";
-import { AnswerStatus } from "~/types";
+import { TAnswerStatus } from "~/types";
 import { View } from "react-native";
 import AnswerButton from "~/components/questions/AnswerButton";
 import ItemSorter, { SorterItem, SorterItemData } from "~/components/questions/ItemSorter";
@@ -17,7 +17,7 @@ export type SortItemsProps = {
 const SortItems: React.FunctionComponent<SortItemsProps> = ({ answer, options, renderQuestion }) => {
   const { t } = useTranslation();
 
-  // const [answerStatus, setAnswerStatus] = React.useState<AnswerStatus>(null);
+  // const [answerStatus, setAnswerStatus] = React.useState<TAnswerStatus>(null);
 
   // const [selectedItems, setSelectedItems] = React.useState<Array<TSorterItemData>>([]);
 

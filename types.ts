@@ -15,7 +15,7 @@ export type TLetterTypeName = "hiragana" | "katakana" | "kanji";
 
 export type MutationOperation = "create" | "edit" | "delete";
 
-export type AnswerStatus = Nullable<"success" | "error">;
+export type TAnswerStatus = Nullable<"success" | "error">;
 
 export type TranslatedWord = Record<"id" | "en", string>;
 

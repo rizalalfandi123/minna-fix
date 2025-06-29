@@ -1,118 +1,93 @@
 import React from "react";
-import { View, FlatList } from "react-native";
-import useBackHandler from "~/hooks/useBackHandler";
-import LetterQuestion from "~/components/questions/letters/LetterQuestion";
-import LearnProgressBar from "../LearnProgressBar";
-import { contentWidth } from "~/lib/constants/sizes";
+import { FlatList, View } from "react-native";
+import useScreenHeight from "~/helpers/useScreenHeight";
 import delay from "~/helpers/delay";
-import { isWeb } from "~/helpers/platform";
-import { DetailLetterLevelQuestion } from "~/services/queries/letterLevelQuestionQueries";
-import { LetterQuestionType } from "~/types";
+import AnswerButton from "../questions/AnswerButton";
+import LearnProgressBar from "../LearnProgressBar";
+import { isSummarySection } from "~/helpers/letterQuestionNarrowing";
 import LearnLetterSummaryPage from "../summaries/LearnLetterSummaryPage";
-
-type QuestionQueue = { question: LetterQuestionType; isPassed: boolean } | "DONE";
+import useLearnLetterStore, { type TLetterQuestionQueueItem } from "~/stores/learnLetterStore";
+import LetterQuestion from "../questions/letters/LetterQuestion";
+import { DetailLetterLevelQuestion } from "~/services/queries/letterLevelQuestionQueries";
 
 export type LearnLetterPageContentProps = {
-  levelQuestions: Array<DetailLetterLevelQuestion>;
+  questions: Array<DetailLetterLevelQuestion>;
   levelId: string;
+  onBack: () => void;
 };
 
-function isQuestionQuene(queue: QuestionQueue): queue is Extract<QuestionQueue, { isPassed: boolean }> {
-  return typeof queue !== "string";
-}
+const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questions, levelId, onBack }) => {
+  const initialized = React.useRef<boolean>(false);
 
-const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQuestions, levelId }) => {
-  const initedQuestion = React.useRef<boolean>(false);
+  const listRef = React.useRef<FlatList<TLetterQuestionQueueItem> | null>(null);
 
-  const handleBack = useBackHandler("/units");
+  const questionQueue = useLearnLetterStore((state) => state.data.questionQueue);
 
-  const [questionQueue, setQuestionQueue] = React.useState<Array<QuestionQueue>>([]);
+  console.log({ questionQueue: questionQueue.length });
 
-  const flatListRef = React.useRef<FlatList<QuestionQueue>>(null);
+  const activeQuestionIndex = useLearnLetterStore((state) => state.data.activeQuestionIndex);
 
-  const [currentIndex, setCurrentIndex] = React.useState<number>(0);
+  const answerStatus = useLearnLetterStore((state) => state.data.activeQuestionData.answerStatus);
 
-  const handleNext = React.useCallback(() => {
-    if (currentIndex < questionQueue.length - 1) {
-      const newIndex = currentIndex + 1;
+  const handleCheckAnserStatus = useLearnLetterStore((state) => state.handleCheckAnserStatus);
 
-      setCurrentIndex(newIndex);
+  const setQuestionQueue = useLearnLetterStore((state) => state.setQuestionQueue);
 
-      const scrollToNext = () =>
-        flatListRef.current?.scrollToIndex({
-          index: newIndex,
-          animated: true,
-        });
+  const handleSuccessAnswer = useLearnLetterStore((state) => state.handleSuccessAnswer);
 
-      if (isWeb) {
-        delay(100).then(() => {
-          scrollToNext();
-        });
-      } else {
-        scrollToNext();
-      }
+  const handleFailedAnswer = useLearnLetterStore((state) => state.handleFailedAnswer);
+
+  const { learnHight, contentWidth } = useScreenHeight();
+
+  const handlePressContinue = () => {
+    if (answerStatus === "success") {
+      handleSuccessAnswer((nextIndex) => {
+        if (listRef.current) {
+          listRef.current.scrollToIndex({ index: nextIndex });
+        }
+      });
     }
-  }, [currentIndex, questionQueue]);
 
-  const renderItem = React.useCallback(
-    ({ item, index }: { item: QuestionQueue; index: number }) => {
-      if (item === "DONE") {
-        return <LearnLetterSummaryPage levelId={levelId} onNext={handleBack} />;
-      }
+    if (answerStatus === "error") {
+      handleFailedAnswer((nextIndex) => {
+        if (listRef.current) {
+          listRef.current.scrollToIndex({ index: nextIndex, animated: true });
+        }
+      });
+    }
+  };
 
-      return (
-        <LetterQuestion
-          question={item.question}
-          key={index}
-          onCorrectAnswer={() => {
-            const nextQuestionQueue = questionQueue.map((item, i) => {
-              if (index === i && isQuestionQuene(item)) {
-                return { ...item, isPassed: true };
-              }
+  const renderItem = ({ item }: { item: TLetterQuestionQueueItem; index: number }) => {
+    if (isSummarySection(item)) {
+      return <LearnLetterSummaryPage levelId={levelId} onNext={onBack} />;
+    }
 
-              return item;
-            });
-
-            setQuestionQueue(nextQuestionQueue);
-
-            handleNext();
-          }}
-          onErrorAnswer={() => {
-            setQuestionQueue((prev) => {
-              const newValue = [...prev];
-
-              newValue.splice(questionQueue.length - 1, 0, item);
-
-              return newValue;
-            });
-
-            handleNext();
-          }}
-        />
-      );
-    },
-    [currentIndex, handleNext, questionQueue, levelId]
-  );
+    return (
+      <View style={{ height: learnHight }} className="justify-center flex-col gap-2 items-center">
+        <LetterQuestion question={item} />
+      </View>
+    );
+  };
 
   React.useEffect(() => {
-    if (!initedQuestion.current && levelQuestions.length > 0) {
-      const initialQuestionQueue = levelQuestions.map((level) => ({ isPassed: false, question: level.letter_questions.question }));
+    if (!initialized.current && questions.length > 0) {
+      const initialQuestionQueue = questions.map((item) => item.letter_questions);
 
-      setQuestionQueue([...initialQuestionQueue, "DONE"]);
+      setQuestionQueue([...initialQuestionQueue, "SUMMARY"]);
 
-      initedQuestion.current = true;
+      initialized.current = true;
     }
-  }, [levelQuestions]);
+  }, [questions]);
 
   return (
     <View className="flex-1 bg-background">
-      <LearnProgressBar handleBack={handleBack} health={8} progress={20} />
+      {activeQuestionIndex < questionQueue.length - 1 && <LearnProgressBar handleBack={onBack} health={8} progress={20} />}
 
-      <FlatList<QuestionQueue>
-        ref={flatListRef}
+      <FlatList<TLetterQuestionQueueItem>
+        ref={listRef}
         data={questionQueue}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${isQuestionQuene(item) ? item.question.type : item}-${index}`}
+        keyExtractor={(item, index) => `${index}-${isSummarySection(item) ? item : item.question.type}`}
         horizontal
         pagingEnabled
         scrollEnabled={false}
@@ -127,13 +102,17 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ levelQu
           const wait = delay(500);
 
           wait.then(() => {
-            flatListRef.current?.scrollToIndex({
+            listRef.current?.scrollToIndex({
               index: info.index,
               animated: true,
             });
           });
         }}
       />
+
+      {activeQuestionIndex < questionQueue.length - 1 && (
+        <AnswerButton onPressCheckAnswer={handleCheckAnserStatus} onPressContinue={handlePressContinue} answerStatus={answerStatus} />
+      )}
     </View>
   );
 };

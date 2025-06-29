@@ -3,7 +3,7 @@ import { Input } from "~/components/ui/input";
 import React from "react";
 import * as wanakana from "wanakana";
 import { Text } from "~/components/ui/text";
-import { AnswerStatus } from "~/types";
+import { TAnswerStatus } from "~/types";
 import { cn } from "~/lib/utils";
 import useKeyboardVisibility from "~/hooks/useKeyboardVisibility";
 import { learnAnswerHeight, learnProgressBarHeight } from "~/lib/constants/sizes";
@@ -59,9 +59,7 @@ const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
             <Text className={cn("text-center font-sans-medium text-2xl", { "text-accent": !inputAnswer })}>{inputAnswer || "Your input in kana"}</Text>
           </View>
 
-          <View className="px-4">
-            <Input value={inputValue} onChangeText={onChangeText} placeholder="Input here" returnKeyType="done" onSubmitEditing={handleCheckAnserStatus} />
-          </View>
+          <Input className="w-full" value={inputValue} onChangeText={onChangeText} placeholder="Input here" returnKeyType="done" onSubmitEditing={handleCheckAnserStatus} />
         </View>
       </View>
     </KeyboardAvoidingView>

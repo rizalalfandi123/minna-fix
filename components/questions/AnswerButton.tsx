@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { AnswerStatus } from "~/types";
+import { TAnswerStatus } from "~/types";
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { AnimatedView } from "../Animations";
 import useAnswerSound from "~/hooks/useAnswerSound";
@@ -11,7 +11,7 @@ import { cn } from "~/lib/utils";
 import { useTranslation } from "react-i18next";
 
 export type AnswerButtonProps = {
-  answerStatus: AnswerStatus;
+  answerStatus: TAnswerStatus;
   onPressContinue: ButtonProps["onPress"];
   onPressCheckAnswer: ButtonProps["onPress"];
 };
@@ -23,7 +23,7 @@ const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus
 
   const answerSound = useAnswerSound();
 
-  const playAudio = async (type: AnswerStatus) => {
+  const playAudio = async (type: TAnswerStatus) => {
     if (type === null) return;
 
     answerSound.play(type);

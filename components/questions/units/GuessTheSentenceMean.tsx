@@ -6,6 +6,7 @@ import LetterOptions from "../LetterOptions";
 import { UnitQuestionType } from "~/types";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import UnitOptionsQuestion from "./UnitOptionsQuestion";
 
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
@@ -18,7 +19,7 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, w
   const activeLang = i18n.language as Language;
 
   return (
-    <OptionsQuestion
+    <UnitOptionsQuestion
       data={{
         answer: question.data.answer[activeLang],
         options: question.data.options.map((item) => item[activeLang]),

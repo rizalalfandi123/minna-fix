@@ -1,47 +1,54 @@
 import React from "react";
 import { View } from "react-native";
-import SortItemsBySound from "~/components/questions/letters/SortItemsBySound";
-import GuessTheLetter from "~/components/questions/letters/GuessTheLetters";
 import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
-import GuessTheSymbol from "~/components/questions/letters/GuessTheSymbol";
-import MatchingTextByText from "~/components/questions/letters/MatchingTextByText";
-import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
-import { LetterQuestionType } from "~/types";
 import useScreenHeight from "~/helpers/useScreenHeight";
+import { LetterQuestion as TLetterQuestion } from "~/types";
+import GuessTheLetter from "./GuessTheLetters";
+import GuessTheSymbol from "./GuessTheSymbol";
+import MatchingTextByText from "./MatchingTextByText";
+import SortItemsBySound from "./SortItemsBySound";
 
 export type LetterQuestionProps = {
-  question: LetterQuestionType;
-  onCorrectAnswer?: () => void;
-  onErrorAnswer?: () => void;
+  question: TLetterQuestion;
+  withHint?: boolean;
 };
 
-const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, ...props }) => {
-  const { screenHeight } = useScreenHeight();
+const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, withHint = true }) => {
+  const { contentWidth } = useScreenHeight();
 
   const renderQuestion = React.useMemo(() => {
-    switch (question.type) {
-      case "GUESS_THE_LETTER":
-        return <GuessTheLetter {...props} question={question} />;
+    const questionData = question.question;
 
-      case "GUESS_THE_LETTER_SOUND":
-        return <GuessTheLetterSound {...props} {...question.data} />;
+    switch (questionData.type) {
+      case "GUESS_THE_LETTER":
+        return <GuessTheLetter question={questionData} />;
+
+      case "GUESS_THE_LETTER_SOUND": {
+        const guessTheSoundData = {
+          options: questionData.data.options,
+          answer: questionData.data.answer,
+          question: questionData.data.question,
+        };
+
+        return <GuessTheLetterSound {...guessTheSoundData} />;
+      }
 
       case "GUESS_THE_SYMBOL":
-        return <GuessTheSymbol {...props} question={question} />;
+        return <GuessTheSymbol question={questionData} />;
 
       case "MATCHING_TEXT_BY_TEXT":
-        return <MatchingTextByText onFinishAnswer={props.onCorrectAnswer} question={question} />;
+        return <MatchingTextByText question={questionData} />;
 
       case "SORT_THE_ITEMS_BY_SOUND":
-        return <SortItemsBySound {...props} question={question} />;
+        return <SortItemsBySound question={questionData} />;
 
       default:
         return null;
     }
-  }, [question, props]);
+  }, [question]);
 
   return (
-    <View style={{ width: contentWidth, height: screenHeight - learnProgressBarHeight }} className="flex-1 flex-col gap-3">
+    <View style={{ width: contentWidth }} className="flex-col gap-3 flex-1 px-4">
       {renderQuestion}
     </View>
   );

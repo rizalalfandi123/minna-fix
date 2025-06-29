@@ -1,36 +1,32 @@
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 import LetterSymbol from "../LetterSymbol";
-import AnswerButton from "../AnswerButton";
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import { Text } from "~/components/ui/text";
 import { LetterQuestionType } from "~/types";
+import LetterOptionsQuestion from "./LetterOptionsQuestion";
 
 export type GuessTheLetterProps = {
-    question: Extract<LetterQuestionType, { type: "GUESS_THE_LETTER" }>;
-} & Pick<OptionsQuestionProps, "onCorrectAnswer" | "onErrorAnswer">;
+  question: Extract<LetterQuestionType, { type: "GUESS_THE_LETTER" }>;
+};
 
-const GuessTheLetter: React.FC<GuessTheLetterProps> = ({ question, ...props }) => {
-    const { t } = useTranslation();
+const GuessTheLetter: React.FC<GuessTheLetterProps> = ({ question }) => {
+  const { t } = useTranslation();
 
-    return (
-        <OptionsQuestion
-            {...props}
-            data={question.data}
-            renderAnswer={({ data }) => {
-                return <LetterSymbol symbol={data.question} />;
-            }}
-            renderButton={(props) => {
-                return <AnswerButton {...props} />;
-            }}
-            renderInstruction={() => {
-                return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;
-            }}
-            renderOptions={({ data, ...props }) => {
-                return <LetterOptions options={data.options} {...props} />;
-            }}
-        />
-    );
+  return (
+    <LetterOptionsQuestion
+      data={question.data}
+      renderAnswer={({ data }) => {
+        return <LetterSymbol symbol={data.question} />;
+      }}
+      renderInstruction={() => {
+        return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;
+      }}
+      renderOptions={({ data, ...props }) => {
+        return <LetterOptions options={data.options} {...props} />;
+      }}
+    />
+  );
 };
 
 export default GuessTheLetter;

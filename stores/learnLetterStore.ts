@@ -1,47 +1,45 @@
 import { create } from "zustand";
-import { SorterItemData } from "~/components/questions/ItemSorter";
-import { isOptionsQuestion, isSortQuestion, isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
-import { Nullable, TAnswerStatus, UnitQuestion } from "~/types";
+import { isOptionsQuestion } from "~/helpers/letterQuestionNarrowing";
+import { Nullable, TAnswerStatus, LetterQuestion } from "~/types";
 
-export type TLearnUnitQuestionData =
-  | {
-      type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN";
-      selectedAnswer: Nullable<string>;
-      answer: string;
-    }
-  | {
-      type: "SORT_THE_MEAN";
-      selectedAnswer: Array<SorterItemData>;
-      answer: string;
-    }
-  | {
-      type: "WRITE_THE_SYMBOL_FROM_SOUND";
-      inputAnswer: string;
-      answer: string;
-    };
+export type TLearnLetterQuestionData = {
+  type: "GUESS_THE_LETTER" | "GUESS_THE_SYMBOL" | "GUESS_THE_LETTER_SOUND";
+  selectedAnswer: Nullable<string>;
+  answer: string;
+};
+// | {
+//     type: "SORT_THE_MEAN";
+//     selectedAnswer: Array<SorterItemData>;
+//     answer: string;
+//   }
+// | {
+//     type: "WRITE_THE_SYMBOL_FROM_SOUND";
+//     inputAnswer: string;
+//     answer: string;
+//   };
 
-export type TUnitQuestionQueueItem = { question: UnitQuestion; withHint: boolean } | "SUMMARY";
+export type TLetterQuestionQueueItem = LetterQuestion | "SUMMARY";
 
-export type TLearnUnitStoreData = {
+export type TLearnLetterStoreData = {
   data: {
-    questionQueue: Array<TUnitQuestionQueueItem>;
+    questionQueue: Array<TLetterQuestionQueueItem>;
     activeQuestionIndex: number;
     activeQuestionData: {
       answerStatus: TAnswerStatus;
       isLocked: boolean;
-      data: Nullable<TLearnUnitQuestionData>;
+      data: Nullable<TLearnLetterQuestionData>;
     };
   };
 };
 
-export type TLearnUnitStoreMutations = {
-  setQuestionQueue: (data: Array<TUnitQuestionQueueItem>) => void;
+export type TLearnLetterStoreMutations = {
+  setQuestionQueue: (data: Array<TLetterQuestionQueueItem>) => void;
 
   setAnswerStatus: (status: TAnswerStatus) => void;
 
   setIsLocked: (status: boolean) => void;
 
-  setActiveQuestionData: (data: Nullable<TLearnUnitQuestionData>) => void;
+  setActiveQuestionData: (data: Nullable<TLearnLetterQuestionData>) => void;
 
   handleSuccessAnswer: (cb?: (nextActiveQuestionIndex: number) => void) => void;
 
@@ -50,9 +48,9 @@ export type TLearnUnitStoreMutations = {
   handleCheckAnserStatus: () => void;
 };
 
-export type TLearnUnitStore = TLearnUnitStoreData & TLearnUnitStoreMutations;
+export type TLearnLetterStore = TLearnLetterStoreData & TLearnLetterStoreMutations;
 
-const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
+const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
   data: {
     questionQueue: [],
     activeQuestionIndex: 0,
@@ -142,28 +140,30 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
       }
     }
 
-    if (isSortQuestion(previousData.data.activeQuestionData.data)) {
-      const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
+    // if (isSortQuestion(previousData.data.activeQuestionData.data)) {
+    //   const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-      const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
+    //   const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
 
-      if (typeof selectedAnswer === "string") {
-        answerStatus = isCorrect ? "success" : "error";
-      }
-    }
+    //   if (typeof selectedAnswer === "string") {
+    //     answerStatus = isCorrect ? "success" : "error";
+    //   }
+    // }
 
-    if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
-      const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
+    // if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
+    //   const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
 
-      const isCorrect = inputAnswer.trim() === previousData.data.activeQuestionData.data.answer;
+    //   const isCorrect = inputAnswer.trim() === previousData.data.activeQuestionData.data.answer;
 
-      if (typeof inputAnswer === "string") {
-        answerStatus = isCorrect ? "success" : "error";
-      }
-    }
+    //   if (typeof inputAnswer === "string") {
+    //     answerStatus = isCorrect ? "success" : "error";
+    //   }
+    // }
+
+    // console.log({ answerStatus });
 
     set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, answerStatus } } });
   },
 }));
 
-export default useLearnUnitStore;
+export default useLearnLetterStore;

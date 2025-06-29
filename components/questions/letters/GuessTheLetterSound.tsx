@@ -3,6 +3,7 @@ import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import LetterSound from "../LetterSound";
 import { Text } from "~/components/ui/text";
+import LetterOptionsQuestion from "./LetterOptionsQuestion";
 
 export type GuessTheLetterSoundProps = {
   options: string[];
@@ -14,7 +15,7 @@ const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, ans
   const { t } = useTranslation();
 
   return (
-    <OptionsQuestion
+    <LetterOptionsQuestion
       data={{ answer, options, question }}
       renderAnswer={({ data }) => {
         return <LetterSound symbol={data.question} />;

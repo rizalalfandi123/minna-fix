@@ -1,5 +1,5 @@
 import React from "react";
-import { AnswerStatus, LetterQuestionType, Nullable } from "~/types";
+import { TAnswerStatus, LetterQuestionType, Nullable } from "~/types";
 import { View } from "react-native";
 import AnswerButton from "../AnswerButton";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { Text } from "~/components/ui/text";
 import { shuffleArray } from "~/helpers/array";
+import useLearnLetterStore from "~/stores/learnLetterStore";
 
 export type MatchingTextByTextProps = {
   question: Extract<LetterQuestionType, { type: "MATCHING_TEXT_BY_TEXT" }>;
@@ -72,10 +73,12 @@ const MemoizedButton = React.memo(
   }
 );
 
-const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ onCorrectAnswer, onErrorAnswer, onFinishAnswer, question }) => {
+const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ question }) => {
   const { t } = useTranslation();
 
-  const [answerStatus, setAnswerStatus] = React.useState<AnswerStatus>(null);
+  // const [answerStatus, setAnswerStatus] = React.useState<TAnswerStatus>(null);
+
+  const setAnswerStatus = useLearnLetterStore(state => state.setAnswerStatus)
 
   const [firstOption, setFirstOption] = React.useState<Nullable<MatchingTextColumn>>(null);
 
@@ -133,13 +136,13 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
         setAnswerStatus(isAllOk ? "success" : null);
       });
 
-      if (isAnswerCorrect && onCorrectAnswer) {
-        onCorrectAnswer();
-      }
+      // if (isAnswerCorrect && onCorrectAnswer) {
+      //   onCorrectAnswer();
+      // }
 
-      if (!isAnswerCorrect && onErrorAnswer) {
-        onErrorAnswer();
-      }
+      // if (!isAnswerCorrect && onErrorAnswer) {
+      //   onErrorAnswer();
+      // }
 
       delay(500).then(() => {
         React.startTransition(() => {
@@ -151,24 +154,24 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
         });
       });
     },
-    [firstOption, onCorrectAnswer, onErrorAnswer]
+    [firstOption]
   );
 
-  const handleReset = () => {
-    if (onFinishAnswer) {
-      onFinishAnswer?.();
-    }
+  // const handleReset = () => {
+  //   if (onFinishAnswer) {
+  //     onFinishAnswer?.();
+  //   }
 
-    React.startTransition(() => {
-      setAnswerStatus(null);
+  //   React.startTransition(() => {
+  //     setAnswerStatus(null);
 
-      setPairedButtons({});
+  //     setPairedButtons({});
 
-      setFirstOption(null);
+  //     setFirstOption(null);
 
-      setLockedButtons({});
-    });
-  };
+  //     setLockedButtons({});
+  //   });
+  // };
 
   return (
     <View className="flex-1 flex-col">
@@ -193,7 +196,6 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
         </View>
       </View>
 
-      <AnswerButton answerStatus={answerStatus} onPress={handleReset} />
     </View>
   );
 };

@@ -1,8 +1,6 @@
 import React from "react";
 import { type Nullable } from "~/types";
 import { View } from "react-native";
-import useLearnUnitStore from "~/stores/learnUnitStore";
-import { isOptionsQuestion } from "~/helpers/unitQuestionNarrowing";
 
 export type OptionsQuestionProps = {
   data: {
@@ -19,25 +17,20 @@ export type OptionsQuestionProps = {
       disabled: boolean;
     }
   ) => React.ReactNode;
+  handleSelectAnswer: (newAnswer: string) => void;
+  selectedAnswer: Nullable<string>;
+  isLocked: boolean;
 };
 
-const OptionsQuestion: React.FunctionComponent<OptionsQuestionProps> = ({ data, renderAnswer, renderInstruction, renderOptions }) => {
-  const isLocked = useLearnUnitStore((state) => state.data.activeQuestionData.isLocked);
-
-  const selectedAnswer = useLearnUnitStore((state) => {
-    if (isOptionsQuestion(state.data.activeQuestionData.data)) {
-      return state.data.activeQuestionData.data.selectedAnswer;
-    }
-
-    return null;
-  });
-
-  const setSelectedAnswer = useLearnUnitStore((state) => state.setActiveQuestionData);
-
-  const handleSelectAnswer = (newAnswer: string) => {
-    setSelectedAnswer({ type: "GUESS_THE_SENTENCE_MEAN", selectedAnswer: selectedAnswer === newAnswer ? null : newAnswer, answer: data.answer });
-  };
-
+const OptionsQuestion: React.FunctionComponent<OptionsQuestionProps> = ({
+  data,
+  renderAnswer,
+  renderInstruction,
+  renderOptions,
+  handleSelectAnswer,
+  selectedAnswer,
+  isLocked,
+}) => {
   return (
     <View className="w-full flex-1 flex-col">
       {renderInstruction && renderInstruction({ data })}

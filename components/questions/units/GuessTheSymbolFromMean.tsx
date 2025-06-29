@@ -1,11 +1,11 @@
 import { UnitQuestionType } from "~/types";
-import OptionsQuestion from "../OptionsQuestion";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import UnitOptionsQuestion from "./UnitOptionsQuestion";
 
 export type GuessTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
@@ -18,7 +18,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
   const activeLang = i18n.language as Language;
 
   return (
-    <OptionsQuestion
+    <UnitOptionsQuestion
       data={{
         answer: question.data.answer,
         options: question.data.options,
