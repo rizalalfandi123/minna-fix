@@ -5,7 +5,6 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { View } from "react-native";
-import { contentWidth } from "~/lib/constants/sizes";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 
@@ -27,7 +26,7 @@ type ItemSorterProps = {
 
 const ItemSorter: React.FC<ItemSorterProps> = ({
   containerHeight = 500,
-  containerWidth = contentWidth,
+  containerWidth = 0,
   rowHeight = 56,
   itemHeight = 44,
   xSpacing = 8,

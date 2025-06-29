@@ -1,18 +1,18 @@
 import { View } from "react-native";
-import { contentWidth, learnProgressBarHeight } from "~/lib/constants/sizes";
+import { learnProgressBarHeight } from "~/lib/constants/sizes";
 import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import useLetterProgressMutation from "~/services/mutations/useLetterProgressMutation";
 import { v4 as uuid } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
 import { LETTER_PROGRESS_KEY } from "~/services/queries/letterProgressQueries";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import useLearnLetterStore from "~/stores/learnLetterStore";
 
 const LearnLetterSummaryPage: React.FC<{ onNext: () => void; levelId: string }> = ({ onNext, levelId }) => {
   const queryClient = useQueryClient();
 
-  const { screenHeight } = useScreenHeight();
+  const { screenHeight, contentWidth } = useScreenSize();
 
   const resetData = useLearnLetterStore((state) => state.resetData);
 

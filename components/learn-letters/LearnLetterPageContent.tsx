@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import delay from "~/helpers/delay";
 import AnswerButton from "../questions/AnswerButton";
 import LearnProgressBar from "../LearnProgressBar";
@@ -37,7 +37,7 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
 
   const handleFailedAnswer = useLearnLetterStore((state) => state.handleFailedAnswer);
 
-  const { learnHight, contentWidth } = useScreenHeight();
+  const { learnHight, contentWidth } = useScreenSize();
 
   const handlePressContinue = () => {
     if (answerStatus === "success") {

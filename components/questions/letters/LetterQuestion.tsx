@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import GuessTheLetterSound from "~/components/questions/letters/GuessTheLetterSound";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import { LetterQuestion as TLetterQuestion } from "~/types";
 import GuessTheLetter from "./GuessTheLetters";
 import GuessTheSymbol from "./GuessTheSymbol";
@@ -14,7 +14,7 @@ export type LetterQuestionProps = {
 };
 
 const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, withHint = true }) => {
-  const { contentWidth } = useScreenHeight();
+  const { contentWidth } = useScreenSize();
 
   const renderQuestion = React.useMemo(() => {
     const questionData = question.question;

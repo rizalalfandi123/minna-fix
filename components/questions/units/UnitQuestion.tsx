@@ -6,7 +6,7 @@ import SortTheMeans from "./SortTheMeans";
 import SortTheSymbolFromMean from "./SortTheSymbolFromMean";
 import WriteTheSymbolFromMean from "./WriteTheSymbolFromMean";
 import WriteTheSymbolFromSound from "./WriteTheSymbolFromSound";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import { UnitQuestion as TUnitQuestion } from "~/types";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
@@ -22,7 +22,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
 
   const activeLang = i18n.language as Language;
 
-  const { contentWidth } = useScreenHeight();
+  const { contentWidth } = useScreenSize();
 
   const renderQuestion = React.useMemo(() => {
     const questionData = question.question.data;

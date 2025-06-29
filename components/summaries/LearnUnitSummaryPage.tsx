@@ -4,7 +4,7 @@ import { Text } from "../ui/text";
 import { Button } from "../ui/button";
 import { v4 as uuid } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import useUnitProgressMutation from "~/services/mutations/useUnitProgressMutation";
 import { UNIT_PROGRESS_KEY } from "~/services/queries/unitProgressQueries";
 import useLearnUnitStore from "~/stores/learnUnitStore";
@@ -12,7 +12,7 @@ import useLearnUnitStore from "~/stores/learnUnitStore";
 const LearnUnitSummaryPage: React.FC<{ onNext: () => void; levelId: string }> = ({ onNext, levelId }) => {
   const queryClient = useQueryClient();
 
-  const { screenHeight, contentWidth } = useScreenHeight();
+  const { screenHeight, contentWidth } = useScreenSize();
 
   const resetData = useLearnUnitStore((state) => state.resetData);
 

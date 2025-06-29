@@ -6,9 +6,9 @@ import { AnimatedView } from "../Animations";
 import useAnswerSound from "~/hooks/useAnswerSound";
 import { Button, ButtonProps } from "../ui/button";
 import { Text } from "../ui/text";
-import { contentWidth } from "~/lib/constants/sizes";
 import { cn } from "~/lib/utils";
 import { useTranslation } from "react-i18next";
+import useScreenSize from "~/helpers/useScreenSize";
 
 export type AnswerButtonProps = {
   answerStatus: TAnswerStatus;
@@ -22,6 +22,8 @@ const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus
   const { t } = useTranslation();
 
   const answerSound = useAnswerSound();
+
+  const { contentWidth } = useScreenSize();
 
   const playAudio = async (type: TAnswerStatus) => {
     if (type === null) return;

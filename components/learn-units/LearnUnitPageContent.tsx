@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import { UnitQuestion as TUnitQuestion } from "~/types";
 import useLearnUnitStore, { TUnitQuestionQueueItem } from "~/stores/learnUnitStore";
 import delay from "~/helpers/delay";
@@ -36,7 +36,7 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
 
   const handleFailedAnswer = useLearnUnitStore((state) => state.handleFailedAnswer);
 
-  const { learnHight, contentWidth } = useScreenHeight();
+  const { learnHight, contentWidth } = useScreenSize();
 
   const handlePressContinue = () => {
     if (answerStatus === "success") {

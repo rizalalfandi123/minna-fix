@@ -4,15 +4,14 @@ import { AnimatedPressable } from "~/components/Animations";
 import CircularProgress from "~/components/CircularProgress";
 import { shuffleArray } from "~/helpers/array";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
-import { contentWidth } from "~/lib/constants/sizes";
 import { useScreenMode } from "~/lib/useScreenMode";
 
 export type StepsBlock<T extends { id: string; isComplete: boolean }> = Array<{ block: Array<T>; isActive: boolean }>;
 
 const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: { levels: StepsBlock<T>; onPressItem: (item: T) => void }) => {
-  const { unitLevelListHeight } = useScreenHeight();
+  const { unitLevelListHeight, contentWidth } = useScreenSize();
 
   const padding = 44;
 

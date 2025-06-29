@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 
 const LetterPage: React.FC<{
   letterBlocks: Array<TLetterButtonRow>;
   onPressLearn: () => void;
 }> = ({ letterBlocks, onPressLearn }) => {
-  const { letterHeight } = useScreenHeight();
+  const { letterHeight } = useScreenSize();
 
   const { t } = useTranslation();
 

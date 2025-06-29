@@ -7,7 +7,7 @@ import { TAnswerStatus } from "~/types";
 import { cn } from "~/lib/utils";
 import useKeyboardVisibility from "~/hooks/useKeyboardVisibility";
 import { learnAnswerHeight, learnProgressBarHeight } from "~/lib/constants/sizes";
-import useScreenHeight from "~/helpers/useScreenHeight";
+import useScreenSize from "~/helpers/useScreenSize";
 import useLearnUnitStore from "~/stores/learnUnitStore";
 import { isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
 
@@ -19,7 +19,7 @@ export type WriteTheSymbolProps = {
 };
 
 const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
-  const { learnHight, screenHeight } = useScreenHeight();
+  const { learnHight, screenHeight } = useScreenSize();
 
   const [inputValue, setInputValue] = React.useState<string>("");
 

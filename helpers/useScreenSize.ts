@@ -3,7 +3,7 @@ import { Dimensions } from "react-native";
 import { isWeb } from "./platform";
 import { bottomNavHeight, learnAnswerHeight, learnProgressBarHeight, maxContentWidth, pageHeaderHeight } from "~/lib/constants/sizes";
 
-const useScreenHeight = () => {
+const useScreenSize = () => {
   const insets = useSafeAreaInsets();
 
   const windowHeight = isWeb ? Dimensions.get("window").height : Dimensions.get("screen").height;
@@ -18,9 +18,9 @@ const useScreenHeight = () => {
 
   const contentWidth = Math.min(windowWidth, maxContentWidth);
 
-  const learnHight = windowHeight - learnProgressBarHeight - learnAnswerHeight;
+  const learnHight = screenHeight - learnProgressBarHeight - learnAnswerHeight;
 
   return { screenHeight, letterHeight, unitLevelListHeight, contentWidth, learnHight };
 };
 
-export default useScreenHeight;
+export default useScreenSize;

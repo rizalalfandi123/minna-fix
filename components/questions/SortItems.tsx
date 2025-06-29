@@ -3,6 +3,7 @@ import { View } from "react-native";
 import ItemSorter, { SorterItem, SorterItemData } from "~/components/questions/ItemSorter";
 import { useTranslation } from "react-i18next";
 import { Text } from "~/components/ui/text";
+import useScreenSize from "~/helpers/useScreenSize";
 
 export type SortItemsProps = {
   answer: string;
@@ -15,13 +16,21 @@ export type SortItemsProps = {
 const SortItems: React.FunctionComponent<SortItemsProps> = ({ answer, options, renderQuestion, selectedItems, setSelectedItems }) => {
   const { t } = useTranslation();
 
+  const { contentWidth } = useScreenSize();
+
   return (
     <View className="w-full flex-1 flex-col">
       <Text className="w-full px-4 text-left font-sans-medium text-lg">{t("instruction.sort_items_by_sound")}</Text>
 
       <View className="flex-1 items-center justify-center px-4">{renderQuestion({ answer, options })}</View>
 
-      <ItemSorter containerHeight={320} items={options} selectedItems={selectedItems} setSelectedItems={(newItems) => setSelectedItems(newItems)} />
+      <ItemSorter
+        containerHeight={320}
+        containerWidth={contentWidth}
+        items={options}
+        selectedItems={selectedItems}
+        setSelectedItems={(newItems) => setSelectedItems(newItems)}
+      />
     </View>
   );
 };
