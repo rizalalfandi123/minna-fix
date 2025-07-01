@@ -330,15 +330,15 @@ export type Database = {
           deleted: boolean
           id: string
           number: number
-          unit_id: string
+          unit_question_block_id: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           deleted?: boolean
           id?: string
-          number: number
-          unit_id: string
+          number?: number
+          unit_question_block_id: string
           updated_at?: string
         }
         Update: {
@@ -346,15 +346,15 @@ export type Database = {
           deleted?: boolean
           id?: string
           number?: number
-          unit_id?: string
+          unit_question_block_id?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "unit_levels_unit_id_fkey"
-            columns: ["unit_id"]
+            foreignKeyName: "unit_levels_unit_question_block_id_fkey"
+            columns: ["unit_question_block_id"]
             isOneToOne: false
-            referencedRelation: "units"
+            referencedRelation: "unit_question_blocks"
             referencedColumns: ["id"]
           },
         ]
@@ -389,6 +389,51 @@ export type Database = {
             referencedRelation: "letter_levels"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "unit_progress_unit_level_id_fkey"
+            columns: ["unit_level_id"]
+            isOneToOne: false
+            referencedRelation: "unit_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      unit_question_blocks: {
+        Row: {
+          created_at: string
+          deleted: boolean
+          description: Json
+          id: string
+          number: number
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted?: boolean
+          description: Json
+          id?: string
+          number?: number
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted?: boolean
+          description?: Json
+          id?: string
+          number?: number
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unit_question_blocks_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
         ]
       }
       unit_questions: {
@@ -396,7 +441,7 @@ export type Database = {
           created_at: string
           deleted: boolean
           id: string
-          key: string | null
+          key: string
           question: Json
           updated_at: string
         }
@@ -404,7 +449,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           id?: string
-          key?: string | null
+          key: string
           question: Json
           updated_at?: string
         }
@@ -412,7 +457,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           id?: string
-          key?: string | null
+          key?: string
           question?: Json
           updated_at?: string
         }
@@ -426,7 +471,7 @@ export type Database = {
           with_hint: boolean
         }
         Insert: {
-          number: number
+          number?: number
           unit_level_id: string
           unit_question_id: string
           with_hint?: boolean
@@ -466,7 +511,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           id?: string
-          number: number
+          number?: number
           updated_at?: string
         }
         Update: {

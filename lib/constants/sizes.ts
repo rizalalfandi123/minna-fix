@@ -11,3 +11,9 @@ export const learnAnswerHeight = 24 * 4;
 export const bottomNavHeight = 64;
 
 export const pageHeaderHeight = 56;
+
+export const stepCircleSize = 92;
+
+export const stepCirclePadding = 44;
+
+export const stepCircleOffset = 3

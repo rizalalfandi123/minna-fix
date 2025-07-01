@@ -23,7 +23,6 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
 
   const questionQueue = useLearnUnitStore((state) => state.data.questionQueue);
 
-
   const activeQuestionIndex = useLearnUnitStore((state) => state.data.activeQuestionIndex);
 
   const answerStatus = useLearnUnitStore((state) => state.data.activeQuestionData.answerStatus);
@@ -31,6 +30,8 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
   const handleCheckAnserStatus = useLearnUnitStore((state) => state.handleCheckAnserStatus);
 
   const setQuestionQueue = useLearnUnitStore((state) => state.setQuestionQueue);
+
+  const resetData = useLearnUnitStore((state) => state.resetData);
 
   const handleSuccessAnswer = useLearnUnitStore((state) => state.handleSuccessAnswer);
 
@@ -41,6 +42,7 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
   const handlePressContinue = () => {
     if (answerStatus === "success") {
       handleSuccessAnswer((nextIndex) => {
+        console.log({ nextIndex })
         if (listRef.current) {
           listRef.current.scrollToIndex({ index: nextIndex });
         }
@@ -74,9 +76,9 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
 
       initialized.current = true;
     }
-  }, [questions]);
 
-  console.log({ questionQueue})
+    return () => resetData()
+  }, [questions]);
 
   return (
     <View className="flex-1 bg-background">
@@ -90,6 +92,8 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
         horizontal
         pagingEnabled
         scrollEnabled={false}
+        initialNumToRender={4}
+        maxToRenderPerBatch={5}
         showsHorizontalScrollIndicator={false}
         removeClippedSubviews
         getItemLayout={(_data, index) => ({

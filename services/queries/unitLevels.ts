@@ -1,15 +1,43 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
+import { Database, Json } from "~/database.types";
 import supabase from "~/libs/supabase";
-import { UnitLevel } from "~/types";
 
 export const UNIT_LEVELS_KEY = "UNIT_LEVELS";
 
-export const useGetDetailUnitLevels = (unitId: string) => {
-  const query = useQuery<Array<UnitLevel>, PostgrestError>({
+export type UnitLevel = Database["public"]["Tables"]["unit_levels"]["Row"];
+
+export type DetailUnitBlock = {
+  number: number;
+  description: Json;
+  id: string;
+  unit_levels: {
+    number: number;
+    id: string;
+  }[];
+};
+
+export const useGetDetailUnitBlocks = (unitId: string) => {
+  const query = useQuery<Array<DetailUnitBlock>, PostgrestError>({
     queryKey: [UNIT_LEVELS_KEY, { unitId }],
     queryFn: async () => {
-      const res = await supabase.from("unit_levels").select("*").eq("unit_id", unitId).order("number", { ascending: true });
+      const res = await supabase
+        .from("unit_question_blocks")
+        .select(
+          `
+          number,
+          description,
+          id,
+          unit_levels (
+            number,
+            id
+          )
+        `
+        )
+        .eq("unit_id", unitId)
+        .order("number", { ascending: true })
+        .order("number", { ascending: true, referencedTable: "unit_levels" })
+        .overrideTypes<Array<DetailUnitBlock>>();
 
       if (res.error) {
         throw res.error;

@@ -7,127 +7,209 @@ import { triggerHaptic } from "~/helpers/triggerHaptic";
 import useScreenSize from "~/helpers/useScreenSize";
 import { useButtonScaleAnimation } from "~/hooks/useButtonScaleAnimation";
 import { useScreenMode } from "~/lib/useScreenMode";
+import Check from "../icons/Check";
+import { stepCircleOffset, stepCirclePadding, stepCircleSize } from "~/lib/constants/sizes";
+import { cn } from "~/lib/utils";
 
-export type StepsBlock<T extends { id: string; isComplete: boolean }> = Array<{ block: Array<T>; isActive: boolean }>;
+export type StepBlock<T extends { id: string; isComplete: boolean }> =
+  | { type: "BLOCK"; isActive?: boolean; block: Array<T> }
+  | { type: "INFORMATION"; isActive?: boolean;  id: string };
 
-const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: { levels: StepsBlock<T>; onPressItem: (item: T) => void }) => {
-  const { unitLevelListHeight, contentWidth } = useScreenSize();
+export type StepsPageContentProps<T extends { id: string; isComplete: boolean }> = {
+  levels: Array<StepBlock<T>>;
+  onPressItem: (item: { type: StepBlock<T>["type"]; id: string }) => void;
+};
 
-  const padding = 44;
+export function isInformation<T extends { id: string; isComplete: boolean }>(
+  stepBlock: StepBlock<T>
+): stepBlock is Extract<StepBlock<T>, { type: "INFORMATION" }> {
+  return stepBlock.type === "INFORMATION";
+}
 
-  const circleSize = 92;
-
-  const maxOffset = 3;
-
-  const horizontalStep = circleSize * 0.4;
-
-  const patternWidth = (maxOffset - 1) * horizontalStep + circleSize;
-
-  const centerOffset = (contentWidth - patternWidth) / 2;
-
-  const totalHeight = props.levels.length * (circleSize + padding / 2) + circleSize;
+const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: StepsPageContentProps<T>) => {
+  const { unitLevelListHeight } = useScreenSize();
 
   return (
-    <View style={{ height: unitLevelListHeight }}>
-      <ScrollView
-        contentContainerStyle={{
-          minHeight: totalHeight,
-          paddingBottom: 8,
-        }}
-        className="bg-background"
-      >
-        {props.levels.map((item, i) => {
-          const segmentPosition = i % ((maxOffset - 1) * 2);
-
-          const progress = (item.block.filter((subItem) => subItem.isComplete).length / item.block.length) * 100;
-
-          const movingRight = segmentPosition < maxOffset;
-
-          const horizontalOffset = centerOffset + (movingRight ? segmentPosition * horizontalStep : (maxOffset * 2 - 2 - segmentPosition) * horizontalStep);
-
-          const verticalPosition = i * (circleSize + padding / 2);
-
+    <ScrollView
+      contentContainerStyle={{
+        height: unitLevelListHeight,
+        paddingBottom: 8,
+        paddingTop: 2,
+      }}
+      className="bg-background"
+    >
+      {props.levels.map((item, i) => {
+        if (isInformation(item)) {
           return (
-            <ProgressUnitLevel
+            <InformationBlock
               key={i}
-              circleSize={circleSize}
-              horizontalOffset={horizontalOffset}
-              disabled={!item.isActive}
-              progress={progress}
-              verticalPosition={verticalPosition}
               onPress={() => {
-                let selectedItem = item.block.find((level) => !level.isComplete);
-
-                if (!selectedItem) {
-                  selectedItem = shuffleArray(item.block)[0];
-                }
-
-                props.onPressItem(selectedItem);
+                props.onPressItem({ type: "INFORMATION", id: item.id });
               }}
+              disabled={!item.isActive}
+              index={i}
             />
           );
-        })}
-      </ScrollView>
-    </View>
+        }
+
+        const progress = (item.block.filter((subItem) => subItem.isComplete).length / item.block.length) * 100;
+
+        return (
+          <ProgressUnitLevel
+            key={i}
+            disabled={!item.isActive}
+            progress={progress}
+            index={i}
+            onPress={() => {
+              let selectedItem = item.block.find((level) => !level.isComplete);
+
+              if (!selectedItem) {
+                selectedItem = shuffleArray(item.block)[0];
+              }
+
+              props.onPressItem({ type: "BLOCK", id: selectedItem.id });
+            }}
+          />
+        );
+      })}
+    </ScrollView>
   );
 };
 
-export const ProgressUnitLevel: React.FunctionComponent<
-  Record<"circleSize" | "verticalPosition" | "horizontalOffset" | "progress", number> & PressableProps
-> = ({ circleSize, horizontalOffset, verticalPosition, onPress, disabled = true, id, progress, ...props }) => {
-  const scaleAnimation = useButtonScaleAnimation();
+export const InformationBlock: React.FunctionComponent<Record<"index", number> & PressableProps> = React.memo(
+  ({ index, onPress, disabled = true, ...props }) => {
+    const scaleAnimation = useButtonScaleAnimation();
 
-  const { colors } = useScreenMode();
+    const { contentWidth } = useScreenSize();
 
-  const strokeWidth = 8;
+    const { horizontalOffset, verticalPosition } = React.useMemo(() => {
+      const horizontalStep = stepCircleSize * 0.4;
 
-  const handlePress = (e: GestureResponderEvent) => {
-    if (disabled) {
-      return;
-    }
+      const patternWidth = (stepCircleOffset - 1) * horizontalStep + stepCircleSize;
 
-    scaleAnimation.animate();
+      const centerOffset = (contentWidth - patternWidth) / 2;
 
-    triggerHaptic();
+      const segmentPosition = index % ((stepCircleOffset - 1) * 2);
 
-    onPress?.(e);
-  };
+      const movingRight = segmentPosition < stepCircleOffset;
 
-  return (
-    <View
-      className="absolute"
-      style={{
-        top: verticalPosition,
-        left: horizontalOffset,
-        width: circleSize + strokeWidth,
-        height: circleSize + strokeWidth,
-      }}
-    >
-      <CircularProgress
-        radius={circleSize / 2}
-        progress={progress}
-        strokeWidth={strokeWidth}
-        progressColor={disabled ? colors.background : colors.primary}
-        strokeColor={disabled ? colors.background : colors.primary}
+      const horizontalOffset = centerOffset + (movingRight ? segmentPosition * horizontalStep : (stepCircleOffset * 2 - 2 - segmentPosition) * horizontalStep);
+
+      const verticalPosition = index * (stepCircleSize + stepCirclePadding / 2);
+
+      return { horizontalOffset, verticalPosition };
+    }, [index, contentWidth]);
+
+    const handlePress = React.useCallback(
+      (e: GestureResponderEvent) => {
+        if (disabled) return;
+
+        scaleAnimation.animate();
+
+        triggerHaptic();
+
+        onPress?.(e);
+      },
+      [disabled, scaleAnimation, onPress]
+    );
+
+    return (
+      <View
+        className="absolute p-3"
+        style={{
+          top: verticalPosition,
+          left: horizontalOffset,
+          width: stepCircleSize,
+          height: stepCircleSize,
+        }}
       >
         <AnimatedPressable
-          style={[
-            scaleAnimation.animatedStyle,
-            {
-              height: circleSize - strokeWidth * 3,
-              width: circleSize - strokeWidth * 3,
-              backgroundColor: colors.primary,
-              opacity: 0.5,
-              borderRadius: circleSize / 2,
-            },
-          ]}
-          className="absolute"
+          style={[scaleAnimation.animatedStyle]}
           onPress={handlePress}
-          {...props}
-        />
-      </CircularProgress>
-    </View>
-  );
-};
+          className={cn("w-full h-full rounded-full bg-primary", !disabled ? "opacity-100" : "opacity-50")}
+        ></AnimatedPressable>
+      </View>
+    );
+  }
+);
+
+export const ProgressUnitLevel: React.FunctionComponent<Record<"index" | "progress", number> & PressableProps> = React.memo(
+  ({ index, onPress, disabled = true, progress, ...props }) => {
+    const scaleAnimation = useButtonScaleAnimation();
+
+    const { colors } = useScreenMode();
+
+    const { contentWidth } = useScreenSize();
+
+    const strokeWidth = 8;
+
+    const { horizontalOffset, verticalPosition } = React.useMemo(() => {
+      const horizontalStep = stepCircleSize * 0.4;
+
+      const patternWidth = (stepCircleOffset - 1) * horizontalStep + stepCircleSize;
+
+      const centerOffset = (contentWidth - patternWidth) / 2;
+
+      const segmentPosition = index % ((stepCircleOffset - 1) * 2);
+
+      const movingRight = segmentPosition < stepCircleOffset;
+
+      const horizontalOffset = centerOffset + (movingRight ? segmentPosition * horizontalStep : (stepCircleOffset * 2 - 2 - segmentPosition) * horizontalStep);
+
+      const verticalPosition = index * (stepCircleSize + stepCirclePadding / 2);
+
+      return { horizontalOffset, verticalPosition };
+    }, [index, contentWidth]);
+
+    const isComplete = progress >= 100;
+
+    const progressColor = disabled || isComplete ? colors.background : colors.primary;
+
+    const innerCircleSize = stepCircleSize - strokeWidth * 3;
+
+    const checkSize = stepCircleSize * 0.5;
+
+    const handlePress = React.useCallback(
+      (e: GestureResponderEvent) => {
+        if (disabled) return;
+
+        scaleAnimation.animate();
+        triggerHaptic();
+        onPress?.(e);
+      },
+      [disabled, scaleAnimation, onPress]
+    );
+
+    return (
+      <View
+        className="absolute"
+        style={{
+          top: verticalPosition,
+          left: horizontalOffset,
+          width: stepCircleSize + strokeWidth,
+          height: stepCircleSize + strokeWidth,
+        }}
+      >
+        <CircularProgress radius={stepCircleSize / 2} progress={progress} strokeWidth={strokeWidth} progressColor={progressColor} strokeColor={progressColor}>
+          <AnimatedPressable
+            style={[
+              scaleAnimation.animatedStyle,
+              {
+                height: innerCircleSize,
+                width: innerCircleSize,
+                borderRadius: stepCircleSize / 2,
+              },
+            ]}
+            className={cn("absolute justify-center items-center bg-primary", !disabled ? "opacity-100" : "opacity-50")}
+            onPress={handlePress}
+            {...props}
+          >
+            {isComplete && <Check width={checkSize} color={colors["primary-foreground"]} height={checkSize} />}
+          </AnimatedPressable>
+        </CircularProgress>
+      </View>
+    );
+  }
+);
 
 export default StepsPageContent;

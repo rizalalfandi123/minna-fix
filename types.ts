@@ -121,7 +121,7 @@ export type UnitQuestionType =
       data: {
         question: Array<SymbolWord>;
         answer: string;
-        options: Array<string>
+        options: Array<string>;
       };
     }
   | {
@@ -151,7 +151,3 @@ export type UnitQuestion = Omit<Database["public"]["Tables"]["unit_questions"]["
 export type LetterLevelQuestion = Database["public"]["Tables"]["letter_questions_to_letter_levels"]["Row"];
 
 export type UnitLevelQuestion = Database["public"]["Tables"]["unit_questions_to_unit_levels"]["Row"];
-
-export type UnitLevel = Database["public"]["Tables"]["unit_levels"]["Row"];
-
-

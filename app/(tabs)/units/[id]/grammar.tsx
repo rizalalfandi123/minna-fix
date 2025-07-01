@@ -1,12 +1,16 @@
 import { View } from "react-native";
-import { Text } from "~/components/ui/text";
+import Information from "~/components/Information";
+import { Button } from "~/components/ui/button";
+import useScreenSize from "~/helpers/useScreenSize";
 
 export default function Home() {
-    return (
-        <>
-            <View className="flex-1 bg-background">
-                <Text>d</Text>
-            </View>
-        </>
-    );
+  const { screenHeight } = useScreenSize();
+
+  return (
+    <>
+      <View className="bg-background flex-1 flex-col">
+        
+      </View>
+    </>
+  );
 }
