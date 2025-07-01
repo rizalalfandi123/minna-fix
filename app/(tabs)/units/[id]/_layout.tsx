@@ -35,7 +35,6 @@ export default function LettersTabs() {
   const navigations: Array<TabTriggerProps & { title: string }> = [
     { name: "vocabulary", href: `/units/${id}/vocabulary`, title: "Vocabulary" },
     { name: "grammar", href: `/units/${id}/grammar`, title: "Grammar" },
-    { name: "exercise", href: `/units/${id}/exercise`, title: "Exercise" },
   ];
 
   React.useEffect(() => {
@@ -47,7 +46,7 @@ export default function LettersTabs() {
   }, [pathname]);
 
   const handleBack = () => {
-    router.replace({ pathname: "/units" });
+    router.push({ pathname: "/units" });
   };
 
   return (

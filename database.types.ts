@@ -405,6 +405,7 @@ export type Database = {
           description: Json
           id: string
           number: number
+          type: Database["public"]["Enums"]["unit_block_type"]
           unit_id: string
           updated_at: string
         }
@@ -414,6 +415,7 @@ export type Database = {
           description: Json
           id?: string
           number?: number
+          type?: Database["public"]["Enums"]["unit_block_type"]
           unit_id: string
           updated_at?: string
         }
@@ -423,6 +425,7 @@ export type Database = {
           description?: Json
           id?: string
           number?: number
+          type?: Database["public"]["Enums"]["unit_block_type"]
           unit_id?: string
           updated_at?: string
         }
@@ -531,7 +534,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      unit_block_type: "vocabulary" | "grammar"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -649,7 +652,9 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      unit_block_type: ["vocabulary", "grammar"],
+    },
   },
 } as const
 

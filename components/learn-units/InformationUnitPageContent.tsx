@@ -13,7 +13,7 @@ const InformationUnitPageContent: React.FunctionComponent<InformationUnitPageCon
   const { screenHeight } = useScreenSize();
 
   return (
-    <View className="bg-background flex-1 flex-col">
+    <View className="bg-background flex-1 flex-col px-4">
       <Information style={{ height: screenHeight - 24 * 4 }}>dee</Information>
 
       <View className="h-24 justify-center items-center w-full">

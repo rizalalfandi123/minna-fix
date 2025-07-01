@@ -10,10 +10,12 @@ import { useScreenMode } from "~/lib/useScreenMode";
 import Check from "../icons/Check";
 import { stepCircleOffset, stepCirclePadding, stepCircleSize } from "~/lib/constants/sizes";
 import { cn } from "~/lib/utils";
+import Lock from "../icons/Lock";
+import Help from "../icons/Help";
 
 export type StepBlock<T extends { id: string; isComplete: boolean }> =
   | { type: "BLOCK"; isActive?: boolean; block: Array<T> }
-  | { type: "INFORMATION"; isActive?: boolean;  id: string };
+  | { type: "INFORMATION"; isActive?: boolean; id: string };
 
 export type StepsPageContentProps<T extends { id: string; isComplete: boolean }> = {
   levels: Array<StepBlock<T>>;
@@ -26,52 +28,54 @@ export function isInformation<T extends { id: string; isComplete: boolean }>(
   return stepBlock.type === "INFORMATION";
 }
 
+const iconSize = stepCircleSize * 0.3;
+
 const StepsPageContent = <T extends { id: string; isComplete: boolean }>(props: StepsPageContentProps<T>) => {
   const { unitLevelListHeight } = useScreenSize();
 
   return (
     <ScrollView
-      contentContainerStyle={{
+      style={{
         height: unitLevelListHeight,
-        paddingBottom: 8,
-        paddingTop: 2,
       }}
       className="bg-background"
     >
-      {props.levels.map((item, i) => {
-        if (isInformation(item)) {
+      <View style={{ height: props.levels.length * (stepCircleSize + stepCirclePadding / 2) }} className="flex-col justify-between items-center">
+        {props.levels.map((item, i) => {
+          if (isInformation(item)) {
+            return (
+              <InformationBlock
+                key={i}
+                onPress={() => {
+                  props.onPressItem({ type: "INFORMATION", id: item.id });
+                }}
+                disabled={!item.isActive}
+                index={i}
+              />
+            );
+          }
+
+          const progress = (item.block.filter((subItem) => subItem.isComplete).length / item.block.length) * 100;
+
           return (
-            <InformationBlock
+            <ProgressUnitLevel
               key={i}
-              onPress={() => {
-                props.onPressItem({ type: "INFORMATION", id: item.id });
-              }}
               disabled={!item.isActive}
+              progress={progress}
               index={i}
+              onPress={() => {
+                let selectedItem = item.block.find((level) => !level.isComplete);
+
+                if (!selectedItem) {
+                  selectedItem = shuffleArray(item.block)[0];
+                }
+
+                props.onPressItem({ type: "BLOCK", id: selectedItem.id });
+              }}
             />
           );
-        }
-
-        const progress = (item.block.filter((subItem) => subItem.isComplete).length / item.block.length) * 100;
-
-        return (
-          <ProgressUnitLevel
-            key={i}
-            disabled={!item.isActive}
-            progress={progress}
-            index={i}
-            onPress={() => {
-              let selectedItem = item.block.find((level) => !level.isComplete);
-
-              if (!selectedItem) {
-                selectedItem = shuffleArray(item.block)[0];
-              }
-
-              props.onPressItem({ type: "BLOCK", id: selectedItem.id });
-            }}
-          />
-        );
-      })}
+        })}
+      </View>
     </ScrollView>
   );
 };
@@ -81,6 +85,8 @@ export const InformationBlock: React.FunctionComponent<Record<"index", number> &
     const scaleAnimation = useButtonScaleAnimation();
 
     const { contentWidth } = useScreenSize();
+
+    const { colors } = useScreenMode();
 
     const { horizontalOffset, verticalPosition } = React.useMemo(() => {
       const horizontalStep = stepCircleSize * 0.4;
@@ -126,8 +132,14 @@ export const InformationBlock: React.FunctionComponent<Record<"index", number> &
         <AnimatedPressable
           style={[scaleAnimation.animatedStyle]}
           onPress={handlePress}
-          className={cn("w-full h-full rounded-full bg-primary", !disabled ? "opacity-100" : "opacity-50")}
-        ></AnimatedPressable>
+          className={cn("w-full h-full rounded-full bg-primary justify-center items-center", !disabled ? "opacity-100" : "opacity-50")}
+        >
+          {disabled ? (
+            <Lock width={iconSize} color={colors["primary-foreground"]} height={iconSize} />
+          ) : (
+            <Help width={iconSize - 4} color={colors["primary-foreground"]} height={iconSize - 4} />
+          )}
+        </AnimatedPressable>
       </View>
     );
   }
@@ -167,8 +179,6 @@ export const ProgressUnitLevel: React.FunctionComponent<Record<"index" | "progre
 
     const innerCircleSize = stepCircleSize - strokeWidth * 3;
 
-    const checkSize = stepCircleSize * 0.5;
-
     const handlePress = React.useCallback(
       (e: GestureResponderEvent) => {
         if (disabled) return;
@@ -204,7 +214,8 @@ export const ProgressUnitLevel: React.FunctionComponent<Record<"index" | "progre
             onPress={handlePress}
             {...props}
           >
-            {isComplete && <Check width={checkSize} color={colors["primary-foreground"]} height={checkSize} />}
+            {isComplete && <Check width={iconSize} color={colors["primary-foreground"]} height={iconSize} />}
+            {disabled && <Lock width={iconSize} color={colors["primary-foreground"]} height={iconSize} />}
           </AnimatedPressable>
         </CircularProgress>
       </View>

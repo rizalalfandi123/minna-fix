@@ -12,7 +12,7 @@ const useScreenSize = () => {
 
   const screenHeight = windowHeight - insets.top - insets.bottom;
 
-  const letterHeight = windowHeight - bottomNavHeight * 2;
+  const letterHeight = screenHeight - bottomNavHeight * 2;
 
   const unitLevelListHeight = letterHeight - pageHeaderHeight;
 
