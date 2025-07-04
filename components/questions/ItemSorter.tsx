@@ -1,19 +1,16 @@
 import React from "react";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { View } from "react-native";
-import { Button } from "../ui/button";
-import { Text } from "../ui/text";
+import { Button, ButtonProps } from "../ui/button";
+import { Text, TextProps } from "../ui/text";
+import { cn } from "~/lib/utils";
 
 export type SorterItemData = Record<"number" | "width" | "index", number> & {
   value: string;
 };
 export type SorterItem = Pick<SorterItemData, "number" | "value">;
 
-type ItemSorterProps = {
+export type ItemSorterProps = {
   containerHeight?: number;
   containerWidth?: number;
   rowHeight?: number;
@@ -22,6 +19,8 @@ type ItemSorterProps = {
   items: Array<SorterItem>;
   selectedItems: Array<SorterItemData>;
   setSelectedItems: (nextSelectedItems: Array<SorterItemData>) => void;
+  buttonProps?: Partial<ButtonProps>;
+  buttonTextProps?: Partial<TextProps>;
 };
 
 const ItemSorter: React.FC<ItemSorterProps> = ({
@@ -33,11 +32,10 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
   items,
   setSelectedItems,
   selectedItems,
+  buttonProps = {},
+  buttonTextProps = {},
 }) => {
-  const ySpacing = React.useMemo(
-    () => (rowHeight - itemHeight) / 2,
-    [rowHeight, itemHeight]
-  );
+  const ySpacing = React.useMemo(() => (rowHeight - itemHeight) / 2, [rowHeight, itemHeight]);
 
   const [state, setState] = React.useState({
     isLoading: true,
@@ -54,20 +52,13 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
 
   const animationStyles = items.map((_, i) => {
     return useAnimatedStyle(() => ({
-      top: state.isLoading
-        ? yPositions.value[i]
-        : withTiming(yPositions.value[i]),
-      left: state.isLoading
-        ? xPositions.value[i]
-        : withTiming(xPositions.value[i]),
+      top: state.isLoading ? yPositions.value[i] : withTiming(yPositions.value[i]),
+      left: state.isLoading ? xPositions.value[i] : withTiming(xPositions.value[i]),
       position: "absolute",
     }));
   });
 
-  const containerRowHeight = React.useMemo(
-    () => state.totalRows * rowHeight,
-    [state.totalRows, rowHeight]
-  );
+  const containerRowHeight = React.useMemo(() => state.totalRows * rowHeight, [state.totalRows, rowHeight]);
 
   React.useEffect(() => {
     if (state.itemWidths.length === items.length && state.isLoading) {
@@ -110,21 +101,13 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
         return;
       }
 
-      if (
-        selectedItems.some(
-          (selectedItem) => selectedItem.number === newItem.number
-        )
-      ) {
-        const nextSelectedItems = selectedItems.filter(
-          (selectedItem) => selectedItem.number !== newItem.number
-        );
+      if (selectedItems.some((selectedItem) => selectedItem.number === newItem.number)) {
+        const nextSelectedItems = selectedItems.filter((selectedItem) => selectedItem.number !== newItem.number);
 
         setSelectedItems(nextSelectedItems);
 
         yPositions.value = yPositions.value.map((item, i) => {
-          const selectedItemsIndex = nextSelectedItems.findIndex(
-            (selectedItem) => selectedItem.index === i
-          );
+          const selectedItemsIndex = nextSelectedItems.findIndex((selectedItem) => selectedItem.index === i);
 
           if (selectedItemsIndex >= 0) {
             const newRows = calculateExistingRow({
@@ -133,9 +116,7 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
               itemsWidths: nextSelectedItems,
             });
 
-            const rowPosition = newRows.data.findIndex((row) =>
-              row.some((cell) => cell.index === i)
-            );
+            const rowPosition = newRows.data.findIndex((row) => row.some((cell) => cell.index === i));
             const existColumnArea = rowHeight * rowPosition + (ySpacing - 1);
             return -containerHeight + containerRowHeight + existColumnArea;
           }
@@ -148,9 +129,7 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
         });
 
         xPositions.value = xPositions.value.map((item, i) => {
-          const selectedItemsIndex = nextSelectedItems.findIndex(
-            (selectedItem) => selectedItem.index === i
-          );
+          const selectedItemsIndex = nextSelectedItems.findIndex((selectedItem) => selectedItem.index === i);
 
           if (selectedItemsIndex >= 0) {
             const newRows = calculateExistingRow({
@@ -159,21 +138,11 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
               itemsWidths: nextSelectedItems,
             });
 
-            const rowPosition = newRows.data.findIndex((row) =>
-              row.some((cell) => cell.index === i)
-            );
-            const cellPosition = newRows.data[rowPosition].findIndex(
-              (cell) => cell.index === i
-            );
-            const existRowItems = newRows.data[rowPosition].slice(
-              0,
-              cellPosition
-            );
+            const rowPosition = newRows.data.findIndex((row) => row.some((cell) => cell.index === i));
+            const cellPosition = newRows.data[rowPosition].findIndex((cell) => cell.index === i);
+            const existRowItems = newRows.data[rowPosition].slice(0, cellPosition);
 
-            return (
-              existRowItems.reduce((acc, item) => item.width + acc, 0) +
-              xSpacing
-            );
+            return existRowItems.reduce((acc, item) => item.width + acc, 0) + xSpacing;
           }
 
           if (i === newItem.index) {
@@ -183,10 +152,7 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
           return item;
         });
       } else {
-        const nextSelectedItems: Array<SorterItemData> = [
-          ...selectedItems,
-          { ...newItem, width: state.itemWidths[newItem.index].width },
-        ];
+        const nextSelectedItems: Array<SorterItemData> = [...selectedItems, { ...newItem, width: state.itemWidths[newItem.index].width }];
 
         setSelectedItems(nextSelectedItems);
 
@@ -198,8 +164,7 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
 
         yPositions.value = yPositions.value.map((item, i) => {
           if (i === newItem.index) {
-            const existColumnArea =
-              rowHeight * newRows.totalRow + (ySpacing - 1);
+            const existColumnArea = rowHeight * newRows.totalRow + (ySpacing - 1);
             return -containerHeight + containerRowHeight + existColumnArea;
           }
           return item;
@@ -213,71 +178,45 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
           });
 
           if (i === newItem.index) {
-            const existRowArea = (rows.data[newRows.totalRow] ?? []).reduce(
-              (acc, value) => acc + value.width,
-              0
-            );
+            const existRowArea = (rows.data[newRows.totalRow] ?? []).reduce((acc, value) => acc + value.width, 0);
             return existRowArea + xSpacing;
           }
           return item;
         });
       }
     },
-    [
-      selectedItems,
-      state.itemWidths,
-      containerWidth,
-      containerHeight,
-      containerRowHeight,
-      xSpacing,
-      rowHeight,
-      ySpacing,
-      state.originalPositions,
-    ]
+    [selectedItems, state.itemWidths, containerWidth, containerHeight, containerRowHeight, xSpacing, rowHeight, ySpacing, state.originalPositions]
   );
 
-  const handleItemLayout = React.useCallback(
-    (index: number, number: number, width: number, value: string) => {
-      setState((prev) => {
-        const existing = prev.itemWidths[index];
-        if (existing?.width === Math.ceil(width)) return prev;
+  const handleItemLayout = React.useCallback((index: number, number: number, width: number, value: string) => {
+    setState((prev) => {
+      const existing = prev.itemWidths[index];
+      if (existing?.width === Math.ceil(width)) return prev;
 
-        const newItemWidths = [...prev.itemWidths];
-        newItemWidths[index] = {
-          width: Math.ceil(width),
-          number,
-          index,
-          value,
-        };
+      const newItemWidths = [...prev.itemWidths];
+      newItemWidths[index] = {
+        width: Math.ceil(width),
+        number,
+        index,
+        value,
+      };
 
-        return {
-          ...prev,
-          itemWidths: newItemWidths,
-        };
-      });
-    },
-    []
-  );
+      return {
+        ...prev,
+        itemWidths: newItemWidths,
+      };
+    });
+  }, []);
 
   return (
-    <View
-      className="flex-col"
-      style={{ height: containerHeight, position: "relative" }}
-    >
+    <View className="flex-col" style={{ height: containerHeight, position: "relative" }}>
       <View className="flex-col" style={{ height: containerRowHeight }}>
         {Array.from({ length: state.totalRows }).map((_item, index) => (
-          <View
-            className="border-border border-b-2"
-            style={{ height: rowHeight }}
-            key={`row-separator-${index}`}
-          />
+          <View className="border-border border-b-2" style={{ height: rowHeight }} key={`row-separator-${index}`} />
         ))}
       </View>
 
-      <View
-        style={{ height: containerRowHeight }}
-        className="absolute bottom-0 left-0 flex-row flex-wrap justify-center"
-      >
+      <View style={{ height: containerRowHeight }} className="absolute bottom-0 left-0 flex-row flex-wrap justify-center">
         {items.map((item, i) => {
           const itemWidth = state.itemWidths.find((item) => item.index === i);
 
@@ -291,7 +230,6 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
                   value: item.value,
                 })}
                 style={[animationStyles[i], { height: itemHeight }]}
-                className="z-10"
                 onLayout={(event) => {
                   const width = event.nativeEvent.layout.width;
 
@@ -301,8 +239,12 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
                 }}
                 size="lg"
                 variant="outline"
+                {...buttonProps}
+                className={cn("z-10", buttonProps.className)}
               >
-                <Text className="text-lg">{item.value}</Text>
+                <Text className="text-lg" {...buttonTextProps}>
+                  {item.value}
+                </Text>
               </Button>
 
               {itemWidth && (
@@ -324,15 +266,7 @@ const ItemSorter: React.FC<ItemSorterProps> = ({
   );
 };
 
-const calculateExistingRow = ({
-  containerWidth,
-  itemsWidths,
-  spacing,
-}: {
-  containerWidth: number;
-  itemsWidths: Array<SorterItemData>;
-  spacing: number;
-}) => {
+const calculateExistingRow = ({ containerWidth, itemsWidths, spacing }: { containerWidth: number; itemsWidths: Array<SorterItemData>; spacing: number }) => {
   let totalRow = 0;
 
   let rowWidth = 0;
@@ -347,10 +281,7 @@ const calculateExistingRow = ({
       totalRow += 1;
     }
 
-    data[totalRow] = [
-      ...(data[totalRow] ?? []),
-      { ...item, width: item.width + spacing },
-    ];
+    data[totalRow] = [...(data[totalRow] ?? []), { ...item, width: item.width + spacing }];
   });
 
   return { totalRow, data };

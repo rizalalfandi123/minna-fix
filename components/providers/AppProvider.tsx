@@ -6,18 +6,21 @@ import ServiceProvider from "./ServiceProvider";
 import { UserDataProvider } from "~/contexts/userContext";
 import { useScreenMode } from "~/lib/useScreenMode";
 import { vars } from "nativewind";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const ThemedApp: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { colorVars } = useScreenMode();
 
   return (
-    <SafeAreaProvider style={vars(colorVars)}>
-      <SafeAreaView className="bg-background flex-1 items-center justify-center">
-        <View className="h-full w-full bg-background" style={{ maxWidth: maxContentWidth }}>
-          {children}
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <GestureHandlerRootView>
+      <SafeAreaProvider style={vars(colorVars)}>
+        <SafeAreaView className="bg-background flex-1 items-center justify-center">
+          <View className="h-full w-full bg-background" style={{ maxWidth: maxContentWidth }}>
+            {children}
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
 

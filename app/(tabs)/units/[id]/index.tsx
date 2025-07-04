@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
-import StepsPageContent, { StepBlock } from "~/components/units/StepsPageContent";
+import StepsPageContent from "~/components/units/StepsPageContent";
 import useUnitBlocks from "~/hooks/useUnitBlocks";
 
 const VocabularyPage = () => {
@@ -9,6 +9,7 @@ const VocabularyPage = () => {
   const router = useRouter();
 
   const data = useUnitBlocks({ unitId: params.id, type: "vocabulary" });
+
 
   const handlePressBlock = (data: { id: string; type: "BLOCK" | "INFORMATION" }) => {
     if (data.type === "BLOCK") {

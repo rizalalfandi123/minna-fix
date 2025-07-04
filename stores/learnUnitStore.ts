@@ -10,8 +10,8 @@ export type TLearnUnitQuestionData =
       answer: string;
     }
   | {
-      type: "SORT_THE_MEAN";
-      selectedAnswer: Array<SorterItemData>;
+      type: "SORT_THE_MEAN" | "SORT_THE_SYMBOLS_FROM_MEAN" | "SORT_THE_SYMBOLS_FROM_SOUND";
+      selectedAnswer: Array<string>;
       answer: string;
     }
   | {
@@ -141,8 +141,6 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
 
     let answerStatus: TAnswerStatus = null;
 
-    console.log({ previousData });
-
     if (isOptionsQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
@@ -156,7 +154,11 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isSortQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-      const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
+      const isCorrect =
+        previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "") ===
+        selectedAnswer
+          .join("")
+          .replace(/\s+/g, "");
 
       answerStatus = isCorrect ? "success" : "error";
     }
@@ -164,7 +166,12 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
       const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
 
-      const isCorrect = inputAnswer.trim() === previousData.data.activeQuestionData.data.answer;
+      console.log({
+        quest: previousData.data.activeQuestionData.data.answer.replace(/\s+/g, ""),
+        answer: inputAnswer.replace(/\s+/g, "")
+      })
+
+      const isCorrect = inputAnswer.replace(/\s+/g, "") === previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "");
 
       if (typeof inputAnswer === "string") {
         answerStatus = isCorrect ? "success" : "error";

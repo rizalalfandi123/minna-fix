@@ -8,7 +8,7 @@ import useUnitProgress from "~/services/queries/unitProgressQueries";
 
 type TVocabularyBlock = StepBlock<DetailUnitBlock["unit_levels"][number] & { isComplete: boolean }>;
 
-const useUnitBlocks = ({type, unitId}: {unitId: string, type: UnitBlockType}) => {
+const useUnitBlocks = ({ type, unitId }: { unitId: string; type: UnitBlockType }) => {
   const { data: unitProgress = [] } = useUnitProgress();
 
   const { data: unitBlocks = [] } = useGetDetailUnitBlocks(unitId, type);
@@ -34,11 +34,27 @@ const useUnitBlocks = ({type, unitId}: {unitId: string, type: UnitBlockType}) =>
 
     const blocks: Array<TVocabularyBlock> = vocabularyBlocks.flatMap(({ blocks, id }, index) => {
       if (index === 0) {
-        return [{ type: "INFORMATION", id }, ...blocks, { type: "INFORMATION", id: vocabularyBlocks[index + 1].id }];
+        const nextBlock = vocabularyBlocks[index + 1];
+
+        const value: Array<TVocabularyBlock> = [{ type: "INFORMATION", id }, ...blocks];
+
+        if (nextBlock) {
+          value.push({ type: "INFORMATION", id: vocabularyBlocks[index + 1].id });
+        }
+
+        return value
       }
 
       if (index < vocabularyBlocks.length - 1) {
-        return [...blocks, { type: "INFORMATION", id: vocabularyBlocks[index + 1].id }];
+        const nextBlock = vocabularyBlocks[index + 1];
+
+        const value: Array<TVocabularyBlock> = [...blocks];
+
+        if (nextBlock) {
+          value.push({ type: "INFORMATION", id: vocabularyBlocks[index + 1].id });
+        }
+
+        return value;
       }
 
       return [...blocks];
@@ -73,7 +89,7 @@ const useUnitBlocks = ({type, unitId}: {unitId: string, type: UnitBlockType}) =>
     return stepBlocks;
   }, [unitProgress, unitBlocks]);
 
-  return data
+  return data;
 };
 
 export default useUnitBlocks;

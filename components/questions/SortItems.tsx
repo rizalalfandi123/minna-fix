@@ -1,36 +1,54 @@
 import React from "react";
 import { View } from "react-native";
-import ItemSorter, { SorterItem, SorterItemData } from "~/components/questions/ItemSorter";
 import { useTranslation } from "react-i18next";
 import { Text } from "~/components/ui/text";
-import useScreenSize from "~/helpers/useScreenSize";
+import DuoDragDrop, { DuoDragDropRef } from "../duo-drag-drop";
+import Spinner from "../Spinner";
 
 export type SortItemsProps = {
   answer: string;
-  options: Array<SorterItem>;
+  options: Array<string>;
   renderQuestion: (props: Pick<SortItemsProps, "answer" | "options">) => React.ReactNode;
-  selectedItems: SorterItemData[];
-  setSelectedItems: (newAnswer: SorterItemData[]) => void;
+  setSelectedItems: (newAnswer: string[]) => void;
+  dndProps: Record<"wordHeight" | "lineHeight", number>;
 };
 
-const SortItems: React.FunctionComponent<SortItemsProps> = ({ answer, options, renderQuestion, selectedItems, setSelectedItems }) => {
+const SortItems: React.FunctionComponent<SortItemsProps> = ({ answer, options, renderQuestion, setSelectedItems, dndProps }) => {
   const { t } = useTranslation();
 
-  const { contentWidth } = useScreenSize();
+  const duoDragDropRef = React.useRef<DuoDragDropRef>(null);
+
+  const [mounted, setMounted] = React.useState<boolean>(false);
 
   return (
     <View className="w-full flex-1 flex-col">
-      <Text className="w-full px-4 text-left font-sans-medium text-lg">{t("instruction.sort_items_by_sound")}</Text>
+      <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.sort_items_by_sound")}</Text>
 
-      <View className="flex-1 items-center justify-center px-4">{renderQuestion({ answer, options })}</View>
+      <View className="items-center justify-center w-full flex-1">{renderQuestion({ answer, options })}</View>
 
-      <ItemSorter
-        containerHeight={320}
-        containerWidth={contentWidth}
-        items={options}
-        selectedItems={selectedItems}
-        setSelectedItems={(newItems) => setSelectedItems(newItems)}
-      />
+      <View className="flex-col justify-end">
+        {!mounted && (
+          <View className="w-full justify-center items-center py-6">
+            <Spinner />
+          </View>
+        )}
+
+        <DuoDragDrop
+          ref={duoDragDropRef}
+          words={options}
+          wordHeight={dndProps.wordHeight}
+          lineHeight={dndProps.lineHeight}
+          wordGap={4}
+          wordBankOffsetY={6}
+          wordBankAlignment="center"
+          onDrop={() => {
+            setSelectedItems(duoDragDropRef.current?.getAnsweredWords() ?? []);
+          }}
+          onReady={() => {
+            setMounted(true);
+          }}
+        />
+      </View>
     </View>
   );
 };

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { UnitQuestionType } from "~/types";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
 import UnitSortItems from "./UnitSortItems";
+import useBuildSentence from "~/hooks/useBuildSentence";
 
 export type SortTheMeansProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_MEAN" }>;
@@ -15,21 +16,20 @@ const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {
 
   const activeLang = i18n.language as Language;
 
+  const sentence = useBuildSentence({ data: props.question.data.question, isUseTranslation: false });
+
+  const data = useMemo(
+    () => ({ answer: props.question.data.answer[activeLang].translate, options: props.question.data.options.map((item) => item[activeLang].translate) }),
+    [props.question]
+  );
+
   return (
     <UnitSortItems
-      {...props}
-      answer={props.question.data.answer[activeLang]}
-      options={props.question.data.options.map((item, index) => ({ number: index, value: item[activeLang] }))}
+      type="SORT_THE_MEAN"
+      answer={data.answer}
+      options={data.options}
       renderQuestion={() => {
-        return (
-          <QuestionSentenceButton
-            sentence={props.question.data.question.map((item) => ({
-              word: item.value,
-              hintData: [...Object.values(item.alternative ?? {}), item.mean[activeLang]],
-            }))}
-            withHint={props.withHint}
-          />
-        );
+        return <QuestionSentenceButton sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

@@ -17,7 +17,7 @@ export type MutationOperation = "create" | "edit" | "delete";
 
 export type TAnswerStatus = Nullable<"success" | "error">;
 
-export type TranslatedWord = Record<"id" | "en", string>;
+export type TranslatedWord = Record<"id" | "en", { translate: string; index: number }>;
 
 export type SymbolWord = {
   value: string;
@@ -27,7 +27,7 @@ export type SymbolWord = {
     kanji: string;
     romaji: string;
   }>;
-  mean: TranslatedWord;
+  translation?: TranslatedWord;
 };
 
 export type LetterQuestionType =
@@ -120,6 +120,14 @@ export type UnitQuestionType =
       type: "SORT_THE_SYMBOLS_FROM_MEAN";
       data: {
         question: Array<SymbolWord>;
+        answer: string;
+        options: Array<string>;
+      };
+    }
+  | {
+      type: "SORT_THE_SYMBOLS_FROM_SOUND";
+      data: {
+        question: string;
         answer: string;
         options: Array<string>;
       };

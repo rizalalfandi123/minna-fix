@@ -11,6 +11,7 @@ import { UnitQuestion as TUnitQuestion } from "~/types";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
 import GuessTheSoundMean from "./GuessTheSoundMean";
+import SortTheSymbolFromSound from "./SortTheSymbolFromSound";
 
 export type UnitQuestionProps = {
   question: TUnitQuestion;
@@ -33,8 +34,8 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
 
       case "GUESS_THE_SOUND_MEAN": {
         const guessTheSoundData = {
-          options: questionData.data.options.map((word) => word[activeLang]),
-          answer: questionData.data.answer[activeLang],
+          options: questionData.data.options.map((word) => word[activeLang].translate),
+          answer: questionData.data.answer[activeLang].translate,
           question: questionData.data.question,
         };
 
@@ -43,6 +44,9 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
 
       case "GUESS_THE_SYMBOL_FROM_MEAN":
         return <GuessTheSymbolFromMean withHint={withHint} question={questionData} />;
+
+      case "SORT_THE_SYMBOLS_FROM_SOUND":
+        return <SortTheSymbolFromSound withHint={withHint} question={questionData} />;
 
       case "SORT_THE_MEAN":
         return <SortTheMeans withHint={withHint} question={questionData} />;
@@ -62,7 +66,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
   }, [question]);
 
   return (
-    <View style={{ width: contentWidth }} className="flex-col gap-3 flex-1 px-4">
+    <View style={{ width: contentWidth }} className="flex-col gap-3 flex-1 px-2">
       {renderQuestion}
     </View>
   );

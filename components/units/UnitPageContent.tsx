@@ -22,7 +22,7 @@ const UnitItem: React.FC<{ unit: Unit }> = ({ unit }) => {
     triggerHaptic();
 
     setTimeout(() => {
-      router.navigate({ pathname: "/units/[id]/vocabulary", params: { id: unit.id } });
+      router.navigate({ pathname: "/units/[id]", params: { id: unit.id } });
     }, 200);
   };
 

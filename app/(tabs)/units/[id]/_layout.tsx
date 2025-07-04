@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerProps } from "expo-router/ui";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -24,6 +24,8 @@ export default function LettersTabs() {
 
   const { id } = useLocalSearchParams<{ id: string }>();
 
+  console.log("ID", id);
+
   const unitData = React.useMemo(() => {
     const units = queryClient.getQueryData<Array<Unit>>([UNITS]);
 
@@ -33,7 +35,7 @@ export default function LettersTabs() {
   }, [id]);
 
   const navigations: Array<TabTriggerProps & { title: string }> = [
-    { name: "vocabulary", href: `/units/${id}/vocabulary`, title: "Vocabulary" },
+    { name: "vocabulary", href: `/units/${id}`, title: "Vocabulary" },
     { name: "grammar", href: `/units/${id}/grammar`, title: "Grammar" },
   ];
 
@@ -62,9 +64,9 @@ export default function LettersTabs() {
           return (
             <TabTrigger
               className={cn("h-12 flex-1 items-center justify-center border-b-2 bg-background", isActive ? "border-b-foreground" : "border-b-background")}
-              name={nav.name}
               href={nav.href}
               key={nav.name}
+              name={nav.name}
             >
               <Text className={cn("w-full text-center font-sans-semibold text-lg uppercase", isActive ? "text-foreground" : "text-border")}>{nav.title}</Text>
             </TabTrigger>

@@ -3,9 +3,8 @@ import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
-import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
+import useBuildSentence from "~/hooks/useBuildSentence";
 
 export type GuessTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
@@ -13,9 +12,7 @@ export type GuessTheSymbolFromMeanProps = {
 };
 
 const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, withHint }) => {
-  const { i18n } = useTranslation();
-
-  const activeLang = i18n.language as Language;
+  const sentence = useBuildSentence({ data: question.data.question });
 
   return (
     <UnitOptionsQuestion
@@ -26,16 +23,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
         question: question.data.question.map((item) => item.value).join(""),
       }}
       renderAnswer={() => {
-        return (
-          <QuestionSentenceButton
-            withSpeak={false}
-            sentence={question.data.question.map((item) => ({
-              word: item.mean[activeLang],
-              hintData: [...Object.values(item.alternative ?? {}), item.mean[activeLang]],
-            }))}
-            withHint={withHint}
-          />
-        );
+        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={withHint} />;
       }}
       renderInstruction={() => {
         return (

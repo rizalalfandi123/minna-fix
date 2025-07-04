@@ -1,9 +1,10 @@
 import { UnitQuestionType } from "~/types";
-import QuestionSentenceButton from "../QuestionSentenceButton";
+import QuestionSentenceButton, { QuestionSentenceButtonProps } from "../QuestionSentenceButton";
 import React from "react";
 import WriteTheSymbol from "../WriteTheSymbol";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import useBuildSentence from "~/hooks/useBuildSentence";
 
 export type WriteTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "WRITE_THE_SYMBOL_FROM_MEAN" }>;
@@ -11,9 +12,7 @@ export type WriteTheSymbolFromMeanProps = {
 };
 
 const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) => {
-  const { i18n } = useTranslation();
-
-  const activeLang = i18n.language as Language;
+  const sentence = useBuildSentence({ data: props.question.data.question });
 
   return (
     <WriteTheSymbol
@@ -21,15 +20,7 @@ const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) =>
         answer: props.question.data.answer,
       }}
       renderQuestion={() => {
-        return (
-          <QuestionSentenceButton
-            sentence={props.question.data.question.map((item) => ({
-              word: item.mean[activeLang],
-              hintData: [...Object.values(item.alternative ?? {}), item.mean[activeLang]],
-            }))}
-            withHint={props.withHint}
-          />
-        );
+        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

@@ -9,7 +9,7 @@ export type SortItemsBySoundProps = {
 };
 
 const SortItemsBySound: React.FunctionComponent<SortItemsBySoundProps> = ({ question }) => {
-  const suffleOptions = React.useMemo(() => shuffleArray(question.data.options), [question.data.options]);
+  const suffleOptions = React.useMemo(() => shuffleArray(question.data.options.map((item) => item.value)), [question.data.options]);
 
   return (
     <LetterSortItems

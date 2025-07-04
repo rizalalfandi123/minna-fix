@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { SorterItemData } from "~/components/questions/ItemSorter";
 import { isOptionsQuestion, isSortQuestion } from "~/helpers/letterQuestionNarrowing";
 import { Nullable, TAnswerStatus, LetterQuestion } from "~/types";
 
@@ -11,7 +10,7 @@ export type TLearnLetterQuestionData =
     }
   | {
       type: "SORT_THE_ITEMS_BY_SOUND";
-      selectedAnswer: Array<SorterItemData>;
+      selectedAnswer: Array<string>;
       answer: string;
     };
 
@@ -149,7 +148,7 @@ const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
     if (isSortQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-      const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.map((item) => item.value).join("");
+      const isCorrect = previousData.data.activeQuestionData.data.answer === selectedAnswer.join("");
 
       answerStatus = isCorrect ? "success" : "error";
     }

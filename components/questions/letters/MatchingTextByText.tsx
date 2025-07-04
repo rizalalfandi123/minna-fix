@@ -1,7 +1,6 @@
 import React from "react";
-import { TAnswerStatus, LetterQuestionType, Nullable } from "~/types";
+import { LetterQuestionType, Nullable } from "~/types";
 import { View } from "react-native";
-import AnswerButton from "../AnswerButton";
 import { useTranslation } from "react-i18next";
 import delay from "~/helpers/delay";
 import { Button } from "~/components/ui/button";
@@ -76,9 +75,7 @@ const MemoizedButton = React.memo(
 const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ question }) => {
   const { t } = useTranslation();
 
-  // const [answerStatus, setAnswerStatus] = React.useState<TAnswerStatus>(null);
-
-  const setAnswerStatus = useLearnLetterStore(state => state.setAnswerStatus)
+  const setAnswerStatus = useLearnLetterStore((state) => state.setAnswerStatus);
 
   const [firstOption, setFirstOption] = React.useState<Nullable<MatchingTextColumn>>(null);
 
@@ -136,14 +133,6 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
         setAnswerStatus(isAllOk ? "success" : null);
       });
 
-      // if (isAnswerCorrect && onCorrectAnswer) {
-      //   onCorrectAnswer();
-      // }
-
-      // if (!isAnswerCorrect && onErrorAnswer) {
-      //   onErrorAnswer();
-      // }
-
       delay(500).then(() => {
         React.startTransition(() => {
           setPairedButtons((prev) => ({
@@ -156,22 +145,6 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
     },
     [firstOption]
   );
-
-  // const handleReset = () => {
-  //   if (onFinishAnswer) {
-  //     onFinishAnswer?.();
-  //   }
-
-  //   React.startTransition(() => {
-  //     setAnswerStatus(null);
-
-  //     setPairedButtons({});
-
-  //     setFirstOption(null);
-
-  //     setLockedButtons({});
-  //   });
-  // };
 
   return (
     <View className="flex-1 flex-col">
@@ -195,7 +168,6 @@ const MatchingTextByText: React.FunctionComponent<MatchingTextByTextProps> = ({ 
           ))}
         </View>
       </View>
-
     </View>
   );
 };

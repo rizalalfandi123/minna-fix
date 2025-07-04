@@ -33,6 +33,8 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
 
   const setQuestionQueue = useLearnLetterStore((state) => state.setQuestionQueue);
 
+  const resetData = useLearnLetterStore((state) => state.resetData);
+
   const handleSuccessAnswer = useLearnLetterStore((state) => state.handleSuccessAnswer);
 
   const handleFailedAnswer = useLearnLetterStore((state) => state.handleFailedAnswer);
@@ -77,6 +79,8 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
 
       initialized.current = true;
     }
+
+    return () => resetData();
   }, [questions]);
 
   return (

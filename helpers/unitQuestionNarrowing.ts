@@ -17,14 +17,14 @@ export function isOptionsQuestion(questionData: Nullable<TLearnUnitQuestionData>
 export function isSortQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<
   TLearnUnitQuestionData,
   {
-    type: "SORT_THE_MEAN";
+    type: "SORT_THE_MEAN" | "SORT_THE_SYMBOLS_FROM_MEAN" | "SORT_THE_SYMBOLS_FROM_SOUND"
   }
 > {
   if (!questionData) {
     return false;
   }
 
-  return ["SORT_THE_MEAN"].includes(questionData.type);
+  return ["SORT_THE_MEAN", "SORT_THE_SYMBOLS_FROM_MEAN", "SORT_THE_SYMBOLS_FROM_SOUND"].includes(questionData.type);
 }
 
 export function isWriteQuestion(questionData: Nullable<TLearnUnitQuestionData>): questionData is Extract<

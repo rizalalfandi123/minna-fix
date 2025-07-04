@@ -6,9 +6,14 @@ import useUnitBlocks from "~/hooks/useUnitBlocks";
 const GrammarPage = () => {
   const params = useLocalSearchParams<{ id: string }>();
 
+  console.log({ params });
+
   const router = useRouter();
 
-  const data = useUnitBlocks({ unitId: params.id, type: "vocabulary" });
+  const data = useUnitBlocks({ unitId: params.id, type: "grammar" });
+
+  console.log({ data })
+
 
   const handlePressBlock = (data: { id: string; type: "BLOCK" | "INFORMATION" }) => {
     if (data.type === "BLOCK") {

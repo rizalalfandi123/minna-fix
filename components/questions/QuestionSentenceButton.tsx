@@ -10,11 +10,13 @@ import { Text } from "~/components/ui/text";
 import { useScreenMode } from "~/lib/useScreenMode";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 
-const QuestionSentenceButton: React.FunctionComponent<{
+export type QuestionSentenceButtonProps = {
   sentence: Array<{ word: string; hintData?: Array<string> }>;
   withHint: boolean;
   withSpeak?: boolean;
-}> = ({ sentence, withHint, withSpeak = true }) => {
+};
+
+const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProps> = ({ sentence, withHint, withSpeak = true }) => {
   const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
@@ -29,7 +31,7 @@ const QuestionSentenceButton: React.FunctionComponent<{
 
   return (
     <View
-      className={cn("w-full flex-row justify-center gap-4 items-center", {
+      className={cn("w-full justify-center gap-4 flex-col items-center", {
         "cursor-pointer": withHint,
       })}
     >
@@ -43,9 +45,11 @@ const QuestionSentenceButton: React.FunctionComponent<{
         </AnimatedPressable>
       )}
 
-      {sentence.map((item, index) => (
-        <Word key={index} hintData={item.hintData || []} word={item.word} withHint={withHint} />
-      ))}
+      <View className="flex flex-row flex-wrap gap-2">
+        {sentence.map((item, index) => (
+          <Word key={index} hintData={item.hintData || []} word={item.word} withHint={withHint} />
+        ))}
+      </View>
     </View>
   );
 };
@@ -55,17 +59,19 @@ const Word: React.FunctionComponent<{
   word: string;
   withHint: boolean;
 }> = ({ hintData, word, withHint }) => {
+  const availableHint = withHint && hintData.length > 0;
+
   const text = (
     <View className="h-16 min-w-[16px] flex-col items-center justify-center">
       <Text className="font-sans-bold text-2xl">{word}</Text>
 
-      <View className={cn("h-2 w-full border-accent border-dotted bg-background", withHint ? "border-b-4" : "border-b-0")} />
+      <View className={cn("h-2 w-full border-accent border-dotted bg-background", availableHint ? "border-b-4" : "border-b-0")} />
     </View>
   );
 
   return (
     <React.Fragment>
-      {hintData && withHint ? (
+      {availableHint ? (
         <Popover>
           <PopoverTrigger>{text}</PopoverTrigger>
           <PopoverContent className="w-fit" side="bottom" sideOffset={-24}>
