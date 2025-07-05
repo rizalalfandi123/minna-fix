@@ -30,7 +30,7 @@ const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps>
       answer={data.answer}
       options={data.options}
       renderQuestion={() => {
-        return <QuestionSentenceButton translateAsValue withSpeak={false} sentence={sentence} withHint={props.withHint} />;
+        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

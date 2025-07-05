@@ -3,7 +3,6 @@ import { Input } from "~/components/ui/input";
 import React from "react";
 import * as wanakana from "wanakana";
 import { Text } from "~/components/ui/text";
-import { TAnswerStatus } from "~/types";
 import { cn } from "~/lib/utils";
 import useKeyboardVisibility from "~/hooks/useKeyboardVisibility";
 import { learnAnswerHeight, learnProgressBarHeight } from "~/lib/constants/sizes";

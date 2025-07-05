@@ -27,7 +27,7 @@ const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) =>
     <WriteTheSymbol
       data={data}
       renderQuestion={() => {
-        return <QuestionSentenceButton withSpeak={false} translateAsValue sentence={sentence} withHint={props.withHint} />;
+        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

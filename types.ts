@@ -87,10 +87,6 @@ export type UnitQuestionType =
   | {
       type: "GUESS_THE_SENTENCE_MEAN";
       data: {
-        question: {
-          key: string;
-          index: number;
-        }[];
         options: {
           id: string[];
           en: string[];
@@ -99,15 +95,15 @@ export type UnitQuestionType =
           id: string;
           en: string;
         };
+        question: {
+          value: string;
+          key: string;
+        }[];
       };
     }
   | {
       type: "SORT_THE_MEAN";
       data: {
-        question: {
-          key: string;
-          index: number;
-        }[];
         options: {
           id: string[];
           en: string[];
@@ -116,6 +112,10 @@ export type UnitQuestionType =
           id: string;
           en: string;
         };
+        question: {
+          value: string;
+          key: string;
+        }[];
       };
     }
   | {
@@ -135,35 +135,35 @@ export type UnitQuestionType =
   | {
       type: "GUESS_THE_SYMBOL_FROM_MEAN";
       data: {
-        question: {
-          id: {
-            key: string;
-            index: number;
-          }[];
-          en: {
-            key: string;
-            index: number;
-          }[];
-        };
         options: string[];
         answer: string;
+        question: {
+          id: {
+            value: string;
+            key: string;
+          }[];
+          en: {
+            value: string;
+            key: string;
+          }[];
+        };
       };
     }
   | {
       type: "SORT_THE_SYMBOLS_FROM_MEAN";
       data: {
-        question: {
-          id: {
-            key: string;
-            index: number;
-          }[];
-          en: {
-            key: string;
-            index: number;
-          }[];
-        };
         options: string[];
         answer: string;
+        question: {
+          id: {
+            value: string;
+            key: string;
+          }[];
+          en: {
+            value: string;
+            key: string;
+          }[];
+        };
       };
     }
   | {
@@ -177,17 +177,17 @@ export type UnitQuestionType =
   | {
       type: "WRITE_THE_SYMBOL_FROM_MEAN";
       data: {
+        answer: string;
         question: {
           id: {
+            value: string;
             key: string;
-            index: number;
           }[];
           en: {
+            value: string;
             key: string;
-            index: number;
           }[];
         };
-        answer: string;
       };
     }
   | {

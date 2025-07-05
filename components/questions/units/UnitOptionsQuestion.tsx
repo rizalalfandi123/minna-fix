@@ -1,10 +1,10 @@
 import React from "react";
-import useLearnUnitStore from "~/stores/learnUnitStore";
+import useLearnUnitStore, { TUnitGuessQuestion } from "~/stores/learnUnitStore";
 import { isOptionsQuestion } from "~/helpers/unitQuestionNarrowing";
 import OptionsQuestion, { OptionsQuestionProps } from "../OptionsQuestion";
 
 export type UnitOptionsQuestionProps = Omit<OptionsQuestionProps, "handleSelectAnswer" | "selectedAnswer" | "isLocked"> & {
-  type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
+  type: TUnitGuessQuestion;
 };
 
 const UnitOptionsQuestion: React.FunctionComponent<UnitOptionsQuestionProps> = ({ type, ...props }) => {

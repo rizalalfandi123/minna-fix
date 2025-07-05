@@ -22,7 +22,7 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, w
     () => ({
       answer: question.data.answer[activeLang],
       options: question.data.options[activeLang],
-      sentence: question.data.question.map((item) => ({ key: item.key })),
+      sentence: question.data.question,
     }),
     [question]
   );

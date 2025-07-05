@@ -17,7 +17,7 @@ const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {
 
   const { answer, options, sentence } = useMemo(
     () => ({
-      sentence: props.question.data.question.map((item) => ({ key: item.key })),
+      sentence: props.question.data.question,
       answer: props.question.data.answer[activeLang],
       options: props.question.data.options[activeLang],
     }),

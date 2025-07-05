@@ -32,7 +32,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
       type="GUESS_THE_SYMBOL_FROM_MEAN"
       data={data}
       renderAnswer={() => {
-        return <QuestionSentenceButton withSpeak={false} translateAsValue sentence={sentence} withHint={withHint} />;
+        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={withHint} />;
       }}
       renderInstruction={() => {
         return (

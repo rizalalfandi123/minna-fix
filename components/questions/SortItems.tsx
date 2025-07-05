@@ -28,7 +28,7 @@ const SortItems: React.FunctionComponent<SortItemsProps> = ({ answer, options, r
 
       <View className="flex-col justify-end">
         {!mounted && (
-          <View className="w-full justify-center items-center py-6">
+          <View className="w-full justify-center items-center">
             <Spinner />
           </View>
         )}

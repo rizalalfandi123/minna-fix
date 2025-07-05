@@ -12,13 +12,14 @@ import useScreenSize from "~/helpers/useScreenSize";
 
 export type AnswerButtonProps = {
   answerStatus: TAnswerStatus;
+  statusMessage: string;
   onPressContinue: ButtonProps["onPress"];
   onPressCheckAnswer: ButtonProps["onPress"];
 };
 
 const height = 280;
 
-const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus, onPressCheckAnswer, onPressContinue }) => {
+const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus, onPressCheckAnswer, onPressContinue, statusMessage }) => {
   const { t } = useTranslation();
 
   const answerSound = useAnswerSound();
@@ -68,6 +69,7 @@ const AnswerButton: React.FunctionComponent<AnswerButtonProps> = ({ answerStatus
         className={cn("absolute bottom-0 left-0 border-border bg-background p-2 pb-24", answerStatus === null ? "border-t-0" : "border-t-2")}
       >
         <Text>{answerStatus}</Text>
+        <Text>{statusMessage}</Text>
       </AnimatedView>
     </View>
   );

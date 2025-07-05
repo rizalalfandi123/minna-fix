@@ -1,16 +1,20 @@
 import { create } from "zustand";
-import { SorterItemData } from "~/components/questions/ItemSorter";
 import { isOptionsQuestion, isSortQuestion, isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
 import { Nullable, TAnswerStatus, UnitQuestion } from "~/types";
+import * as wanakana from "wanakana";
+
+export type TUnitGuessQuestion = "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
+
+export type TUnitSortQuestion = "SORT_THE_MEAN" | "SORT_THE_SYMBOLS_FROM_MEAN" | "SORT_THE_SYMBOLS_FROM_SOUND";
 
 export type TLearnUnitQuestionData =
   | {
-      type: "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
+      type: TUnitGuessQuestion;
       selectedAnswer: Nullable<string>;
       answer: string;
     }
   | {
-      type: "SORT_THE_MEAN" | "SORT_THE_SYMBOLS_FROM_MEAN" | "SORT_THE_SYMBOLS_FROM_SOUND";
+      type: TUnitSortQuestion;
       selectedAnswer: Array<string>;
       answer: string;
     }
@@ -30,6 +34,7 @@ export type TLearnUnitStoreData = {
       answerStatus: TAnswerStatus;
       isLocked: boolean;
       data: Nullable<TLearnUnitQuestionData>;
+      statusMessage: string;
     };
   };
 };
@@ -61,6 +66,7 @@ const initalData: TLearnUnitStoreData["data"] = {
     answerStatus: null,
     isLocked: false,
     data: null,
+    statusMessage: "",
   },
 };
 
@@ -78,11 +84,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
       data: {
         ...previousData.data,
         activeQuestionIndex: nextActiveQuestionIndex,
-        activeQuestionData: {
-          answerStatus: null,
-          isLocked: false,
-          data: null,
-        },
+        activeQuestionData: initalData.activeQuestionData,
       },
     });
 
@@ -102,11 +104,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
       data: {
         activeQuestionIndex: nextActiveQuestionIndex,
         questionQueue: nextQuestionQueue,
-        activeQuestionData: {
-          answerStatus: null,
-          isLocked: false,
-          data: null,
-        },
+        activeQuestionData: initalData.activeQuestionData,
       },
     });
 
@@ -141,6 +139,8 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
 
     let answerStatus: TAnswerStatus = null;
 
+    let statusMessage: string = "";
+
     if (isOptionsQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
@@ -154,11 +154,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isSortQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-      const isCorrect =
-        previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "") ===
-        selectedAnswer
-          .join("")
-          .replace(/\s+/g, "");
+      const isCorrect = previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "") === selectedAnswer.join("").replace(/\s+/g, "");
 
       answerStatus = isCorrect ? "success" : "error";
     }
@@ -166,19 +162,18 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
       const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
 
-      console.log({
-        quest: previousData.data.activeQuestionData.data.answer.replace(/\s+/g, ""),
-        answer: inputAnswer.replace(/\s+/g, "")
-      })
-
       const isCorrect = inputAnswer.replace(/\s+/g, "") === previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "");
 
       if (typeof inputAnswer === "string") {
         answerStatus = isCorrect ? "success" : "error";
       }
+
+      if (answerStatus === "error") {
+        statusMessage = wanakana.toRomaji(previousData.data.activeQuestionData.data.answer, { convertLongVowelMark: false, upcaseKatakana: true });
+      }
     }
 
-    set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, answerStatus } } });
+    set({ data: { ...previousData.data, activeQuestionData: { ...previousData.data.activeQuestionData, answerStatus, statusMessage } } });
   },
 }));
 

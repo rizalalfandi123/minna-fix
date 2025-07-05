@@ -9,6 +9,8 @@ import UnitQuestion from "../questions/units/UnitQuestion";
 import LearnProgressBar from "../LearnProgressBar";
 import LearnUnitSummaryPage from "../summaries/LearnUnitSummaryPage";
 import { isSummarySection } from "~/helpers/unitQuestionNarrowing";
+import QuestionSkipper from "~/components/__dev__/QuestionSkipper";
+import { cn } from "~/lib/utils";
 
 export type LearnUnitPageContentProps = {
   questions: Array<{ question: TUnitQuestion; withHint: boolean }>;
@@ -27,6 +29,8 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
 
   const answerStatus = useLearnUnitStore((state) => state.data.activeQuestionData.answerStatus);
 
+  const statusMessage = useLearnUnitStore((state) => state.data.activeQuestionData.statusMessage);
+
   const handleCheckAnserStatus = useLearnUnitStore((state) => state.handleCheckAnserStatus);
 
   const setQuestionQueue = useLearnUnitStore((state) => state.setQuestionQueue);
@@ -42,7 +46,7 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
   const handlePressContinue = () => {
     if (answerStatus === "success") {
       handleSuccessAnswer((nextIndex) => {
-        console.log({ nextIndex })
+        console.log({ nextIndex });
         if (listRef.current) {
           listRef.current.scrollToIndex({ index: nextIndex });
         }
@@ -77,11 +81,11 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
       initialized.current = true;
     }
 
-    return () => resetData()
+    return () => resetData();
   }, [questions]);
 
   return (
-    <View className="flex-1 bg-background">
+    <View className={cn("flex-1 bg-background", { relative: __DEV__ })}>
       {activeQuestionIndex < questionQueue.length - 1 && <LearnProgressBar handleBack={onBack} health={8} progress={20} />}
 
       <FlatList<TUnitQuestionQueueItem>
@@ -114,8 +118,10 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
       />
 
       {activeQuestionIndex < questionQueue.length - 1 && (
-        <AnswerButton onPressCheckAnswer={handleCheckAnserStatus} onPressContinue={handlePressContinue} answerStatus={answerStatus} />
+        <AnswerButton onPressCheckAnswer={handleCheckAnserStatus} statusMessage={statusMessage} onPressContinue={handlePressContinue} answerStatus={answerStatus} />
       )}
+
+      <QuestionSkipper levelId={levelId} />
     </View>
   );
 };
