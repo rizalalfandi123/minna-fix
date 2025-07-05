@@ -17,9 +17,9 @@ const GuessTheLetterSound: React.FC<GuessTheLetterSoundProps> = ({ question, ans
   return (
     <LetterOptionsQuestion
       type="GUESS_THE_LETTER_SOUND"
-      data={{ answer, options, question }}
-      renderAnswer={({ data }) => {
-        return <LetterSound symbol={data.question} />;
+      data={{ answer, options }}
+      renderAnswer={() => {
+        return <LetterSound symbol={question} />;
       }}
       renderInstruction={() => {
         return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;

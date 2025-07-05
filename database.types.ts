@@ -526,6 +526,36 @@ export type Database = {
         }
         Relationships: []
       }
+      words: {
+        Row: {
+          created_at: string
+          deleted: boolean
+          en: string
+          id: string
+          key: string
+          others: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted?: boolean
+          en: string
+          id: string
+          key?: string
+          others?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted?: boolean
+          en?: string
+          id?: string
+          key?: string
+          others?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

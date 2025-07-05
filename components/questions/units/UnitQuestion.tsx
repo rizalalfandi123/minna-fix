@@ -26,7 +26,7 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
   const { contentWidth } = useScreenSize();
 
   const renderQuestion = React.useMemo(() => {
-    const questionData = question.question.data;
+    const questionData = question.question;
 
     switch (questionData.type) {
       case "GUESS_THE_SENTENCE_MEAN":
@@ -34,8 +34,8 @@ const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }
 
       case "GUESS_THE_SOUND_MEAN": {
         const guessTheSoundData = {
-          options: questionData.data.options.map((word) => word[activeLang].translate),
-          answer: questionData.data.answer[activeLang].translate,
+          options: questionData.data.options[activeLang],
+          answer: questionData.data.answer[activeLang],
           question: questionData.data.question,
         };
 

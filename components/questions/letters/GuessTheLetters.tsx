@@ -17,8 +17,8 @@ const GuessTheLetter: React.FC<GuessTheLetterProps> = ({ question }) => {
     <LetterOptionsQuestion
       type="GUESS_THE_LETTER"
       data={question.data}
-      renderAnswer={({ data }) => {
-        return <LetterSymbol symbol={data.question} />;
+      renderAnswer={() => {
+        return <LetterSymbol symbol={question.data.question} />;
       }}
       renderInstruction={() => {
         return <Text className="w-full text-left font-sans-medium text-lg">{t("instruction.guess_the_letter")}</Text>;

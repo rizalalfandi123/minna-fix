@@ -13,7 +13,7 @@ export type LetterQuestionProps = {
   withHint?: boolean;
 };
 
-const LetterQuestion: React.FC<LetterQuestionProps> = ({ question, withHint = true }) => {
+const LetterQuestion: React.FC<LetterQuestionProps> = ({ question }) => {
   const { contentWidth } = useScreenSize();
 
   const renderQuestion = React.useMemo(() => {

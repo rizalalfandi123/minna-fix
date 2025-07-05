@@ -87,41 +87,83 @@ export type UnitQuestionType =
   | {
       type: "GUESS_THE_SENTENCE_MEAN";
       data: {
-        options: Array<TranslatedWord>;
-        answer: TranslatedWord;
-        question: Array<SymbolWord>;
+        question: {
+          key: string;
+          index: number;
+        }[];
+        options: {
+          id: string[];
+          en: string[];
+        };
+        answer: {
+          id: string;
+          en: string;
+        };
       };
     }
   | {
       type: "SORT_THE_MEAN";
       data: {
-        question: Array<SymbolWord>;
-        answer: TranslatedWord;
-        options: Array<TranslatedWord>;
+        question: {
+          key: string;
+          index: number;
+        }[];
+        options: {
+          id: string[];
+          en: string[];
+        };
+        answer: {
+          id: string;
+          en: string;
+        };
       };
     }
   | {
       type: "GUESS_THE_SOUND_MEAN";
       data: {
-        options: Array<TranslatedWord>;
-        answer: TranslatedWord;
         question: string;
+        options: {
+          id: string[];
+          en: string[];
+        };
+        answer: {
+          id: string;
+          en: string;
+        };
       };
     }
   | {
       type: "GUESS_THE_SYMBOL_FROM_MEAN";
       data: {
-        options: Array<string>;
+        question: {
+          id: {
+            key: string;
+            index: number;
+          }[];
+          en: {
+            key: string;
+            index: number;
+          }[];
+        };
+        options: string[];
         answer: string;
-        question: Array<SymbolWord>;
       };
     }
   | {
       type: "SORT_THE_SYMBOLS_FROM_MEAN";
       data: {
-        question: Array<SymbolWord>;
+        question: {
+          id: {
+            key: string;
+            index: number;
+          }[];
+          en: {
+            key: string;
+            index: number;
+          }[];
+        };
+        options: string[];
         answer: string;
-        options: Array<string>;
       };
     }
   | {
@@ -135,7 +177,16 @@ export type UnitQuestionType =
   | {
       type: "WRITE_THE_SYMBOL_FROM_MEAN";
       data: {
-        question: Array<SymbolWord>;
+        question: {
+          id: {
+            key: string;
+            index: number;
+          }[];
+          en: {
+            key: string;
+            index: number;
+          }[];
+        };
         answer: string;
       };
     }
@@ -150,10 +201,7 @@ export type UnitQuestionType =
 export type UnitQuestionCategory = "VOCABULARY" | "GRAMMAR" | "EXERCISE";
 
 export type UnitQuestion = Omit<Database["public"]["Tables"]["unit_questions"]["Row"], "question"> & {
-  question: {
-    data: UnitQuestionType;
-    category: UnitQuestionCategory;
-  };
+  question: UnitQuestionType;
 };
 
 export type LetterLevelQuestion = Database["public"]["Tables"]["letter_questions_to_letter_levels"]["Row"];

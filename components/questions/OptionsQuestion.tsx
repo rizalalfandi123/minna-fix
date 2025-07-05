@@ -6,7 +6,7 @@ export type OptionsQuestionProps = {
   data: {
     options: string[];
     answer: string;
-    question: string;
+    // question: string;
   };
   renderAnswer?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;
   renderInstruction?: (props: Pick<OptionsQuestionProps, "data">) => React.ReactNode;

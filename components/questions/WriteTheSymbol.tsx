@@ -59,7 +59,16 @@ const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
             <Text className={cn("text-center font-sans-medium text-2xl", { "text-accent": !inputAnswer })}>{inputAnswer || "Your input in kana"}</Text>
           </View>
 
-          <Input className="w-full" value={inputValue} onChangeText={onChangeText} placeholder="Input here" returnKeyType="done" onSubmitEditing={handleCheckAnserStatus} />
+          <View className="w-full px-2">
+            <Input
+              className="w-full"
+              value={inputValue}
+              onChangeText={onChangeText}
+              placeholder="Input here"
+              returnKeyType="done"
+              onSubmitEditing={handleCheckAnserStatus}
+            />
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>

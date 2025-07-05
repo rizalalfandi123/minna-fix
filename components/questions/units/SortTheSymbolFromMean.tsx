@@ -2,7 +2,8 @@ import React from "react";
 import { UnitQuestionType } from "~/types";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import UnitSortItems from "./UnitSortItems";
-import useBuildSentence from "~/hooks/useBuildSentence";
+import { useTranslation } from "react-i18next";
+import { Language } from "~/contexts/userContext";
 
 export type SortTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_SYMBOLS_FROM_MEAN" }>;
@@ -10,9 +11,18 @@ export type SortTheSymbolFromMeanProps = {
 };
 
 const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps> = (props) => {
-  const sentence = useBuildSentence({ data: props.question.data.question });
+  const { i18n } = useTranslation();
 
-  const data = React.useMemo(() => ({ answer: props.question.data.answer, options: props.question.data.options.map((item) => item) }), [props.question]);
+  const activeLang = i18n.language as Language;
+
+  const { sentence, ...data } = React.useMemo(
+    () => ({
+      answer: props.question.data.answer,
+      options: props.question.data.options,
+      sentence: props.question.data.question[activeLang],
+    }),
+    []
+  );
 
   return (
     <UnitSortItems
@@ -20,7 +30,7 @@ const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps>
       answer={data.answer}
       options={data.options}
       renderQuestion={() => {
-        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
+        return <QuestionSentenceButton translateAsValue withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

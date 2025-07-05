@@ -9,14 +9,18 @@ import { cn } from "~/lib/utils";
 import { Text } from "~/components/ui/text";
 import { useScreenMode } from "~/lib/useScreenMode";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import { useGetWord } from "~/services/queries/wordQueries";
+import { useTranslation } from "react-i18next";
+import { Language } from "~/contexts/userContext";
 
 export type QuestionSentenceButtonProps = {
-  sentence: Array<{ word: string; hintData?: Array<string> }>;
+  sentence: Array<{ key: string }>;
   withHint: boolean;
   withSpeak?: boolean;
+  translateAsValue?: boolean;
 };
 
-const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProps> = ({ sentence, withHint, withSpeak = true }) => {
+const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProps> = ({ sentence, withHint, withSpeak = true, translateAsValue = false }) => {
   const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
@@ -26,7 +30,7 @@ const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProp
 
     triggerHaptic();
 
-    speak(sentence.map((item) => item.word).join(" "), "ja");
+    speak(sentence.map((item) => item.key).join(" "), "ja");
   };
 
   return (
@@ -47,11 +51,39 @@ const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProp
 
       <View className="flex flex-row flex-wrap gap-2">
         {sentence.map((item, index) => (
-          <Word key={index} hintData={item.hintData || []} word={item.word} withHint={withHint} />
+          <Hint translateAsValue={translateAsValue} key={index} id={item.key} />
         ))}
       </View>
     </View>
   );
+};
+
+const Hint: React.FunctionComponent<{ id: string; translateAsValue: boolean }> = ({ id, translateAsValue }) => {
+  const { i18n } = useTranslation();
+
+  const activeLang = i18n.language as Language;
+
+  const { data } = useGetWord(id);
+
+  const { hintData, word } = React.useMemo(() => {
+    const result: Array<string> = [id];
+
+    let word: string = id;
+
+    if (data?.[activeLang]) {
+      result.push(data[activeLang]);
+    }
+
+    result.push(...Object.values(data?.others ?? {}));
+
+    if (translateAsValue && data) {
+      word = data[activeLang];
+    }
+
+    return { hintData: result, word };
+  }, [data, translateAsValue]);
+
+  return <Word hintData={hintData} word={word} withHint />;
 };
 
 const Word: React.FunctionComponent<{
