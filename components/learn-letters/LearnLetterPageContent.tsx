@@ -23,11 +23,11 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
 
   const questionQueue = useLearnLetterStore((state) => state.data.questionQueue);
 
-  console.log({ questionQueue: questionQueue });
-
   const activeQuestionIndex = useLearnLetterStore((state) => state.data.activeQuestionIndex);
 
   const answerStatus = useLearnLetterStore((state) => state.data.activeQuestionData.answerStatus);
+
+  const statusMessage = useLearnLetterStore((state) => state.data.activeQuestionData.statusMessage);
 
   const handleCheckAnserStatus = useLearnLetterStore((state) => state.handleCheckAnserStatus);
 
@@ -115,7 +115,12 @@ const LearnLetterPageContent: React.FC<LearnLetterPageContentProps> = ({ questio
       />
 
       {activeQuestionIndex < questionQueue.length - 1 && (
-        <AnswerButton onPressCheckAnswer={handleCheckAnserStatus} onPressContinue={handlePressContinue} answerStatus={answerStatus} />
+        <AnswerButton
+          statusMessage={statusMessage}
+          onPressCheckAnswer={handleCheckAnserStatus}
+          onPressContinue={handlePressContinue}
+          answerStatus={answerStatus}
+        />
       )}
     </View>
   );

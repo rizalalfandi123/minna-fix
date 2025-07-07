@@ -1,10 +1,9 @@
-import OptionsQuestion from "../OptionsQuestion";
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
-import { Text } from "~/components/ui/text";
 import { LetterQuestionType } from "~/types";
 import LetterOptionsQuestion from "./LetterOptionsQuestion";
+import QuestionInstructure from "../QuestionInstruction";
 
 export type GuessTheSymbolProps = {
   question: Extract<LetterQuestionType, { type: "GUESS_THE_SYMBOL" }>;
@@ -20,7 +19,7 @@ const GuessTheSymbol: React.FC<GuessTheSymbolProps> = ({ question }) => {
       renderInstruction={() => {
         return (
           <View className="w-full flex-1 items-center justify-center">
-            <Text className="w-full text-center font-sans-medium text-lg">{t("instruction.guess_the_symbol", { sound: `"${question.data.question}"` })}</Text>
+            <QuestionInstructure>{t("instruction.guess_the_symbol", { sound: `"${question.data.question}"` })}</QuestionInstructure>
           </View>
         );
       }}

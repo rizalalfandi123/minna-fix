@@ -46,7 +46,6 @@ const LearnUnitPageContent: React.FC<LearnUnitPageContentProps> = ({ questions, 
   const handlePressContinue = () => {
     if (answerStatus === "success") {
       handleSuccessAnswer((nextIndex) => {
-        console.log({ nextIndex });
         if (listRef.current) {
           listRef.current.scrollToIndex({ index: nextIndex });
         }

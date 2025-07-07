@@ -28,7 +28,7 @@ const QuestionSkipper: React.FC<{ levelId: string }> = ({ levelId }) => {
   }
 
   return (
-    <Button onPress={handleIncreaseLevel} variant="outline" className="absolute top-10 left-2">
+    <Button onPress={handleIncreaseLevel} variant="outline" className="absolute top-10 right-2">
       <Text>Skip</Text>
     </Button>
   );

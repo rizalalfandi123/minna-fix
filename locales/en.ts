@@ -56,6 +56,10 @@ const en = {
     guess_the_symbol: "Choose the letter that matches the sound {{sound}}",
     matching_text_by_text: "Choose the matching pair",
     sort_items_by_sound: "Arrange the sequence based on sound",
+    sort_the_mean: "Guess the meaning of this sentence",
+    sort_the_symbol_from_mean: "Guess this sentence in kana",
+    write_the_symbol_from_sound: 'Write sentences from this sound',
+    write_the_symbol_from_mean: 'Write this sentence in kana'
   },
   settings: {
     name: "Settings",

@@ -58,6 +58,10 @@ const id: TDictionary = {
     guess_the_symbol: "Pilih huruf yang sesuai dengan bunyi {{sound}}",
     matching_text_by_text: "Pilih pasangan yang sesuai",
     sort_items_by_sound: "Sesuikan urutan berdasarkan bunyi",
+    sort_the_mean: "Tebak arti dari kalimat ini",
+    sort_the_symbol_from_mean: "Tebak kalimat ini dalam kana",
+    write_the_symbol_from_sound: 'Tulis kalimat dari suara ini',
+    write_the_symbol_from_mean: 'Tulis kalimat ini dalam kana'
   },
   settings: {
     name: "Pengaturan",

@@ -11,7 +11,7 @@ export type WriteTheSymbolFromMeanProps = {
 };
 
 const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
@@ -26,6 +26,7 @@ const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) =>
   return (
     <WriteTheSymbol
       data={data}
+      instruction={t('instruction.write_the_symbol_from_mean')}
       renderQuestion={() => {
         return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}

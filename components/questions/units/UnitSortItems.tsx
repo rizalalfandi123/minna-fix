@@ -4,6 +4,7 @@ import SortItems, { SortItemsProps } from "../SortItems";
 
 export type UnitSortItemsProps = Pick<SortItemsProps, "answer" | "options" | "renderQuestion"> & {
   type: "SORT_THE_SYMBOLS_FROM_MEAN" | "SORT_THE_MEAN" | "SORT_THE_SYMBOLS_FROM_SOUND";
+  instruction: string;
 };
 
 const UnitSortItems: React.FunctionComponent<UnitSortItemsProps> = (props) => {

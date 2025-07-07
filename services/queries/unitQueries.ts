@@ -21,6 +21,27 @@ export const useGetUnits = (options?: GetUnitOptions) => {
       return units.data;
     },
 
+    ...(options ?? {}),
+  });
+
+  return query;
+};
+
+export type GetDetailUnitOptions = Partial<UseQueryOptions<Unit, PostgrestError>>;
+
+export const useGetDetailUnit = (id: string, options?: GetDetailUnitOptions) => {
+  const query = useQuery<Unit, PostgrestError>({
+    queryKey: [UNITS, { id }],
+
+    queryFn: async () => {
+      const units = await supabase.from("units").select("*").eq("id", id).single();
+
+      if (units.error) {
+        throw units.error;
+      }
+
+      return units.data;
+    },
 
     ...(options ?? {}),
   });

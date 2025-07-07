@@ -1,12 +1,12 @@
 import { UnitQuestionType } from "~/types";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
-import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
 import React from "react";
 import { Language } from "~/contexts/userContext";
 import { useTranslation } from "react-i18next";
+import QuestionInstructure from "../QuestionInstruction";
 
 export type GuessTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
@@ -37,7 +37,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
       renderInstruction={() => {
         return (
           <View className="w-full items-center justify-center">
-            <Text className="w-full text-center font-sans-medium text-lg">dwwd</Text>
+            <QuestionInstructure>dwwd</QuestionInstructure>
           </View>
         );
       }}

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { isOptionsQuestion, isSortQuestion, isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
 import { Nullable, TAnswerStatus, UnitQuestion } from "~/types";
 import * as wanakana from "wanakana";
+import { removeUnusedSymbol } from "~/helpers/formatter";
 
 export type TUnitGuessQuestion = "GUESS_THE_SENTENCE_MEAN" | "GUESS_THE_SYMBOL_FROM_MEAN" | "GUESS_THE_SOUND_MEAN";
 
@@ -154,7 +155,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isSortQuestion(previousData.data.activeQuestionData.data)) {
       const selectedAnswer = previousData.data.activeQuestionData.data.selectedAnswer;
 
-      const isCorrect = previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "") === selectedAnswer.join("").replace(/\s+/g, "");
+      const isCorrect = removeUnusedSymbol(previousData.data.activeQuestionData.data.answer) === removeUnusedSymbol(selectedAnswer.join(""));
 
       answerStatus = isCorrect ? "success" : "error";
     }
@@ -162,7 +163,7 @@ const useLearnUnitStore = create<TLearnUnitStore>((set, get) => ({
     if (isWriteQuestion(previousData.data.activeQuestionData.data)) {
       const inputAnswer = previousData.data.activeQuestionData.data.inputAnswer;
 
-      const isCorrect = inputAnswer.replace(/\s+/g, "") === previousData.data.activeQuestionData.data.answer.replace(/\s+/g, "");
+      const isCorrect = removeUnusedSymbol(inputAnswer) === removeUnusedSymbol(previousData.data.activeQuestionData.data.answer);
 
       if (typeof inputAnswer === "string") {
         answerStatus = isCorrect ? "success" : "error";

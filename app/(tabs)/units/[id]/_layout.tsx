@@ -1,5 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { Link, useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerProps } from "expo-router/ui";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -8,8 +7,7 @@ import { Text } from "~/components/ui/text";
 import { triggerHaptic } from "~/helpers/triggerHaptic";
 import { bottomNavHeight } from "~/lib/constants/sizes";
 import { cn } from "~/lib/utils";
-import { UNITS } from "~/services/queries/unitQueries";
-import { Unit } from "~/types";
+import { useGetDetailUnit } from "~/services/queries/unitQueries";
 
 export default function LettersTabs() {
   const pathname = usePathname();
@@ -18,21 +16,11 @@ export default function LettersTabs() {
 
   const router = useRouter();
 
-  const queryClient = useQueryClient();
-
   const prevPath = React.useRef<string>(pathname);
 
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  console.log("ID", id);
-
-  const unitData = React.useMemo(() => {
-    const units = queryClient.getQueryData<Array<Unit>>([UNITS]);
-
-    const unit = (units ?? []).find((unit) => unit.id === id);
-
-    return unit;
-  }, [id]);
+  const { data: unit } = useGetDetailUnit(id);
 
   const navigations: Array<TabTriggerProps & { title: string }> = [
     { name: "vocabulary", href: `/units/${id}`, title: "Vocabulary" },
@@ -53,7 +41,7 @@ export default function LettersTabs() {
 
   return (
     <Tabs>
-      <PageHeader title={unitData ? t("unit_name", { name: `${unitData.number}` }) : t("unit_name", { name: "" })} onBack={handleBack} />
+      <PageHeader title={unit ? t("unit_name", { name: `${unit.number}` }) : t("unit_name", { name: "" })} onBack={handleBack} />
 
       <TabSlot />
 

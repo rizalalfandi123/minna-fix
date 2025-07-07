@@ -17,6 +17,7 @@ const LetterSortItems: React.FunctionComponent<LetterSortItemsProps> = (props) =
         wordHeight: 52,
         lineHeight: 60,
       }}
+      instruction=""
       setSelectedItems={setSelectedItems}
       {...props}
     />

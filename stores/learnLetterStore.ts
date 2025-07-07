@@ -24,6 +24,7 @@ export type TLearnLetterStoreData = {
       answerStatus: TAnswerStatus;
       isLocked: boolean;
       data: Nullable<TLearnLetterQuestionData>;
+      statusMessage: string;
     };
   };
 };
@@ -55,6 +56,7 @@ const initalData: TLearnLetterStoreData["data"] = {
     answerStatus: null,
     isLocked: false,
     data: null,
+    statusMessage: ""
   },
 };
 
@@ -72,11 +74,7 @@ const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
       data: {
         ...previousData.data,
         activeQuestionIndex: nextActiveQuestionIndex,
-        activeQuestionData: {
-          answerStatus: null,
-          isLocked: false,
-          data: null,
-        },
+        activeQuestionData: initalData.activeQuestionData,
       },
     });
 
@@ -96,11 +94,7 @@ const useLearnLetterStore = create<TLearnLetterStore>((set, get) => ({
       data: {
         activeQuestionIndex: nextActiveQuestionIndex,
         questionQueue: nextQuestionQueue,
-        activeQuestionData: {
-          answerStatus: null,
-          isLocked: false,
-          data: null,
-        },
+        activeQuestionData: initalData.activeQuestionData,
       },
     });
 

@@ -4,6 +4,7 @@ import QuestionSentenceButton from "../QuestionSentenceButton";
 import UnitSortItems from "./UnitSortItems";
 import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
+import { shuffleArray } from "~/helpers/array";
 
 export type SortTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_SYMBOLS_FROM_MEAN" }>;
@@ -11,14 +12,14 @@ export type SortTheSymbolFromMeanProps = {
 };
 
 const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps> = (props) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
   const { sentence, ...data } = React.useMemo(
     () => ({
       answer: props.question.data.answer,
-      options: props.question.data.options,
+      options: shuffleArray(props.question.data.options),
       sentence: props.question.data.question[activeLang],
     }),
     []
@@ -27,6 +28,7 @@ const SortTheSymbolFromMean: React.FunctionComponent<SortTheSymbolFromMeanProps>
   return (
     <UnitSortItems
       type="SORT_THE_SYMBOLS_FROM_MEAN"
+      instruction={t("instruction.sort_the_symbol_from_mean")}
       answer={data.answer}
       options={data.options}
       renderQuestion={() => {

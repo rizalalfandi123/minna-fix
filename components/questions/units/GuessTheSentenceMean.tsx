@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Language } from "~/contexts/userContext";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
 import React from "react";
+import QuestionInstructure from "../QuestionInstruction";
 
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
@@ -37,7 +38,7 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, w
       renderInstruction={() => {
         return (
           <View className="w-full items-center justify-center">
-            <Text className="w-full text-center font-sans-medium text-lg">dwwd</Text>
+            <QuestionInstructure>dwwd</QuestionInstructure>
           </View>
         );
       }}

@@ -9,12 +9,14 @@ import { learnAnswerHeight, learnProgressBarHeight } from "~/lib/constants/sizes
 import useScreenSize from "~/helpers/useScreenSize";
 import useLearnUnitStore from "~/stores/learnUnitStore";
 import { isWriteQuestion } from "~/helpers/unitQuestionNarrowing";
+import QuestionInstructure from "./QuestionInstruction";
 
 export type WriteTheSymbolProps = {
   data: {
     answer: string;
   };
   renderQuestion: (props: Pick<WriteTheSymbolProps, "data">) => React.ReactNode;
+  instruction: string;
 };
 
 const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
@@ -51,6 +53,8 @@ const WriteTheSymbol: React.FC<WriteTheSymbolProps> = (props) => {
   return (
     <KeyboardAvoidingView behavior="padding" className="w-full flex-1">
       <View style={{ height: questionHeight }}>
+        <QuestionInstructure>{props.instruction}</QuestionInstructure>
+
         <View className="flex-1 justify-center items-center">{props.renderQuestion({ data: props.data })}</View>
 
         <View className="flex-none">

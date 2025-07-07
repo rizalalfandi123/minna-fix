@@ -48,7 +48,7 @@ const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProp
         </AnimatedPressable>
       )}
 
-      <View className="flex flex-row flex-wrap gap-2">
+      <View className="flex flex-row justify-center flex-wrap gap-2">
         {sentence.map((word, index) => (
           <Hint key={index} word={word} withHint={withHint} />
         ))}
