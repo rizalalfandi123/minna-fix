@@ -91,7 +91,7 @@ const Word: React.FunctionComponent<{
   const availableHint = withHint && hintData.length > 0;
 
   const text = (
-    <View className="h-16 min-w-[16px] flex-col items-center justify-center">
+    <View className="h-12 min-w-[16px] flex-col items-center justify-center">
       <Text className="font-sans-bold text-2xl">{word}</Text>
 
       <View className={cn("h-2 w-full border-accent border-dotted bg-background", availableHint ? "border-b-4" : "border-b-0")} />

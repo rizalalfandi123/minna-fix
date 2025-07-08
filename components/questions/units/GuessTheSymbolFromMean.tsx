@@ -14,7 +14,7 @@ export type GuessTheSymbolFromMeanProps = {
 };
 
 const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, withHint }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
@@ -37,7 +37,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
       renderInstruction={() => {
         return (
           <View className="w-full items-center justify-center">
-            <QuestionInstructure>dwwd</QuestionInstructure>
+            <QuestionInstructure>{t('instruction.sort_the_symbol_from_mean')}</QuestionInstructure>
           </View>
         );
       }}

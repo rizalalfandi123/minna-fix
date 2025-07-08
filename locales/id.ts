@@ -56,6 +56,7 @@ const id: TDictionary = {
   instruction: {
     guess_the_letter: "Pilih bunyi yang tepat dari huruf ini",
     guess_the_symbol: "Pilih huruf yang sesuai dengan bunyi {{sound}}",
+    guess_the_sentence_mean: "Tebak arti dari kata ini",
     matching_text_by_text: "Pilih pasangan yang sesuai",
     sort_items_by_sound: "Sesuikan urutan berdasarkan bunyi",
     sort_the_mean: "Tebak arti dari kalimat ini",

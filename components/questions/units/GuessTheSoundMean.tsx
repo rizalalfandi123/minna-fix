@@ -1,7 +1,6 @@
 import LetterOptions from "../LetterOptions";
 import { useTranslation } from "react-i18next";
 import LetterSound from "../LetterSound";
-import { Text } from "~/components/ui/text";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
 import QuestionInstructure from "../QuestionInstruction";
 

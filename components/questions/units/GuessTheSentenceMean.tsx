@@ -15,7 +15,7 @@ export type GuessTheSentenceMeanProps = {
 };
 
 const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const activeLang = i18n.language as Language;
 
@@ -38,7 +38,7 @@ const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, w
       renderInstruction={() => {
         return (
           <View className="w-full items-center justify-center">
-            <QuestionInstructure>dwwd</QuestionInstructure>
+            <QuestionInstructure>{t("instruction.guess_the_sentence_mean")}</QuestionInstructure>
           </View>
         );
       }}

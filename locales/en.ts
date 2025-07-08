@@ -54,6 +54,7 @@ const en = {
   instruction: {
     guess_the_letter: "Choose the correct sound from this letter",
     guess_the_symbol: "Choose the letter that matches the sound {{sound}}",
+    guess_the_sentence_mean: "Guess the meaning of this word",
     matching_text_by_text: "Choose the matching pair",
     sort_items_by_sound: "Arrange the sequence based on sound",
     sort_the_mean: "Guess the meaning of this sentence",

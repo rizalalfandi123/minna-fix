@@ -1,3 +1,3 @@
 export const removeUnusedSymbol = (str: string) => {
-  return str.replace(/[^\p{L}\p{N}]/gu, "");
+  return str.replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
 };
