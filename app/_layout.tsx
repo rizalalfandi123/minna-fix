@@ -1,5 +1,5 @@
 import "~/global.css";
-import "~/libs/i18n";
+import "~/instances/i18n";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";

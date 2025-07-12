@@ -1,7 +1,7 @@
 import { Database } from "~/database.types";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 
 export type LetterLevel = Database["public"]["Tables"]["letter_levels"]["Row"];
 

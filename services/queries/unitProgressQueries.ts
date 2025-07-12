@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Database } from "~/database.types";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 
 export const UNIT_PROGRESS_KEY = "UNIT_PROGRESS";
 

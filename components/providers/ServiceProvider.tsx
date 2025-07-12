@@ -2,7 +2,7 @@ import React from "react";
 
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import queryClient, { asyncStoragePersister } from "~/libs/query-client";
+import queryClient, { asyncStoragePersister } from "~/instances/query-client";
 
 const ServiceProvider = (props: React.PropsWithChildren) => {
   return (

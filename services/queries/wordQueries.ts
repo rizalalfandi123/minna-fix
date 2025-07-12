@@ -1,11 +1,11 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { Language } from "~/contexts/userContext";
 import { Database } from "~/database.types";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
+import { TLanguage } from "~/stores/userStore";
 
 export type TWord = Omit<Database["public"]["Tables"]["words"]["Row"], "others"> & {
-  others: Record<string, string | Record<Language, string>>;
+  others: Record<string, string | Record<TLanguage, string>>;
 };
 
 export type GetWordOptions = Partial<UseQueryOptions<TWord, PostgrestError>>;

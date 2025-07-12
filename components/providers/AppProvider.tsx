@@ -3,12 +3,14 @@ import { View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { maxContentWidth } from "~/lib/constants/sizes";
 import ServiceProvider from "./ServiceProvider";
-import { UserDataProvider } from "~/contexts/userContext";
 import { useScreenMode } from "~/lib/useScreenMode";
 import { vars } from "nativewind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import useInitLanguage from "~/hooks/useInitLanguage";
 
 const ThemedApp: React.FC<React.PropsWithChildren> = ({ children }) => {
+  useInitLanguage();
+
   const { colorVars } = useScreenMode();
 
   return (
@@ -27,9 +29,7 @@ const ThemedApp: React.FC<React.PropsWithChildren> = ({ children }) => {
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <ServiceProvider>
-      <UserDataProvider>
-        <ThemedApp>{children}</ThemedApp>
-      </UserDataProvider>
+      <ThemedApp>{children}</ThemedApp>
     </ServiceProvider>
   );
 };

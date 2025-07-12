@@ -1,13 +1,12 @@
-import QuestionSentenceButton, { QuestionSentenceButtonProps } from "../QuestionSentenceButton";
+import QuestionSentenceButton from "../QuestionSentenceButton";
 import { View } from "react-native";
-import { Text } from "~/components/ui/text";
 import LetterOptions from "../LetterOptions";
 import { UnitQuestionType } from "~/types";
 import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
 import React from "react";
 import QuestionInstructure from "../QuestionInstruction";
+import { TLanguage } from "~/stores/userStore";
 
 export type GuessTheSentenceMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SENTENCE_MEAN" }>;
@@ -17,7 +16,7 @@ export type GuessTheSentenceMeanProps = {
 const GuessTheSentenceMean: React.FC<GuessTheSentenceMeanProps> = ({ question, withHint }) => {
   const { i18n, t } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { sentence, ...data } = React.useMemo(
     () => ({

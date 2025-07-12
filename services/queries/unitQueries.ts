@@ -1,6 +1,6 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 import { Unit } from "~/types";
 
 export type GetUnitOptions = Partial<UseQueryOptions<Array<Unit>, PostgrestError>>;

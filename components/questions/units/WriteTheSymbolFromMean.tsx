@@ -3,7 +3,7 @@ import QuestionSentenceButton from "../QuestionSentenceButton";
 import React from "react";
 import WriteTheSymbol from "../WriteTheSymbol";
 import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
+import { TLanguage } from "~/stores/userStore";
 
 export type WriteTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "WRITE_THE_SYMBOL_FROM_MEAN" }>;
@@ -13,7 +13,7 @@ export type WriteTheSymbolFromMeanProps = {
 const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) => {
   const { i18n, t } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { sentence, ...data } = React.useMemo(
     () => ({
@@ -26,9 +26,9 @@ const WriteTheSymbolFromMean: React.FC<WriteTheSymbolFromMeanProps> = (props) =>
   return (
     <WriteTheSymbol
       data={data}
-      instruction={t('instruction.write_the_symbol_from_mean')}
+      instruction={t("instruction.write_the_symbol_from_mean")}
       renderQuestion={() => {
-        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={props.withHint} />;
+        return <QuestionSentenceButton showKanji={false} withSpeak={false} sentence={sentence} withHint={props.withHint} />;
       }}
     />
   );

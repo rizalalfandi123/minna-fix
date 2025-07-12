@@ -1,6 +1,6 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 
 import { LetterQuestion, LetterLevelQuestion } from "~/types";
 

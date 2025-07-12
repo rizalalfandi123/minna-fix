@@ -1,11 +1,10 @@
 import React from "react";
 import { Platform } from "react-native";
-import { ScreenMode } from "~/contexts/userContext";
-import useUserData from "~/hooks/useUserData";
 import { setAndroidNavigationBar } from "./android-navigation-bar";
 import { useColorScheme } from "nativewind";
 import appTheme from "./constants/appTheme";
 import { Theme } from "@react-navigation/native";
+import { TScreenMode, useUserData } from "~/stores/userStore";
 
 const fonts: Theme["fonts"] = {
   regular: {
@@ -27,7 +26,7 @@ const fonts: Theme["fonts"] = {
 };
 
 export const setPlatformSpecificSetup = Platform.select({
-  web: (screenMode: ScreenMode) => {
+  web: (screenMode: TScreenMode) => {
     document.documentElement.classList.add("bg-background");
 
     if (screenMode === "dark") {
@@ -36,18 +35,20 @@ export const setPlatformSpecificSetup = Platform.select({
       document.documentElement.classList.remove("dark");
     }
   },
-  android: (screenMode: ScreenMode) => {
+  android: (screenMode: TScreenMode) => {
     setAndroidNavigationBar(screenMode);
   },
   default: () => {},
 });
 
 export function useScreenMode() {
-  const { state, dispatch } = useUserData();
+  // const { state, dispatch } = useUserData();
 
   const { setColorScheme } = useColorScheme();
 
-  const screenMode = state.settings.screenMode;
+  const screenMode = useUserData((state) => state.settings.screenMode);
+
+  const setScreenMode = useUserData((state) => state.setScreenMode);
 
   const colorVars = React.useMemo(() => {
     const colorData = Object.entries(appTheme["default"][screenMode]).map(([key, value]) => ({
@@ -60,24 +61,19 @@ export function useScreenMode() {
   }, [screenMode]);
 
   const colors = React.useMemo(() => {
+    const data = Object.fromEntries(Object.entries(colorVars).map(([key, value]) => [key, `hsl(${value})`])) as unknown as Record<
+      keyof typeof appTheme.default.dark,
+      string
+    >;
 
-    const data = Object.fromEntries(Object.entries(colorVars).map(([key, value]) => [key, `hsl(${value})`]))  as unknown as Record<keyof typeof appTheme.default.dark, string>
-
-    return data
+    return data;
   }, [colorVars]);
 
   const toggleScreenMode = () => {
-    setScreenMode(state.settings.screenMode === "light" ? "dark" : "light");
+    setScreenMode(screenMode === "light" ? "dark" : "light");
   };
 
-  const setScreenMode = (screenMode: ScreenMode) => {
-    dispatch({
-      type: "SET_SCREEN_MODE",
-      payload: screenMode,
-    });
-  };
-
-  const applyScreenMode = (screenMode: ScreenMode) => {
+  const applyScreenMode = (screenMode: TScreenMode) => {
     setColorScheme(screenMode);
 
     setPlatformSpecificSetup(screenMode);
@@ -91,6 +87,6 @@ export function useScreenMode() {
     applyScreenMode,
     colors,
     fonts,
-    colorVars
+    colorVars,
   };
 }

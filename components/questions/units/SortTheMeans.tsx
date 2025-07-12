@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 import { UnitQuestionType } from "~/types";
 import QuestionSentenceButton from "../QuestionSentenceButton";
 import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
 import UnitSortItems from "./UnitSortItems";
 import { shuffleArray } from "~/helpers/array";
+import { TLanguage } from "~/stores/userStore";
 
 export type SortTheMeansProps = {
   question: Extract<UnitQuestionType, { type: "SORT_THE_MEAN" }>;
@@ -14,7 +14,7 @@ export type SortTheMeansProps = {
 const SortTheMeans: React.FunctionComponent<SortTheMeansProps> = (props) => {
   const { i18n, t } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { answer, options, sentence } = useMemo(
     () => ({

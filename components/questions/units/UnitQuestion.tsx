@@ -9,9 +9,9 @@ import WriteTheSymbolFromSound from "./WriteTheSymbolFromSound";
 import useScreenSize from "~/helpers/useScreenSize";
 import { UnitQuestion as TUnitQuestion } from "~/types";
 import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
 import GuessTheSoundMean from "./GuessTheSoundMean";
 import SortTheSymbolFromSound from "./SortTheSymbolFromSound";
+import { TLanguage } from "~/stores/userStore";
 
 export type UnitQuestionProps = {
   question: TUnitQuestion;
@@ -21,7 +21,7 @@ export type UnitQuestionProps = {
 const UnitQuestion: React.FC<UnitQuestionProps> = ({ question, withHint = true }) => {
   const { i18n } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { contentWidth } = useScreenSize();
 

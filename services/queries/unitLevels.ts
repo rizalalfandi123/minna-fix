@@ -1,7 +1,7 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
 import { Database, Json } from "~/database.types";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 
 export const UNIT_LEVELS_KEY = "UNIT_LEVELS";
 

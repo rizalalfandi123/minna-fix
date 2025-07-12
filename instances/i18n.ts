@@ -1,11 +1,11 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { Language } from "~/contexts/userContext";
 import en from "~/locales/en";
 import id from "~/locales/id";
+import { TLanguage } from "~/stores/userStore";
 
 export type LanguageOption = {
-    code: Language;
+    code: TLanguage;
     name: string;
 };
 

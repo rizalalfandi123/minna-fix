@@ -1,25 +1,23 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import useUserData from "./useUserData";
+import { useUserData } from "~/stores/userStore";
 
 const useInitLanguage = () => {
-    const { i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
-    const { state } = useUserData();
+  const currentLanguange = useUserData((state) => state.settings.language);
 
-    const currentLanguange = state.settings.language;
+  const syncLanguage = () => {
+    i18n.changeLanguage(currentLanguange);
+  };
 
-    const syncLanguage = () => {
-        i18n.changeLanguage(currentLanguange);
-    };
+  React.useEffect(() => {
+    if (currentLanguange !== i18n.language) {
+      syncLanguage();
+    }
+  }, [currentLanguange, i18n.language]);
 
-    React.useEffect(() => {
-        if (currentLanguange !== i18n.language) {
-            syncLanguage();
-        }
-    }, []);
-
-    return null;
+  return null;
 };
 
 export default useInitLanguage;

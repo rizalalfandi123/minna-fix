@@ -11,15 +11,17 @@ import { useScreenMode } from "~/lib/useScreenMode";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useGetWord } from "~/services/queries/wordQueries";
 import { useTranslation } from "react-i18next";
-import { Language } from "~/contexts/userContext";
+import { removeBlockBracketsAndContent } from "~/helpers/formatter";
+import { TLanguage } from "~/stores/userStore";
 
 export type QuestionSentenceButtonProps = {
   sentence: Array<Record<"key" | "value", string>>;
   withHint: boolean;
   withSpeak?: boolean;
+  showKanji?: boolean;
 };
 
-const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProps> = ({ sentence, withHint, withSpeak = true }) => {
+const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProps> = ({ sentence, withHint, withSpeak = true, showKanji = true }) => {
   const { colors } = useScreenMode();
 
   const scaleAnimation = useButtonScaleAnimation();
@@ -29,12 +31,12 @@ const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProp
 
     triggerHaptic();
 
-    speak(sentence.map((item) => item.key).join(" "), "ja");
+    speak(sentence.map((item) => removeBlockBracketsAndContent(item.key)).join(" "), "ja");
   };
 
   return (
     <View
-      className={cn("w-full justify-center gap-4 flex-col items-center", {
+      className={cn("w-full justify-center gap-8 flex-col items-center", {
         "cursor-pointer": withHint,
       })}
     >
@@ -50,49 +52,60 @@ const QuestionSentenceButton: React.FunctionComponent<QuestionSentenceButtonProp
 
       <View className="flex flex-row justify-center flex-wrap gap-2">
         {sentence.map((word, index) => (
-          <Hint key={index} word={word} withHint={withHint} />
+          <Hint key={index} word={word} withHint={withHint} showKanji={showKanji} />
         ))}
       </View>
     </View>
   );
 };
 
-const Hint: React.FunctionComponent<{ word: Record<"key" | "value", string>, withHint: boolean }> = ({ word, withHint }) => {
+const Hint: React.FunctionComponent<{ word: Record<"key" | "value", string>; withHint: boolean; showKanji: boolean }> = ({ word, showKanji, withHint }) => {
   const { i18n } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { data } = useGetWord(word.key, { enabled: !!word.key });
 
-  const { hintData } = React.useMemo(() => {
+  const wordData = React.useMemo(() => {
     const result: Array<string> = [];
 
+    const wordValue: Record<"main" | "secondary", string> = { main: word.value, secondary: "" };
+
     if (data) {
-      result.push(data.key);
+      result.push(removeBlockBracketsAndContent(data.key));
+
       result.push(data[activeLang]);
+
       result.push(...Object.values(data.others ?? {}).map((item) => (typeof item === "string" ? item : item[activeLang])));
+
+      if (data.others.kanji && typeof data.others.kanji === "string" && showKanji) {
+        wordValue.main = data.others.kanji;
+        wordValue.secondary = word.value;
+      }
     }
 
-    return { hintData: result, word };
+    return { hintData: result, word: wordValue };
   }, [data]);
 
   if (!word.value) {
     return null;
   }
 
-  return <Word hintData={hintData} word={word.value} withHint={withHint} />;
+  return <Word hintData={wordData.hintData} word={wordData.word} withHint={withHint} />;
 };
 
 const Word: React.FunctionComponent<{
   hintData: Array<string>;
-  word: string;
+  word: Record<"main" | "secondary", string>;
   withHint: boolean;
 }> = ({ hintData, word, withHint }) => {
   const availableHint = withHint && hintData.length > 0;
 
   const text = (
-    <View className="h-12 min-w-[16px] flex-col items-center justify-center">
-      <Text className="font-sans-bold text-2xl">{word}</Text>
+    <View className="h-12 min-w-[16px] flex-col items-center justify-end">
+      <Text className="font-sans-bold text-base">{word.secondary}</Text>
+
+      <Text className="font-sans-bold text-2xl">{word.main}</Text>
 
       <View className={cn("h-2 w-full border-accent border-dotted bg-background", availableHint ? "border-b-4" : "border-b-0")} />
     </View>

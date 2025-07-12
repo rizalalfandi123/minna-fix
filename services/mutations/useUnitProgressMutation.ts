@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
-import supabase from "~/libs/supabase";
+import supabase from "~/instances/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 import { UNIT_PROGRESS_KEY, UnitProgress } from "../queries/unitProgressQueries";
 

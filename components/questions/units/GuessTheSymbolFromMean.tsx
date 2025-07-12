@@ -4,9 +4,9 @@ import { View } from "react-native";
 import LetterOptions from "../LetterOptions";
 import UnitOptionsQuestion from "./UnitOptionsQuestion";
 import React from "react";
-import { Language } from "~/contexts/userContext";
 import { useTranslation } from "react-i18next";
 import QuestionInstructure from "../QuestionInstruction";
+import { TLanguage } from "~/stores/userStore";
 
 export type GuessTheSymbolFromMeanProps = {
   question: Extract<UnitQuestionType, { type: "GUESS_THE_SYMBOL_FROM_MEAN" }>;
@@ -16,7 +16,7 @@ export type GuessTheSymbolFromMeanProps = {
 const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ question, withHint }) => {
   const { i18n, t } = useTranslation();
 
-  const activeLang = i18n.language as Language;
+  const activeLang = i18n.language as TLanguage;
 
   const { sentence, ...data } = React.useMemo(
     () => ({
@@ -32,7 +32,7 @@ const GuessTheSymbolFromMean: React.FC<GuessTheSymbolFromMeanProps> = ({ questio
       type="GUESS_THE_SYMBOL_FROM_MEAN"
       data={data}
       renderAnswer={() => {
-        return <QuestionSentenceButton withSpeak={false} sentence={sentence} withHint={withHint} />;
+        return <QuestionSentenceButton showKanji={false} withSpeak={false} sentence={sentence} withHint={withHint} />;
       }}
       renderInstruction={() => {
         return (
